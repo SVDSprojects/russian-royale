@@ -1,4 +1,6 @@
 import type { Express, Request, Response, RequestHandler } from 'express';
+import { emailCodes, emailDelivery, type EmailDelivery } from './email-codes';
+import { transaction } from './storage';
 import { randomBytes, createHash, scrypt, timingSafeEqual } from 'node:crypto';
 import { promisify } from 'node:util';
 import type { DB } from './storage.js';
@@ -33,7 +35,14 @@ function email(value: unknown) {
   return result;
 }
 
-export function setupAuth(app: Express, db: DB, now: () => number, testMode: boolean) {
+export function setupAuth(
+  app: Express,
+  db: DB,
+  now: () => number,
+  testMode: boolean,
+  delivery: EmailDelivery | undefined = testMode ? undefined : emailDelivery(process.env),
+) {
+  const codes = emailCodes(db, now, delivery);
   const attempts = new Map<string, { count: number; until: number }>();
   const accountAttempts = new Map<string, { count: number; until: number }>();
   const authLimit: RequestHandler = (req, _res, next) => {
@@ -102,6 +111,35 @@ export function setupAuth(app: Express, db: DB, now: () => number, testMode: boo
       maxAge: 14 * 86400_000,
     });
   }
+  app.get('/api/auth/status', (_req, res) =>
+    res.json({ emailCodesEnabled: codes.enabled, emailCodesRequired: codes.required, smsEnabled: false }),
+  );
+  app.post('/api/auth/email-code', authLimit, async (req, res) => {
+    const b = body(req),
+      mail = email(b.email);
+    if (!['register', 'reset'].includes(b.purpose)) throw new HttpError(400, 'Неизвестный тип кода.');
+    await codes.request(mail, b.purpose, req.ip || 'unknown');
+    res.json({
+      ok: true,
+      message:
+        'Если адрес подходит для выбранного действия, письмо отправлено. Проверьте почту и папку Спам.',
+    });
+  });
+  app.post('/api/auth/reset-password', authLimit, async (req, res) => {
+    const b = body(req),
+      mail = email(b.email),
+      password = str(b.password, 'Пароль', 10, 128);
+    const verified = codes.check(mail, 'reset', b.code);
+    const passwordHash = await hashPassword(password);
+    transaction(db, () => {
+      codes.take(mail, 'reset', verified.nonce);
+      const user = db.prepare('SELECT id FROM users WHERE email=?').get(mail);
+      if (!user) throw new HttpError(400, 'Код неверен или истёк.');
+      db.prepare('UPDATE users SET password_hash=? WHERE id=?').run(passwordHash, user.id);
+      db.prepare('DELETE FROM sessions WHERE user_id=?').run(user.id);
+    });
+    res.json({ ok: true });
+  });
   app.get('/api/auth/me', (req, res) => res.json({ user: req.user || null }));
   app.post('/api/auth/register', authLimit, async (req, res) => {
     const b = body(req);
@@ -110,16 +148,21 @@ export function setupAuth(app: Express, db: DB, now: () => number, testMode: boo
       password = str(b.password, 'Пароль', 10, 128);
     if (db.prepare('SELECT id FROM users WHERE email=?').get(mail))
       throw new HttpError(409, 'Этот email уже зарегистрирован.');
+    const verified = codes.required ? codes.check(mail, 'register', b.code) : null;
     const passwordHash = await hashPassword(password);
     const uid = id();
     try {
-      db.prepare('INSERT INTO users(id,email,username,password_hash,created_at) VALUES(?,?,?,?,?)').run(
-        uid,
-        mail,
-        username,
-        passwordHash,
-        iso(now()),
-      );
+      transaction(db, () => {
+        if (verified) codes.take(mail, 'register', verified.nonce);
+        db.prepare('INSERT INTO users(id,email,username,password_hash,created_at) VALUES(?,?,?,?,?)').run(
+          uid,
+          mail,
+          username,
+          passwordHash,
+          iso(now()),
+        );
+        if (verified) db.prepare('INSERT INTO rr_verified_emails VALUES(?,?)').run(uid, now());
+      });
     } catch (err) {
       if (db.prepare('SELECT id FROM users WHERE email=?').get(mail))
         throw new HttpError(409, 'Этот email уже зарегистрирован.');

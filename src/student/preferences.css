@@ -1,0 +1,189 @@
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  background: #101725;
+  color: #e8eefb;
+}
+:root[data-theme='dark'] .rr-app {
+  --bg: #101725;
+  --panel: #182337;
+  --line: #35445d;
+  --muted: #b0bfd6;
+  --violet: #a7b9ff;
+  --green: #88dfc4;
+  background: radial-gradient(ellipse at 85% 0%, #1f3155, transparent 50%), #101725;
+  color: #e8eefb;
+}
+[data-theme='dark'] .rr-sidebar,
+[data-theme='dark'] .rr-topbar {
+  background: #131e30f5;
+  border-color: #35445d;
+  color: #e8eefb;
+}
+:root[data-theme='dark']
+  .rr-app
+  :is(
+    .rr-panel,
+    .rr-server-card,
+    .rr-auth-form,
+    .rr-empty,
+    .rr-dialog,
+    .rr-room-list-item,
+    .rr-setting-row,
+    .rr-stat,
+    .rr-lesson-card,
+    .rr-rule-card,
+    .rr-profile-hero,
+    .rr-community-strip,
+    .rr-community-note
+  ) {
+  background: #182337;
+  color: #e8eefb;
+  border-color: #35445d;
+}
+:root[data-theme='dark']
+  .rr-app
+  :is(
+    .rr-muted,
+    .rr-eyebrow,
+    .rr-breadcrumb,
+    .rr-nav-item,
+    .rr-sidebar-footer,
+    .rr-auth-note,
+    .rr-setting-row p,
+    .rr-page-header p,
+    .rr-account small
+  ) {
+  color: #b8c8e4;
+}
+:root[data-theme='dark']
+  .rr-app
+  :is(.rr-button.secondary, .rr-toggle, .rr-social-person button, .social-page button) {
+  background: #22334e;
+  color: #e8eefb;
+  border-color: #556989;
+}
+:root[data-theme='dark'] .rr-app :is(input, textarea, select) {
+  background: #142039;
+  color: #edf3ff;
+  border-color: #5e718f;
+}
+:root[data-theme='dark'] .rr-app :is(.rr-page-header, .rr-discovery, .rr-world-hero) {
+  --world-ink: #e8eefb;
+  --world-blue: #9db7ff;
+}
+[data-theme='dark'] .rr-nav-item.active {
+  color: #fff;
+  background: #3058cf;
+}
+:root[data-theme='dark'] .rr-app :is(.rr-notice.error, .rr-error) {
+  background: #4a2331;
+  color: #ffdfdf;
+}
+[data-theme='dark'] .rr-brand strong {
+  color: #adc2ff;
+}
+:root[data-theme='dark'] .rr-app :is(.rr-auth-tabs, .rr-auth-tabs button, .rr-auth-tabs button.active) {
+  color: #e8eefb;
+  background: #233551;
+}
+.rr-notifications {
+  position: relative;
+}
+.rr-notification-count {
+  position: absolute;
+  right: -3px;
+  top: -4px;
+  min-width: 18px;
+  border-radius: 20px;
+  padding: 0 4px;
+  background: #d9295c;
+  color: white;
+  font-size: 11px;
+}
+.rr-notification-tray {
+  position: absolute;
+  z-index: 100;
+  right: 0;
+  top: 48px;
+  width: min(350px, calc(100vw - 34px));
+  max-height: 70vh;
+  overflow: auto;
+  background: #fff;
+  color: #172642;
+  border: 1px solid #b7c7dc;
+  border-radius: 18px;
+  box-shadow: 0 16px 45px #08152e40;
+  padding: 18px;
+}
+.rr-notification-tray button {
+  min-height: 40px;
+  cursor: pointer;
+}
+.rr-notification-item {
+  display: grid;
+  gap: 5px;
+  text-align: left;
+  width: 100%;
+  padding: 14px;
+  margin: 10px 0;
+  background: #f3f6fb;
+  border: 1px solid #d4deec;
+  border-radius: 12px;
+}
+.rr-notification-item.is-unread {
+  border-left: 4px solid #2455f5;
+}
+[data-theme='dark'] .rr-notification-tray {
+  background: #182337;
+  color: #edf3ff;
+  border-color: #536583;
+}
+[data-theme='dark'] .rr-notification-item {
+  background: #233551;
+  color: #edf3ff;
+  border-color: #536583;
+}
+@media (max-width: 600px) {
+  .rr-setting-row {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .rr-notification-tray {
+    position: fixed;
+    right: 16px;
+    top: 70px;
+  }
+}
+:root[data-theme='dark']
+  .rr-app
+  :is(.rr-game-card, .arcade-mode, .royale-hero, .rr-level-card, .rr-lesson-feature) {
+  background: #182337;
+  color: #edf3ff;
+  border-color: #35445d;
+  box-shadow: 0 4px 0 #080f1b;
+}
+:root[data-theme='dark']
+  .rr-app
+  :is(
+    .rr-game-card-body h3,
+    .rr-game-card-body p,
+    .rr-game-card-foot > span,
+    .arcade-mode h3,
+    .arcade-mode p,
+    .royale-hero-copy h1,
+    .royale-hero-copy p,
+    .rr-breadcrumb strong,
+    .rr-xp-badge,
+    .rr-footer,
+    .rr-footer button
+  ) {
+  color: #d8e5ff;
+}
+:root[data-theme='dark'] .rr-app .rr-panel {
+  box-shadow: 0 4px 0 #080f1b;
+}
+:root[data-theme='dark'] .rr-app .rr-setting-row > button {
+  background: #263b5f;
+  color: #edf3ff;
+  border-color: #667d9e;
+}

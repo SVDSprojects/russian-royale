@@ -1,3 +1,5 @@
+import { EmailAuthForm } from './EmailAuthForm';
+import { Notifications } from './Notifications';
 import { SocialPage } from './SocialPage';
 import { RemainingGamesPage } from '../games/RemainingGamesPage';
 import { CheckpointPage } from '../games/CheckpointPage';
@@ -225,6 +227,7 @@ export default function StudentApp() {
               </span>
               {user ? (
                 <>
+                  <Notifications />
                   <button className="rr-xp-badge" onClick={() => go('profile')}>
                     <Sparkles size={15} />
                     {user.xp} XP
@@ -265,119 +268,9 @@ export default function StudentApp() {
 }
 
 export function AuthForm({ onSuccess }: { onSuccess?: () => void }) {
-  const auth = useAuth(),
-    [mode, setMode] = useState<'login' | 'register'>('register'),
-    [username, setUsername] = useState(''),
-    [email, setEmail] = useState(''),
-    [password, setPassword] = useState(''),
-    [visible, setVisible] = useState(false),
-    [busy, setBusy] = useState(false),
-    [error, setError] = useState('');
-  async function submit(e: FormEvent) {
-    e.preventDefault();
-    setBusy(true);
-    setError('');
-    try {
-      if (mode === 'login') await auth.login(email, password);
-      else await auth.register(email, password, username);
-      onSuccess?.();
-    } catch (e) {
-      setError(message(e));
-    } finally {
-      setBusy(false);
-    }
-  }
-  return (
-    <form className="rr-auth-form" onSubmit={submit}>
-      <div className="rr-auth-tabs">
-        <button
-          type="button"
-          className={mode === 'register' ? 'active' : ''}
-          onClick={() => {
-            setMode('register');
-            setError('');
-          }}
-        >
-          Регистрация
-        </button>
-        <button
-          type="button"
-          className={mode === 'login' ? 'active' : ''}
-          onClick={() => {
-            setMode('login');
-            setError('');
-          }}
-        >
-          Вход
-        </button>
-      </div>
-      <h2>{mode === 'register' ? 'Твоя история начинается здесь' : 'Рады снова видеть тебя'}</h2>
-      <p>
-        {mode === 'register'
-          ? 'Создай аккаунт и собери свою команду.'
-          : 'Продолжим с того места, где остановились.'}
-      </p>
-      {mode === 'register' && (
-        <label>
-          Имя игрока
-          <input
-            name="username"
-            autoComplete="nickname"
-            required
-            minLength={2}
-            maxLength={32}
-            placeholder="Как тебя называть?"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </label>
-      )}
-      <label>
-        Электронная почта
-        <input
-          name="email"
-          type="email"
-          autoComplete="email"
-          required
-          placeholder="you@example.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </label>
-      <label>
-        Пароль
-        <div className="rr-password-field">
-          <input
-            name="password"
-            type={visible ? 'text' : 'password'}
-            autoComplete={mode === 'register' ? 'new-password' : 'current-password'}
-            required
-            minLength={mode === 'register' ? 10 : 1}
-            maxLength={128}
-            placeholder={mode === 'register' ? 'Не менее 10 символов' : 'Твой пароль'}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button
-            type="button"
-            aria-label={visible ? 'Скрыть пароль' : 'Показать пароль'}
-            onClick={() => setVisible(!visible)}
-          >
-            {visible ? <EyeOff size={18} /> : <Eye size={18} />}
-          </button>
-        </div>
-      </label>
-      <ErrorNotice text={error} />
-      <button disabled={busy} className="rr-button primary full">
-        {busy ? 'Подключаемся…' : mode === 'register' ? 'Создать аккаунт' : 'Войти'}
-        <ArrowRight size={17} />
-      </button>
-      <small className="rr-auth-note">
-        Личные данные доступны только твоему аккаунту и администраторам платформы.
-      </small>
-    </form>
-  );
+  return <EmailAuthForm onSuccess={onSuccess} />;
 }
+
 function Welcome() {
   return (
     <div className="rr-welcome rr-world-welcome">

@@ -1,3 +1,4 @@
+import { PreferenceSettings } from './preferences';
 import { RoyaleHero } from './RoyaleHero';
 import { WaitingGames } from './WaitingGames';
 import { GameArt } from './GameArt';
@@ -620,6 +621,7 @@ export function SettingsPage() {
   return (
     <>
       <PageHeader eyebrow="ТВОЙ КОМФОРТ" title="Настройки" description="Настрой пространство под себя." />
+      <PreferenceSettings />
       <section className="rr-panel rr-settings-panel">
         <div className="rr-setting-row">
           <div>
