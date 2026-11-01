@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-labelledby="t d">
+  <title id="t">Alias — Фабрика смыслов</title>
+  <desc id="d">Конвейер везёт коробки со словами, над ним речевые облака, справа вагоны команд разной формы.</desc>
+  <rect width="640" height="360" fill="#322741"/>
+  <path d="M0 300 H640" stroke="#b8e8ff" stroke-opacity=".15" stroke-width="18"/>
+  <path d="M60 0 V90 H190" fill="none" stroke="#b8e8ff" stroke-opacity=".15" stroke-width="14"/>
+  <g fill="#d63970" fill-opacity=".25">
+    <circle cx="560" cy="70" r="40"/>
+    <g transform="translate(560 70)"><rect x="-6" y="-52" width="12" height="16" rx="3"/><rect x="-6" y="36" width="12" height="16" rx="3"/><rect x="-52" y="-6" width="16" height="12" rx="3"/><rect x="36" y="-6" width="16" height="12" rx="3"/></g>
+  </g>
+  <rect x="40" y="226" width="400" height="26" rx="13" fill="#241c30" stroke="#d63970" stroke-width="3"/>
+  <path d="M56 239 H424" stroke="#fff3c4" stroke-opacity=".5" stroke-width="4" stroke-dasharray="12 16"/>
+  <g fill="#b8e8ff"><circle cx="80" cy="239" r="8"/><circle cx="170" cy="239" r="8"/><circle cx="260" cy="239" r="8"/><circle cx="350" cy="239" r="8"/><circle cx="420" cy="239" r="8"/></g>
+  <g stroke="#d63970" stroke-width="3">
+    <rect x="80" y="162" width="72" height="62" rx="6" fill="#fff3c4"/>
+    <rect x="200" y="162" width="72" height="62" rx="6" fill="#fff3c4"/>
+    <rect x="320" y="162" width="72" height="62" rx="6" fill="#fff3c4"/>
+  </g>
+  <g font-family="Unbounded, Manrope, sans-serif" font-size="30" font-weight="700" fill="#322741" text-anchor="middle">
+    <text x="116" y="204">?</text><text x="236" y="204">?</text><text x="356" y="204">?</text>
+  </g>
+  <g fill="#b8e8ff">
+    <path d="M70 70 h170 a22 22 0 0 1 22 22 v28 a22 22 0 0 1 -22 22 h-130 l-22 18 v-18 h-18 a22 22 0 0 1 -22 -22 v-28 a22 22 0 0 1 22 -22 z"/>
+    <path d="M290 40 h150 a20 20 0 0 1 20 20 v26 a20 20 0 0 1 -20 20 h-36 v16 l-20 -16 h-94 a20 20 0 0 1 -20 -20 v-26 a20 20 0 0 1 20 -20 z"/>
+  </g>
+  <g fill="#322741" fill-opacity=".55">
+    <rect x="80" y="92" width="140" height="8" rx="4"/><rect x="80" y="110" width="96" height="8" rx="4"/>
+    <rect x="290" y="60" width="130" height="8" rx="4"/><rect x="290" y="78" width="84" height="8" rx="4"/>
+  </g>
+  <g stroke="#322741" stroke-width="2">
+    <rect x="470" y="200" width="70" height="52" rx="6" fill="#d63970"/>
+    <rect x="550" y="200" width="70" height="52" rx="6" fill="#b8e8ff"/>
+  </g>
+  <g fill="#fff3c4"><circle cx="488" cy="258" r="9"/><circle cx="522" cy="258" r="9"/><circle cx="568" cy="258" r="9"/><circle cx="602" cy="258" r="9"/></g>
+  <circle cx="505" cy="226" r="11" fill="#fff3c4" stroke="#322741" stroke-width="2"/>
+  <path d="M585 214 L597 236 H573 Z" fill="#322741"/>
+</svg>

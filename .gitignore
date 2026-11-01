@@ -1,0 +1,27 @@
+node_modules/
+dist/
+data/
+.env
+test-results/
+playwright-report/
+*.log
+*.sqlite*
+artifacts/
+tools/*.exe
+.wrangler/
+.dev.vars
+# Local handoffs and generated material
+imports/
+exports/
+docs/game-prompts/qa/
+docs/game-prompts/Word/
+docs/game-prompts/Word-v2/
+*.zip
+*.pdf
+*.docx
+.env.*
+!.env.example
+.dev.vars*
+*.pem
+*.key
+coverage/

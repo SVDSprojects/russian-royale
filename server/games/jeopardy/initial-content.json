@@ -1,0 +1,585 @@
+{
+  "id": "demo",
+  "title": "Русский язык: экспедиция 01",
+  "revision": 1,
+  "status": "published",
+  "categories": [
+    {
+      "id": "glasnye",
+      "label": "Гласные",
+      "color": "#E6FF60"
+    },
+    {
+      "id": "znaki",
+      "label": "Ь и Ъ",
+      "color": "#FF8065"
+    },
+    {
+      "id": "pristavki",
+      "label": "Приставки",
+      "color": "#A4C3FF"
+    },
+    {
+      "id": "glagoly",
+      "label": "Глаголы",
+      "color": "#65DDCE"
+    },
+    {
+      "id": "punktuatsiya",
+      "label": "Пунктуация",
+      "color": "#FFE7A3"
+    }
+  ],
+  "questions": [
+    {
+      "id": "glasnye_1",
+      "ruleId": "glasnye",
+      "ruleIds": ["glasnye"],
+      "ruleUrl": "https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/glasnye-posle-shipyashchikh-i-ts",
+      "prompt": "Вставьте букву: ж_раф. Ответьте одной буквой.",
+      "options": [],
+      "acceptedAnswers": ["и"],
+      "explanation": "В сочетании жи пишется и: жираф.",
+      "difficulty": 1,
+      "revision": 1,
+      "status": "published",
+      "categoryId": "glasnye",
+      "cost": 100,
+      "normalization": {
+        "trim": true,
+        "caseFold": true,
+        "collapseSpaces": false,
+        "foldYo": false,
+        "stripPunctuation": false
+      }
+    },
+    {
+      "id": "glasnye_2",
+      "ruleId": "glasnye",
+      "ruleIds": ["glasnye"],
+      "ruleUrl": "https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/glasnye-posle-shipyashchikh-i-ts",
+      "prompt": "Вставьте букву: ч_до. Ответьте одной буквой.",
+      "options": [],
+      "acceptedAnswers": ["у"],
+      "explanation": "В сочетании чу пишется у: чудо.",
+      "difficulty": 1,
+      "revision": 1,
+      "status": "published",
+      "categoryId": "glasnye",
+      "cost": 200,
+      "normalization": {
+        "trim": true,
+        "caseFold": true,
+        "collapseSpaces": false,
+        "foldYo": false,
+        "stripPunctuation": false
+      }
+    },
+    {
+      "id": "glasnye_3",
+      "ruleId": "glasnye",
+      "ruleIds": ["glasnye"],
+      "ruleUrl": "https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/glasnye-posle-shipyashchikh-i-ts",
+      "prompt": "Вставьте букву: щ_вель. Ответьте одной буквой.",
+      "options": [],
+      "acceptedAnswers": ["а"],
+      "explanation": "В сочетании ща пишется а: щавель. Ударение падает на второй слог.",
+      "difficulty": 2,
+      "revision": 1,
+      "status": "published",
+      "categoryId": "glasnye",
+      "cost": 300,
+      "normalization": {
+        "trim": true,
+        "caseFold": true,
+        "collapseSpaces": false,
+        "foldYo": false,
+        "stripPunctuation": false
+      }
+    },
+    {
+      "id": "glasnye_4",
+      "ruleId": "glasnye",
+      "ruleIds": ["glasnye"],
+      "ruleUrl": "https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/glasnye-posle-shipyashchikh-i-ts",
+      "prompt": "Вставьте букву: ш_пот. Используйте ё, если она нужна.",
+      "options": [],
+      "acceptedAnswers": ["ё"],
+      "explanation": "В корне слова шёпот пишется ё: в слове шептать ей соответствует е.",
+      "difficulty": 2,
+      "revision": 1,
+      "status": "published",
+      "categoryId": "glasnye",
+      "cost": 400,
+      "normalization": {
+        "trim": true,
+        "caseFold": true,
+        "collapseSpaces": false,
+        "foldYo": false,
+        "stripPunctuation": false
+      }
+    },
+    {
+      "id": "glasnye_5",
+      "ruleId": "glasnye",
+      "ruleIds": ["glasnye"],
+      "ruleUrl": "https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/glasnye-posle-shipyashchikh-i-ts",
+      "prompt": "Запишите слово «ж_ри» целиком.",
+      "options": [],
+      "acceptedAnswers": ["жюри"],
+      "explanation": "Жюри — заимствованное слово; в нём сохраняется ю после ж.",
+      "difficulty": 3,
+      "revision": 1,
+      "status": "published",
+      "categoryId": "glasnye",
+      "cost": 500,
+      "normalization": {
+        "trim": true,
+        "caseFold": true,
+        "collapseSpaces": false,
+        "foldYo": false,
+        "stripPunctuation": false
+      }
+    },
+    {
+      "id": "znaki_1",
+      "ruleId": "znaki",
+      "ruleIds": ["znaki"],
+      "ruleUrl": "https://gramota.ru/spravka/vopros/326080",
+      "prompt": "Вставьте знак: сем_я.",
+      "options": [],
+      "acceptedAnswers": ["ь"],
+      "explanation": "В слове семья перед я пишется разделительный мягкий знак.",
+      "difficulty": 1,
+      "revision": 1,
+      "status": "published",
+      "categoryId": "znaki",
+      "cost": 100,
+      "normalization": {
+        "trim": true,
+        "caseFold": true,
+        "collapseSpaces": false,
+        "foldYo": false,
+        "stripPunctuation": false
+      }
+    },
+    {
+      "id": "znaki_2",
+      "ruleId": "znaki",
+      "ruleIds": ["znaki"],
+      "ruleUrl": "https://gramota.ru/spravka/vopros/326080",
+      "prompt": "Вставьте знак: под_езд.",
+      "options": [],
+      "acceptedAnswers": ["ъ"],
+      "explanation": "После приставки под-, оканчивающейся на согласный, перед е пишется ъ.",
+      "difficulty": 1,
+      "revision": 1,
+      "status": "published",
+      "categoryId": "znaki",
+      "cost": 200,
+      "normalization": {
+        "trim": true,
+        "caseFold": true,
+        "collapseSpaces": false,
+        "foldYo": false,
+        "stripPunctuation": false
+      }
+    },
+    {
+      "id": "znaki_3",
+      "ruleId": "znaki",
+      "ruleIds": ["znaki"],
+      "ruleUrl": "https://gramota.ru/spravka/vopros/326080",
+      "prompt": "Запишите правильно: об_явление.",
+      "options": [],
+      "acceptedAnswers": ["объявление"],
+      "explanation": "После приставки об- перед я пишется разделительный твёрдый знак.",
+      "difficulty": 2,
+      "revision": 1,
+      "status": "published",
+      "categoryId": "znaki",
+      "cost": 300,
+      "normalization": {
+        "trim": true,
+        "caseFold": true,
+        "collapseSpaces": false,
+        "foldYo": false,
+        "stripPunctuation": false
+      }
+    },
+    {
+      "id": "znaki_4",
+      "ruleId": "znaki",
+      "ruleIds": ["znaki"],
+      "ruleUrl": "https://gramota.ru/spravka/vopros/326080",
+      "prompt": "Запишите правильно: в_юга.",
+      "options": [],
+      "acceptedAnswers": ["вьюга"],
+      "explanation": "Разделительный ь пишется внутри корня перед ю: вьюга.",
+      "difficulty": 2,
+      "revision": 1,
+      "status": "published",
+      "categoryId": "znaki",
+      "cost": 400,
+      "normalization": {
+        "trim": true,
+        "caseFold": true,
+        "collapseSpaces": false,
+        "foldYo": false,
+        "stripPunctuation": false
+      }
+    },
+    {
+      "id": "znaki_5",
+      "ruleId": "znaki",
+      "ruleIds": ["znaki"],
+      "ruleUrl": "https://gramota.ru/spravka/vopros/326080",
+      "prompt": "Запишите правильно: меж_языковой.",
+      "options": [],
+      "acceptedAnswers": ["межъязыковой"],
+      "explanation": "После приставки меж-, которая оканчивается на согласный, перед я пишется ъ.",
+      "difficulty": 3,
+      "revision": 1,
+      "status": "published",
+      "categoryId": "znaki",
+      "cost": 500,
+      "normalization": {
+        "trim": true,
+        "caseFold": true,
+        "collapseSpaces": false,
+        "foldYo": false,
+        "stripPunctuation": false
+      }
+    },
+    {
+      "id": "pristavki_1",
+      "ruleId": "pristavki",
+      "ruleIds": ["pristavki"],
+      "ruleUrl": "https://gramota.ru/uchebnik/pravila/pristavki-na-z-s",
+      "prompt": "Вставьте букву: бе_домный.",
+      "options": [],
+      "acceptedAnswers": ["з"],
+      "explanation": "В приставке без- перед звонким д пишется з.",
+      "difficulty": 1,
+      "revision": 1,
+      "status": "published",
+      "categoryId": "pristavki",
+      "cost": 100,
+      "normalization": {
+        "trim": true,
+        "caseFold": true,
+        "collapseSpaces": false,
+        "foldYo": false,
+        "stripPunctuation": false
+      }
+    },
+    {
+      "id": "pristavki_2",
+      "ruleId": "pristavki",
+      "ruleIds": ["pristavki"],
+      "ruleUrl": "https://gramota.ru/uchebnik/pravila/pristavki-na-z-s",
+      "prompt": "Вставьте букву: бе_полезный.",
+      "options": [],
+      "acceptedAnswers": ["с"],
+      "explanation": "Перед глухим п в приставке бес- пишется с.",
+      "difficulty": 1,
+      "revision": 1,
+      "status": "published",
+      "categoryId": "pristavki",
+      "cost": 200,
+      "normalization": {
+        "trim": true,
+        "caseFold": true,
+        "collapseSpaces": false,
+        "foldYo": false,
+        "stripPunctuation": false
+      }
+    },
+    {
+      "id": "pristavki_3",
+      "ruleId": "pristavki",
+      "ruleIds": ["pristavki"],
+      "ruleUrl": "https://gramota.ru/uchebnik/pravila/pristavki-na-z-s",
+      "prompt": "Запишите правильно: ра_сказ.",
+      "options": [],
+      "acceptedAnswers": ["рассказ"],
+      "explanation": "Перед глухим с выбирается приставка рас-. На стыке приставки и корня получается сс.",
+      "difficulty": 2,
+      "revision": 1,
+      "status": "published",
+      "categoryId": "pristavki",
+      "cost": 300,
+      "normalization": {
+        "trim": true,
+        "caseFold": true,
+        "collapseSpaces": false,
+        "foldYo": false,
+        "stripPunctuation": false
+      }
+    },
+    {
+      "id": "pristavki_4",
+      "ruleId": "pristavki",
+      "ruleIds": ["pristavki"],
+      "ruleUrl": "https://gramota.ru/uchebnik/pravila/pristavki-na-z-s",
+      "prompt": "Вставьте букву: ра_будить.",
+      "options": [],
+      "acceptedAnswers": ["з"],
+      "explanation": "Перед звонким б приставка раз- оканчивается на з.",
+      "difficulty": 2,
+      "revision": 1,
+      "status": "published",
+      "categoryId": "pristavki",
+      "cost": 400,
+      "normalization": {
+        "trim": true,
+        "caseFold": true,
+        "collapseSpaces": false,
+        "foldYo": false,
+        "stripPunctuation": false
+      }
+    },
+    {
+      "id": "pristavki_5",
+      "ruleId": "pristavki",
+      "ruleIds": ["pristavki"],
+      "ruleUrl": "https://gramota.ru/uchebnik/pravila/pristavki-na-z-s",
+      "prompt": "Запишите правильно: бе_шумный.",
+      "options": [],
+      "acceptedAnswers": ["бесшумный"],
+      "explanation": "В приставке бес- перед глухим ш пишется с; в слове сохраняется сочетание сш.",
+      "difficulty": 3,
+      "revision": 1,
+      "status": "published",
+      "categoryId": "pristavki",
+      "cost": 500,
+      "normalization": {
+        "trim": true,
+        "caseFold": true,
+        "collapseSpaces": false,
+        "foldYo": false,
+        "stripPunctuation": false
+      }
+    },
+    {
+      "id": "glagoly_1",
+      "ruleId": "glagoly",
+      "ruleIds": ["glagoly"],
+      "ruleUrl": "https://gramota.ru/uchebnik",
+      "prompt": "Выберите форму: Он … каждый день. (учится / учиться)",
+      "options": [],
+      "acceptedAnswers": ["учится"],
+      "explanation": "Он что делает? Учится. В форме третьего лица мягкого знака перед -ся нет.",
+      "difficulty": 1,
+      "revision": 1,
+      "status": "published",
+      "categoryId": "glagoly",
+      "cost": 100,
+      "normalization": {
+        "trim": true,
+        "caseFold": true,
+        "collapseSpaces": false,
+        "foldYo": false,
+        "stripPunctuation": false
+      }
+    },
+    {
+      "id": "glagoly_2",
+      "ruleId": "glagoly",
+      "ruleIds": ["glagoly"],
+      "ruleUrl": "https://gramota.ru/uchebnik",
+      "prompt": "Выберите форму: Нужно … внимательно. (учится / учиться)",
+      "options": [],
+      "acceptedAnswers": ["учиться"],
+      "explanation": "Нужно что делать? Учиться. В неопределённой форме перед -ся сохраняется ь.",
+      "difficulty": 1,
+      "revision": 1,
+      "status": "published",
+      "categoryId": "glagoly",
+      "cost": 200,
+      "normalization": {
+        "trim": true,
+        "caseFold": true,
+        "collapseSpaces": false,
+        "foldYo": false,
+        "stripPunctuation": false
+      }
+    },
+    {
+      "id": "glagoly_3",
+      "ruleId": "glagoly",
+      "ruleIds": ["glagoly"],
+      "ruleUrl": "https://gramota.ru/uchebnik",
+      "prompt": "Запишите глагол: Ты читаеш_ книгу.",
+      "options": [],
+      "acceptedAnswers": ["читаешь"],
+      "explanation": "В окончании второго лица единственного числа после ш пишется ь.",
+      "difficulty": 2,
+      "revision": 1,
+      "status": "published",
+      "categoryId": "glagoly",
+      "cost": 300,
+      "normalization": {
+        "trim": true,
+        "caseFold": true,
+        "collapseSpaces": false,
+        "foldYo": false,
+        "stripPunctuation": false
+      }
+    },
+    {
+      "id": "glagoly_4",
+      "ruleId": "glagoly",
+      "ruleIds": ["glagoly"],
+      "ruleUrl": "https://gramota.ru/uchebnik",
+      "prompt": "Выберите форму: Он хочет … домой. (вернуться / вернётся)",
+      "options": [],
+      "acceptedAnswers": ["вернуться"],
+      "explanation": "Хочет что сделать? Вернуться. Здесь нужна неопределённая форма с -ться.",
+      "difficulty": 2,
+      "revision": 1,
+      "status": "published",
+      "categoryId": "glagoly",
+      "cost": 400,
+      "normalization": {
+        "trim": true,
+        "caseFold": true,
+        "collapseSpaces": false,
+        "foldYo": false,
+        "stripPunctuation": false
+      }
+    },
+    {
+      "id": "glagoly_5",
+      "ruleId": "glagoly",
+      "ruleIds": ["glagoly"],
+      "ruleUrl": "https://gramota.ru/uchebnik",
+      "prompt": "Запишите множественное число повелительной формы «спрячь».",
+      "options": [],
+      "acceptedAnswers": ["спрячьте"],
+      "explanation": "В повелительной форме спрячь мягкий знак сохраняется перед -те: спрячьте.",
+      "difficulty": 3,
+      "revision": 1,
+      "status": "published",
+      "categoryId": "glagoly",
+      "cost": 500,
+      "normalization": {
+        "trim": true,
+        "caseFold": true,
+        "collapseSpaces": false,
+        "foldYo": false,
+        "stripPunctuation": false
+      }
+    },
+    {
+      "id": "punktuatsiya_1",
+      "ruleId": "punktuatsiya",
+      "ruleIds": ["punktuatsiya"],
+      "ruleUrl": "https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/znaki-prepinaniya-pri-odnorodnykh-chlenakh-predlozheniya",
+      "prompt": "Нужна ли запятая перед «и»: «Мы взяли карту и компас»? Ответьте «да» или «нет».",
+      "options": [],
+      "acceptedAnswers": ["нет"],
+      "explanation": "Одиночный союз и соединяет два однородных дополнения. Запятая между ними не ставится.",
+      "difficulty": 1,
+      "revision": 1,
+      "status": "published",
+      "categoryId": "punktuatsiya",
+      "cost": 100,
+      "normalization": {
+        "trim": true,
+        "caseFold": true,
+        "collapseSpaces": false,
+        "foldYo": false,
+        "stripPunctuation": false
+      }
+    },
+    {
+      "id": "punktuatsiya_2",
+      "ruleId": "punktuatsiya",
+      "ruleIds": ["punktuatsiya"],
+      "ruleUrl": "https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/znaki-prepinaniya-pri-odnorodnykh-chlenakh-predlozheniya",
+      "prompt": "Какой знак нужен вместо пропуска: «Ветер холодный _ но слабый»? Назовите знак.",
+      "options": [],
+      "acceptedAnswers": ["запятая"],
+      "explanation": "Между однородными членами перед противительным союзом но ставится запятая.",
+      "difficulty": 1,
+      "revision": 1,
+      "status": "published",
+      "categoryId": "punktuatsiya",
+      "cost": 200,
+      "normalization": {
+        "trim": true,
+        "caseFold": true,
+        "collapseSpaces": false,
+        "foldYo": false,
+        "stripPunctuation": false
+      }
+    },
+    {
+      "id": "punktuatsiya_3",
+      "ruleId": "punktuatsiya",
+      "ruleIds": ["punktuatsiya"],
+      "ruleUrl": "https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/znaki-prepinaniya-pri-odnorodnykh-chlenakh-predlozheniya",
+      "prompt": "Сколько запятых нужно: «Мы взяли карандаш тетрадь линейку»? Ответьте цифрой.",
+      "options": [],
+      "acceptedAnswers": ["2"],
+      "explanation": "Три однородных дополнения без союзов отделяются друг от друга: карандаш, тетрадь, линейку.",
+      "difficulty": 2,
+      "revision": 1,
+      "status": "published",
+      "categoryId": "punktuatsiya",
+      "cost": 300,
+      "normalization": {
+        "trim": true,
+        "caseFold": true,
+        "collapseSpaces": false,
+        "foldYo": false,
+        "stripPunctuation": false
+      }
+    },
+    {
+      "id": "punktuatsiya_4",
+      "ruleId": "punktuatsiya",
+      "ruleIds": ["punktuatsiya"],
+      "ruleUrl": "https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/znaki-prepinaniya-pri-odnorodnykh-chlenakh-predlozheniya",
+      "prompt": "Нужна ли запятая перед «а»: «Он выбрал не остров, а берег»? Ответьте «да» или «нет».",
+      "options": [],
+      "acceptedAnswers": ["да"],
+      "explanation": "Перед противительным союзом а между однородными членами ставится запятая.",
+      "difficulty": 2,
+      "revision": 1,
+      "status": "published",
+      "categoryId": "punktuatsiya",
+      "cost": 400,
+      "normalization": {
+        "trim": true,
+        "caseFold": true,
+        "collapseSpaces": false,
+        "foldYo": false,
+        "stripPunctuation": false
+      }
+    },
+    {
+      "id": "punktuatsiya_5",
+      "ruleId": "punktuatsiya",
+      "ruleIds": ["punktuatsiya"],
+      "ruleUrl": "https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/znaki-prepinaniya-pri-odnorodnykh-chlenakh-predlozheniya",
+      "prompt": "Сколько запятых нужно: «Мы взяли и карту и компас и фонарь»? Ответьте цифрой.",
+      "options": [],
+      "acceptedAnswers": ["2"],
+      "explanation": "Повторяющийся союз и связывает три однородных дополнения: и карту, и компас, и фонарь. Перед первым и запятой нет.",
+      "difficulty": 3,
+      "revision": 1,
+      "status": "published",
+      "categoryId": "punktuatsiya",
+      "cost": 500,
+      "normalization": {
+        "trim": true,
+        "caseFold": true,
+        "collapseSpaces": false,
+        "foldYo": false,
+        "stripPunctuation": false
+      }
+    }
+  ]
+}

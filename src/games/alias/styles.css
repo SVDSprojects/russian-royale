@@ -1,0 +1,407 @@
+/* «Alias» — «Фабрика смыслов». Все правила ограничены корнем .rr-game-alias. */
+
+.rr-game-alias {
+  --rr-alias-crimson: #d63970;
+  --rr-alias-crimson-text: #ff7aa6;
+  --rr-alias-crimson-ink: #a8295a;
+  --rr-alias-vanilla: #fff3c4;
+  --rr-alias-sky: #b8e8ff;
+  --rr-alias-dark: #322741;
+  --rr-alias-dark-deep: #241c30;
+  --rr-alias-ink: #322741;
+  --rr-alias-muted: #d9cde8;
+  --rr-alias-line: rgba(255, 243, 196, 0.24);
+  --rr-alias-radius: 16px;
+  --rr-alias-ui: 200ms;
+  --rr-alias-box: 350ms;
+  --rr-alias-reveal: 450ms;
+  --rr-alias-font: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --rr-alias-display: "Unbounded", "Manrope", system-ui, sans-serif;
+
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 100%;
+  padding: clamp(12px, 3vw, 28px);
+  color: var(--rr-alias-vanilla);
+  background: linear-gradient(180deg, var(--rr-alias-dark) 0%, var(--rr-alias-dark-deep) 100%);
+  font-family: var(--rr-alias-font);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.rr-game-alias *,
+.rr-game-alias *::before,
+.rr-game-alias *::after {
+  box-sizing: border-box;
+}
+
+.rr-game-alias h1,
+.rr-game-alias h2,
+.rr-game-alias h3,
+.rr-game-alias h4 {
+  margin: 0 0 8px;
+  font-family: var(--rr-alias-display);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--rr-alias-vanilla);
+}
+.rr-game-alias h2 { font-size: clamp(20px, 3.4vw, 30px); }
+.rr-game-alias h3 { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 18px; }
+.rr-game-alias p { margin: 0 0 8px; }
+.rr-game-alias ul,
+.rr-game-alias ol { margin: 0; padding: 0; list-style: none; }
+.rr-game-alias svg { flex-shrink: 0; }
+.rr-game-alias :focus-visible { outline: 3px solid var(--rr-alias-sky); outline-offset: 3px; }
+
+.rr-game-alias .rr-alias-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.rr-game-alias .rr-alias-kicker { margin: 0 0 4px; color: var(--rr-alias-crimson-text); font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+.rr-game-alias .rr-alias-muted { color: var(--rr-alias-muted); font-size: 14px; }
+.rr-game-alias .rr-alias-bad { color: var(--rr-alias-crimson-text); }
+.rr-game-alias .rr-alias-success { color: var(--rr-alias-sky); font-weight: 700; }
+.rr-game-alias .rr-alias-warning-text { color: var(--rr-alias-crimson-text); font-weight: 700; }
+
+/* ---------- раскладка ---------- */
+
+.rr-game-alias .rr-alias-top { position: relative; z-index: 1; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.rr-game-alias .rr-alias-top-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.rr-game-alias .rr-alias-layout { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(260px, 360px) minmax(0, 1fr); gap: 16px; align-items: start; }
+.rr-game-alias .rr-alias-stack { position: relative; z-index: 1; display: grid; gap: 16px; min-width: 0; }
+.rr-game-alias .rr-alias-card {
+  position: relative;
+  z-index: 1;
+  padding: 16px;
+  border: 1px solid var(--rr-alias-line);
+  border-radius: var(--rr-alias-radius);
+  background: rgba(36, 28, 48, 0.82);
+}
+.rr-game-alias .rr-alias-warning { border: 2px solid var(--rr-alias-crimson); margin-bottom: 16px; }
+.rr-game-alias .rr-alias-step { position: relative; z-index: 1; margin-bottom: 16px; padding: 12px 16px; border-left: 4px solid var(--rr-alias-sky); border-radius: 12px; background: rgba(184, 232, 255, 0.08); }
+.rr-game-alias .rr-alias-step.is-turn { border-color: var(--rr-alias-crimson); color: var(--rr-alias-vanilla); font-weight: 700; }
+
+/* ---------- кнопки и поля ---------- */
+
+.rr-game-alias button,
+.rr-game-alias input,
+.rr-game-alias select,
+.rr-game-alias textarea { font: inherit; }
+
+.rr-game-alias .rr-alias-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 10px 18px;
+  border: 2px solid var(--rr-alias-crimson);
+  border-radius: 12px;
+  background: var(--rr-alias-vanilla);
+  color: var(--rr-alias-ink);
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 0 var(--rr-alias-crimson);
+  transition: transform var(--rr-alias-ui) ease, box-shadow var(--rr-alias-ui) ease;
+}
+.rr-game-alias .rr-alias-btn:hover:not(:disabled) { transform: translateY(-1px); }
+.rr-game-alias .rr-alias-btn:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 2px 0 var(--rr-alias-crimson); }
+.rr-game-alias .rr-alias-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.rr-game-alias .rr-alias-btn--accent { background: var(--rr-alias-sky); }
+.rr-game-alias .rr-alias-btn--ghost { background: transparent; color: var(--rr-alias-vanilla); box-shadow: none; }
+.rr-game-alias .rr-alias-btn--danger { background: #f0a6c2; }
+
+.rr-game-alias .rr-alias-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--rr-alias-line);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--rr-alias-vanilla);
+  cursor: pointer;
+}
+.rr-game-alias .rr-alias-icon-label { font-size: 14px; }
+.rr-game-alias .rr-alias-link { min-height: 44px; padding: 0 4px; border: 0; background: none; color: var(--rr-alias-crimson-text); text-decoration: underline; cursor: pointer; }
+.rr-game-alias .rr-alias-chip-btn {
+  min-width: 44px;
+  min-height: 44px;
+  margin: 0 6px 6px 0;
+  border: 2px solid var(--rr-alias-line);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--rr-alias-vanilla);
+  font-weight: 800;
+  cursor: pointer;
+}
+.rr-game-alias .rr-alias-chip-btn.is-on { border-color: var(--rr-alias-sky); background: var(--rr-alias-sky); color: var(--rr-alias-ink); }
+.rr-game-alias .rr-alias-stepper { margin: 4px 0; padding: 0; border: 0; }
+.rr-game-alias .rr-alias-stepper legend { margin-bottom: 4px; font-weight: 700; }
+
+.rr-game-alias input:not([type="checkbox"]):not([type="file"]),
+.rr-game-alias select,
+.rr-game-alias textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 2px solid var(--rr-alias-line);
+  border-radius: 12px;
+  background: var(--rr-alias-vanilla);
+  color: var(--rr-alias-ink);
+}
+.rr-game-alias label { display: block; margin: 8px 0 4px; font-weight: 700; }
+.rr-game-alias .rr-alias-input-row { display: flex; gap: 8px; align-items: center; }
+.rr-game-alias .rr-alias-controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.rr-game-alias .rr-alias-controls > .rr-alias-blockers,
+.rr-game-alias .rr-alias-controls > p,
+.rr-game-alias .rr-alias-controls > fieldset,
+.rr-game-alias .rr-alias-controls > .rr-alias-error { flex-basis: 100%; }
+.rr-game-alias .rr-alias-blockers li::before { content: "• "; color: var(--rr-alias-crimson-text); }
+.rr-game-alias .rr-alias-confirm { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+.rr-game-alias .rr-alias-error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: #f0a6c2;
+  color: var(--rr-alias-ink);
+  font-weight: 700;
+  animation: rr-alias-rise var(--rr-alias-ui) ease-out;
+}
+.rr-game-alias .rr-alias-error .rr-alias-icon-btn { border-color: var(--rr-alias-ink); color: var(--rr-alias-ink); }
+.rr-game-alias .rr-alias-banner { position: relative; z-index: 2; display: flex; align-items: center; gap: 10px; margin-bottom: 12px; padding: 10px 14px; border-radius: 12px; color: var(--rr-alias-ink); font-weight: 700; }
+.rr-game-alias .rr-alias-banner--ok { background: var(--rr-alias-sky); }
+.rr-game-alias .rr-alias-banner--warn { background: var(--rr-alias-vanilla); }
+.rr-game-alias .rr-alias-banner--bad { background: #f0a6c2; }
+.rr-game-alias .rr-alias-dot { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--rr-alias-vanilla); border-radius: 50%; }
+.rr-game-alias .rr-alias-dot--online { background: var(--rr-alias-sky); }
+.rr-game-alias .rr-alias-dot--reconnecting { background: var(--rr-alias-vanilla); }
+.rr-game-alias .rr-alias-dot--offline { background: var(--rr-alias-crimson); }
+.rr-game-alias .rr-alias-tag { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px; background: var(--rr-alias-sky); color: var(--rr-alias-ink); font-size: 12px; font-weight: 800; }
+.rr-game-alias .rr-alias-tag--muted { background: var(--rr-alias-vanilla); }
+.rr-game-alias .rr-alias-tag--bad { background: #f0a6c2; }
+.rr-game-alias .rr-alias-tag--warn { background: #ffd28e; }
+
+/* ---------- манометр ---------- */
+
+.rr-game-alias .rr-alias-gauge { position: relative; width: 64px; height: 64px; }
+.rr-game-alias .rr-alias-gauge--large { width: 112px; height: 112px; }
+.rr-game-alias .rr-alias-gauge svg { width: 100%; height: 100%; }
+.rr-game-alias .rr-alias-gauge-rim { fill: var(--rr-alias-crimson); }
+.rr-game-alias .rr-alias-gauge-face { fill: var(--rr-alias-vanilla); }
+.rr-game-alias .rr-alias-gauge-tick { stroke: var(--rr-alias-ink); stroke-width: 2; }
+.rr-game-alias .rr-alias-gauge-zone { fill: none; stroke: var(--rr-alias-sky); stroke-width: 6; }
+.rr-game-alias .rr-alias-gauge-needle { stroke: var(--rr-alias-crimson-ink); stroke-width: 4; stroke-linecap: round; transform-origin: 60px 60px; transition: transform 250ms linear; }
+.rr-game-alias .rr-alias-gauge-hub { fill: var(--rr-alias-ink); }
+.rr-game-alias .rr-alias-gauge span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 18%;
+  color: var(--rr-alias-ink);
+  font-family: var(--rr-alias-display);
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+}
+.rr-game-alias .rr-alias-gauge--large span { font-size: 18px; }
+
+/* ---------- команды и игроки ---------- */
+
+.rr-game-alias .rr-alias-badge { display: inline-flex; align-items: center; gap: 6px; font-weight: 800; }
+.rr-game-alias .rr-alias-teams { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
+.rr-game-alias .rr-alias-team { border-top: 6px solid var(--rr-alias-crimson); }
+.rr-game-alias .rr-alias-players { display: grid; gap: 6px; }
+.rr-game-alias .rr-alias-player { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-height: 48px; padding: 4px 6px; border-radius: 12px; }
+.rr-game-alias .rr-alias-player.is-offline { opacity: 0.7; }
+.rr-game-alias .rr-alias-player--empty { color: var(--rr-alias-muted); border: 2px dashed var(--rr-alias-line); }
+.rr-game-alias .rr-alias-player-name { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.rr-game-alias .rr-alias-avatar { display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; background: var(--rr-alias-vanilla); color: var(--rr-alias-ink); font-size: 12px; font-weight: 800; }
+.rr-game-alias .rr-alias-ready { padding: 2px 10px; border: 1px solid var(--rr-alias-line); border-radius: 999px; font-size: 13px; }
+.rr-game-alias .rr-alias-ready.is-ready { border-color: var(--rr-alias-sky); color: var(--rr-alias-sky); }
+.rr-game-alias .rr-alias-move { display: inline-flex; gap: 4px; }
+
+.rr-game-alias .rr-alias-wagons { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 16px; }
+.rr-game-alias .rr-alias-wagon {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 4px 8px;
+  padding: 10px 14px 18px;
+  border: 3px solid var(--rr-alias-crimson);
+  border-radius: 12px 12px 4px 4px;
+  background: rgba(255, 243, 196, 0.06);
+  background-image: radial-gradient(circle at 20% 100%, var(--rr-alias-vanilla) 0 6px, transparent 7px), radial-gradient(circle at 80% 100%, var(--rr-alias-vanilla) 0 6px, transparent 7px);
+}
+.rr-game-alias .rr-alias-wagon.is-active { background-color: rgba(184, 232, 255, 0.14); }
+.rr-game-alias .rr-alias-wagon.is-winner { background-color: rgba(255, 243, 196, 0.18); }
+.rr-game-alias .rr-alias-wagon-score { font-family: var(--rr-alias-display); font-size: 26px; }
+.rr-game-alias .rr-alias-wagon-members { grid-column: 1 / -1; overflow-wrap: anywhere; }
+
+/* ---------- конвейер и коробки ---------- */
+
+.rr-game-alias .rr-alias-stage { display: grid; gap: 16px; }
+.rr-game-alias .rr-alias-conveyor { position: relative; padding-top: 8px; }
+.rr-game-alias .rr-alias-conveyor-slot { position: relative; display: flex; justify-content: center; min-height: 84px; }
+.rr-game-alias .rr-alias-belt { display: block; width: 100%; height: 36px; }
+.rr-game-alias .rr-alias-belt-body { fill: var(--rr-alias-dark-deep); stroke: var(--rr-alias-crimson); stroke-width: 2; }
+.rr-game-alias .rr-alias-belt-stripes { stroke: var(--rr-alias-vanilla); stroke-width: 3; stroke-dasharray: 10 14; opacity: 0.5; }
+.rr-game-alias .rr-alias-conveyor.is-moving .rr-alias-belt-stripes { animation: rr-alias-belt 1.6s linear infinite; }
+.rr-game-alias .rr-alias-belt-roller { fill: var(--rr-alias-sky); }
+.rr-game-alias .rr-alias-crate {
+  display: grid;
+  place-items: center;
+  width: 84px;
+  height: 76px;
+  border: 3px solid var(--rr-alias-crimson);
+  border-radius: 8px;
+  background: repeating-linear-gradient(90deg, var(--rr-alias-vanilla) 0 18px, #f6e6a6 18px 22px);
+  color: var(--rr-alias-ink);
+  font-family: var(--rr-alias-display);
+  font-size: 30px;
+  animation: rr-alias-arrive var(--rr-alias-box) ease-out;
+}
+.rr-game-alias .rr-alias-crate--leaving { position: absolute; top: 0; pointer-events: none; }
+.rr-game-alias .rr-alias-crate--to-wagon { animation: rr-alias-to-wagon var(--rr-alias-box) ease-in forwards; }
+.rr-game-alias .rr-alias-crate--to-siding { animation: rr-alias-to-siding var(--rr-alias-box) ease-in forwards; }
+.rr-game-alias .rr-alias-boxes { display: flex; flex-wrap: wrap; gap: 8px; }
+.rr-game-alias .rr-alias-box { display: grid; padding: 6px 12px; border: 2px solid var(--rr-alias-crimson); border-radius: 6px; background: var(--rr-alias-vanilla); color: var(--rr-alias-ink); font-weight: 800; animation: rr-alias-rise var(--rr-alias-box) ease-out; }
+.rr-game-alias .rr-alias-box small { color: var(--rr-alias-crimson-ink); font-weight: 700; }
+.rr-game-alias .rr-alias-box--skipped { border-style: dashed; background: #f0a6c2; }
+.rr-game-alias .rr-alias-box--expired { background: var(--rr-alias-sky); }
+.rr-game-alias .rr-alias-lanes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+
+/* ---------- окошко объясняющего, облака, ответы ---------- */
+
+.rr-game-alias .rr-alias-window {
+  margin-bottom: 12px;
+  padding: 14px;
+  border: 4px solid var(--rr-alias-sky);
+  border-radius: 18px;
+  background: var(--rr-alias-vanilla);
+  color: var(--rr-alias-ink);
+  animation: rr-alias-rise var(--rr-alias-reveal) ease-out;
+}
+.rr-game-alias .rr-alias-window .rr-alias-kicker { color: var(--rr-alias-crimson-ink); }
+.rr-game-alias .rr-alias-term { margin: 0 0 10px; font-family: var(--rr-alias-display); font-size: clamp(22px, 4vw, 34px); font-weight: 700; overflow-wrap: anywhere; }
+.rr-game-alias .rr-alias-labels { display: flex; flex-wrap: wrap; gap: 6px; }
+.rr-game-alias .rr-alias-labels li { padding: 4px 10px; border-radius: 6px; background: var(--rr-alias-crimson-ink); color: #ffffff; font-weight: 800; font-size: 14px; }
+.rr-game-alias .rr-alias-labels li::before { content: "🚫 "; }
+.rr-game-alias .rr-alias-clouds ol { display: grid; gap: 10px; max-height: 260px; overflow-y: auto; }
+.rr-game-alias .rr-alias-cloud {
+  position: relative;
+  justify-self: start;
+  max-width: 100%;
+  padding: 10px 16px;
+  border-radius: 22px 22px 22px 6px;
+  background: var(--rr-alias-sky);
+  color: var(--rr-alias-ink);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+  animation: rr-alias-rise var(--rr-alias-ui) ease-out;
+}
+.rr-game-alias .rr-alias-guesses { display: grid; gap: 4px; margin-top: 10px; }
+.rr-game-alias .rr-alias-guesses li { overflow-wrap: anywhere; }
+.rr-game-alias .rr-alias-guesses li.is-correct { color: var(--rr-alias-sky); font-weight: 800; }
+.rr-game-alias .rr-alias-prepare { text-align: center; }
+.rr-game-alias .rr-alias-prepare h3 { justify-content: center; font-size: 24px; }
+
+/* ---------- финал ---------- */
+
+.rr-game-alias .rr-alias-final { display: grid; gap: 16px; }
+.rr-game-alias .rr-alias-verdict { display: flex; gap: 14px; align-items: flex-start; border: 2px solid var(--rr-alias-sky); animation: rr-alias-rise var(--rr-alias-reveal) ease-out; }
+.rr-game-alias .rr-alias-defs { display: grid; gap: 8px; margin: 0 0 12px; }
+.rr-game-alias .rr-alias-defs dt { font-weight: 800; }
+.rr-game-alias .rr-alias-defs dd { margin: 0; color: var(--rr-alias-muted); }
+
+/* ---------- каталог, комната, админка ---------- */
+
+.rr-game-alias .rr-alias-cover { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 20px; align-items: center; margin-bottom: 20px; }
+.rr-game-alias .rr-alias-cover img { width: 100%; height: auto; border-radius: var(--rr-alias-radius); }
+.rr-game-alias .rr-alias-rooms li { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--rr-alias-line); }
+.rr-game-alias .rr-alias-rules summary { min-height: 44px; display: flex; align-items: center; font-weight: 800; cursor: pointer; }
+.rr-game-alias .rr-alias-rules ol { list-style: decimal; padding-left: 20px; }
+.rr-game-alias .rr-alias-rules li { margin-bottom: 6px; }
+.rr-game-alias.rr-alias-joinbar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; min-height: auto; padding: 12px 20px; border-bottom: 1px solid var(--rr-alias-line); }
+.rr-game-alias.rr-alias-placeholder { display: grid; place-items: center; min-height: 60vh; }
+.rr-game-alias .rr-alias-loading { position: relative; z-index: 1; display: flex; gap: 10px; align-items: center; }
+.rr-game-alias .rr-alias-admin-grid { display: grid; grid-template-columns: minmax(220px, 300px) minmax(0, 1fr); gap: 16px; align-items: start; }
+.rr-game-alias .rr-alias-admin-list { display: grid; gap: 4px; max-height: 70vh; margin-top: 8px; overflow-y: auto; }
+.rr-game-alias .rr-alias-admin-item { display: flex; flex-wrap: wrap; gap: 4px; width: 100%; min-height: 44px; padding: 8px 10px; border: 1px solid transparent; border-radius: 10px; background: transparent; color: var(--rr-alias-vanilla); text-align: left; cursor: pointer; }
+.rr-game-alias .rr-alias-admin-item.is-selected { border-color: var(--rr-alias-sky); }
+.rr-game-alias .rr-alias-list-field { margin: 8px 0; padding: 0; border: 0; }
+.rr-game-alias .rr-alias-list-field legend { font-weight: 800; }
+.rr-game-alias .rr-alias-list-field .rr-alias-input-row { margin-bottom: 6px; }
+.rr-game-alias .rr-alias-spin { animation: rr-alias-spin 1s linear infinite; }
+
+/* ---------- декор фабрики ---------- */
+
+.rr-game-alias .rr-alias-backdrop { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; pointer-events: none; }
+.rr-game-alias .rr-alias-pipe { fill: none; stroke: rgba(184, 232, 255, 0.05); stroke-width: 10; stroke-linejoin: round; }
+.rr-game-alias .rr-alias-gear { fill: rgba(214, 57, 112, 0.16); animation: rr-alias-turn 30s linear infinite; }
+.rr-game-alias .rr-alias-gear--reverse { animation-direction: reverse; animation-duration: 20s; }
+.rr-game-alias .rr-alias-gear-hole { fill: var(--rr-alias-dark); }
+.rr-game-alias.is-paused .rr-alias-gear,
+.rr-game-alias.is-paused .rr-alias-belt-stripes { animation-play-state: paused; }
+
+/* ---------- анимации: короткие и прерываемые ---------- */
+
+@keyframes rr-alias-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes rr-alias-arrive {
+  from { opacity: 0; transform: translateX(-60px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes rr-alias-to-wagon {
+  to { opacity: 0; transform: translateY(80px) scale(0.6); }
+}
+@keyframes rr-alias-to-siding {
+  to { opacity: 0; transform: translateX(160px) rotate(12deg); }
+}
+@keyframes rr-alias-belt { to { stroke-dashoffset: -48; } }
+@keyframes rr-alias-turn { to { transform: rotate(360deg); } }
+@keyframes rr-alias-spin { to { transform: rotate(360deg); } }
+
+/* Телефон: конвейер сокращается до одной карточки, всё в одну колонку. */
+@media (max-width: 760px) {
+  .rr-game-alias .rr-alias-layout,
+  .rr-game-alias .rr-alias-admin-grid,
+  .rr-game-alias .rr-alias-cover,
+  .rr-game-alias .rr-alias-lanes { grid-template-columns: minmax(0, 1fr); }
+  .rr-game-alias .rr-alias-belt { height: 22px; }
+  .rr-game-alias .rr-alias-delivered .rr-alias-box:not(:last-child) { display: none; }
+  .rr-game-alias .rr-alias-wagons { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .rr-game-alias .rr-alias-wagon-members { display: none; }
+  .rr-game-alias .rr-alias-gauge--large { width: 84px; height: 84px; }
+  .rr-game-alias .rr-alias-icon-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .rr-game-alias .rr-alias-input-row { flex-wrap: wrap; }
+  .rr-game-alias .rr-alias-input-row .rr-alias-btn { flex: 1 1 auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rr-game-alias *,
+  .rr-game-alias *::before,
+  .rr-game-alias *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+  .rr-game-alias .rr-alias-gear,
+  .rr-game-alias .rr-alias-belt-stripes { animation: none !important; }
+}

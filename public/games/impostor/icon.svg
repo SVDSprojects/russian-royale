@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Самозванец">
+  <rect width="64" height="64" rx="16" fill="#39245a"/>
+  <ellipse cx="32" cy="34" rx="27" ry="10" fill="none" stroke="#e6d7ff" stroke-opacity=".5" stroke-width="2" stroke-dasharray="3 4"/>
+  <circle cx="26" cy="33" r="14" fill="#e6d7ff"/>
+  <circle cx="38" cy="33" r="14" fill="#ff8ebd" fill-opacity=".75"/>
+  <circle cx="52" cy="14" r="4" fill="#e9ff79"/>
+</svg>

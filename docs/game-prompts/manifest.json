@@ -1,0 +1,56 @@
+[
+  {
+    "file": "01_mafia_Промт.docx",
+    "gameId": "mafia",
+    "name": "Мафия",
+    "paragraphs": 65
+  },
+  {
+    "file": "02_bunker_Промт.docx",
+    "gameId": "bunker",
+    "name": "Бункер",
+    "paragraphs": 65
+  },
+  {
+    "file": "03_durak_Промт.docx",
+    "gameId": "durak",
+    "name": "Дурак",
+    "paragraphs": 65
+  },
+  {
+    "file": "04_impostor_Промт.docx",
+    "gameId": "impostor",
+    "name": "Самозванец",
+    "paragraphs": 64
+  },
+  {
+    "file": "05_whoami_Промт.docx",
+    "gameId": "whoami",
+    "name": "Кто я",
+    "paragraphs": 64
+  },
+  {
+    "file": "06_alias_Промт.docx",
+    "gameId": "alias",
+    "name": "Alias",
+    "paragraphs": 65
+  },
+  {
+    "file": "07_roulette_Промт.docx",
+    "gameId": "roulette",
+    "name": "Русская рулетка",
+    "paragraphs": 65
+  },
+  {
+    "file": "08_jeopardy_Промт.docx",
+    "gameId": "jeopardy",
+    "name": "Своя игра",
+    "paragraphs": 65
+  },
+  {
+    "file": "09_broken-text_Промт.docx",
+    "gameId": "broken-text",
+    "name": "Испорченный текст",
+    "paragraphs": 65
+  }
+]

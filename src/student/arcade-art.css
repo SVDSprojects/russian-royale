@@ -1,0 +1,137 @@
+.arcade-card-art {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 176px;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 18px;
+  background: radial-gradient(ellipse at 50% 55%, #ffffffb5 0, #ffffff00 70%);
+}
+.arcade-card-art svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.arcade-card-art .arcade-art-float {
+  animation: rr-art-float 5s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.arcade-card-art--sprint .arcade-art-float {
+  animation-delay: -0.9s;
+}
+.arcade-card-art--survival .arcade-art-float {
+  animation-delay: -2s;
+}
+.arcade-card-art--practice .arcade-art-float {
+  animation-delay: -3.2s;
+}
+.arcade-card-art .arcade-art-spark {
+  animation: rr-art-spark 4s ease-in-out infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+.arcade-mode:hover .arcade-art-speed {
+  animation: rr-art-speed 0.8s ease-out 2;
+}
+.arcade-mode:hover .arcade-art-route {
+  animation: rr-art-route 3s linear 1;
+}
+.arcade-card-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1;
+  text-align: left;
+}
+.arcade-card-tag {
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+}
+.arcade-card-copy h3 {
+  margin: 11px 0 9px;
+  font-size: 18px;
+  line-height: 1.25;
+}
+.arcade-card-copy p {
+  margin: 0 0 18px;
+  font-size: 12px;
+  line-height: 1.6;
+  font-weight: 500;
+}
+.arcade-card-cta {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+  min-height: 44px;
+  border-top: 1px solid #14234424;
+  padding-top: 12px;
+  font-size: 12px;
+}
+.arcade-card-cta svg {
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+.arcade-mode:hover .arcade-card-cta svg {
+  transform: translateX(4px);
+}
+@keyframes rr-art-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0);
+  }
+  50% {
+    transform: translateY(-7px) rotate(2deg);
+  }
+}
+@keyframes rr-art-spark {
+  0%,
+  100% {
+    transform: scale(1) rotate(0);
+  }
+  50% {
+    transform: scale(0.8) rotate(15deg);
+  }
+}
+@keyframes rr-art-speed {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-14px);
+    opacity: 0.4;
+  }
+}
+@keyframes rr-art-route {
+  to {
+    stroke-dashoffset: -44;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .arcade-card-art *,
+  .arcade-card-cta svg {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+html[data-reduce-motion='true'] .arcade-card-art *,
+html[data-reduce-motion='true'] .arcade-card-cta svg {
+  animation: none !important;
+  transition: none !important;
+}
+@media (max-width: 600px) {
+  .arcade-card-art {
+    height: 160px;
+  }
+}

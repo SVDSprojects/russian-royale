@@ -1,0 +1,16 @@
+{
+  "note": "Демо-фикстура нормализованных учебных заданий {id,ruleId,prompt,options,acceptedAnswers,explanation,difficulty,revision,status}. Только для preview и тестов адаптера.",
+  "rules": {
+    "rule-hard-sign": "Разделительный Ъ",
+    "rule-soft-sign": "Разделительный Ь"
+  },
+  "tasks": [
+    { "id": "t1", "ruleId": "rule-hard-sign", "prompt": "Вставьте знак: под_езд", "options": ["ъ", "ь"], "acceptedAnswers": ["подъезд"], "explanation": "Ъ пишется после приставки на согласный перед е, ё, ю, я.", "difficulty": 1, "revision": 1, "status": "published" },
+    { "id": "t2", "ruleId": "rule-hard-sign", "prompt": "Вставьте знак: об_явление", "options": ["ъ", "ь"], "acceptedAnswers": ["объявление"], "explanation": "Ъ пишется после приставки на согласный перед е, ё, ю, я.", "difficulty": 1, "revision": 1, "status": "published" },
+    { "id": "t3", "ruleId": "rule-hard-sign", "prompt": "Вставьте знак: с_ёмка", "options": ["ъ", "ь"], "acceptedAnswers": ["съёмка"], "explanation": "Ъ пишется после приставки на согласный перед е, ё, ю, я.", "difficulty": 1, "revision": 1, "status": "published" },
+    { "id": "t4", "ruleId": "rule-soft-sign", "prompt": "Вставьте знак: в_юга", "options": ["ъ", "ь"], "acceptedAnswers": ["вьюга"], "explanation": "Ь пишется в корне перед е, ё, ю, я, и — не после приставки.", "difficulty": 1, "revision": 1, "status": "published" },
+    { "id": "t5", "ruleId": "rule-soft-sign", "prompt": "Вставьте знак: сем_я", "options": ["ъ", "ь"], "acceptedAnswers": ["семья"], "explanation": "Ь пишется в корне перед е, ё, ю, я, и — не после приставки.", "difficulty": 1, "revision": 1, "status": "published" },
+    { "id": "t6", "ruleId": "rule-soft-sign", "prompt": "Вставьте знак: б_ёт", "options": ["ъ", "ь"], "acceptedAnswers": ["бьёт"], "explanation": "Ь пишется в корне перед е, ё, ю, я, и — не после приставки.", "difficulty": 1, "revision": 1, "status": "published" },
+    { "id": "t7", "ruleId": "rule-soft-sign", "prompt": "Черновик", "options": [], "acceptedAnswers": ["скрытое"], "explanation": "Черновик не должен попасть в пару.", "difficulty": 1, "revision": 1, "status": "draft" }
+  ]
+}

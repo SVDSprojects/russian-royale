@@ -1,0 +1,733 @@
+/* World edition: home, discovery and welcome. Game screens retain their own art direction. */
+.rr-app {
+  background: #f5f5f0;
+}
+.rr-sidebar {
+  background: #fdfdf9;
+}
+.rr-topbar {
+  background: #fdfdf9ee;
+}
+.rr-main {
+  max-width: 1600px;
+}
+.rr-discovery {
+  --world-ink: #172a49;
+  --world-blue: #2455f5;
+}
+.rr-discovery .rr-page-header {
+  margin-bottom: 25px;
+}
+.rr-discovery .rr-page-header h1 {
+  font-size: clamp(24px, 2.2vw, 34px);
+}
+.rr-discovery .rr-description {
+  color: #647086;
+  font-size: 13px;
+}
+.rr-discovery .rr-date-chip {
+  background: #fff;
+  border: 1px solid #e1e5de;
+  box-shadow: none;
+}
+.royale-hero {
+  position: relative;
+  min-height: 445px;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid #eee7d7;
+  border-radius: 30px;
+  background: #f8f1e5;
+  box-shadow: 0 16px 32px -26px #79634050;
+}
+.royale-hero-copy {
+  position: relative;
+  z-index: 2;
+  width: 49%;
+  padding: 44px 0 42px 36px;
+}
+.royale-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #264573;
+  letter-spacing: 1.5px;
+  font-size: 10px;
+  font-weight: 800;
+}
+.royale-kicker > span {
+  width: 7px;
+  height: 7px;
+  background: #2455f5;
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px #2455f515;
+}
+.rr-app .royale-hero h2 {
+  font-size: clamp(28px, 3.15vw, 49px);
+  line-height: 1.18;
+  letter-spacing: -0.06em;
+  margin: 25px 0 22px;
+  color: #142344;
+}
+.rr-app .royale-hero h2 span {
+  color: #2455f5;
+}
+.royale-hero-copy > p {
+  font-size: 14px;
+  line-height: 1.8;
+  color: #536079;
+  max-width: 340px;
+}
+.royale-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  align-items: center;
+  margin-top: 25px;
+}
+.rr-app .royale-primary {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  min-height: 50px;
+  padding: 13px 20px;
+  background: #2455f5;
+  color: #fff;
+  border: 1px solid #2455f5;
+  border-radius: 14px;
+  font-weight: 800;
+  box-shadow:
+    0 5px 0 #1235b6,
+    0 10px 20px #2455f525;
+}
+.rr-app .royale-primary:hover {
+  transform: translateY(-2px);
+  filter: none;
+  background: #1645e2;
+}
+.rr-app .royale-text-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 4px 0;
+  background: none;
+  border: 0;
+  color: #293c5d;
+}
+.royale-hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 30px;
+  color: #657087;
+  font-size: 10px;
+}
+.royale-hero-meta > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.royale-world {
+  position: relative;
+  pointer-events: none;
+}
+.royale-world picture,
+.royale-world img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.royale-hero > .royale-world {
+  position: absolute;
+  z-index: -1;
+  width: 73%;
+  inset: 0 -11% 0 auto;
+}
+.royale-hero > .royale-world::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #f8f1e5 0%, #f8f1e575 11%, transparent 30%);
+}
+.royale-world-spark {
+  position: absolute;
+  z-index: 1;
+  color: #2455f5;
+  font-size: 38px;
+}
+.spark-one {
+  top: 14%;
+  left: 24%;
+  transform: rotate(16deg);
+  animation: world-spark 7s ease-in-out infinite alternate;
+}
+.spark-two {
+  right: 19%;
+  bottom: 19%;
+  font-size: 24px;
+  color: #ff9471;
+  animation: world-spark 8s ease-in-out infinite alternate-reverse;
+}
+.royale-world-token {
+  position: absolute;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 50px;
+  border-radius: 12px;
+  font-family: 'Unbounded Variable', sans-serif;
+  font-size: 25px;
+  box-shadow: 0 6px 0 #172a4920;
+}
+.token-one {
+  background: #d9ff58;
+  color: #2045bb;
+  left: 25%;
+  bottom: 16%;
+  transform: rotate(-14deg);
+  animation: world-float 6s ease-in-out infinite alternate;
+}
+.token-two {
+  background: #ffad93;
+  color: #142344;
+  right: 20%;
+  top: 19%;
+  transform: rotate(15deg);
+  animation: world-float 7s ease-in-out infinite alternate-reverse;
+}
+.royale-world-caption {
+  position: absolute;
+  bottom: 21px;
+  right: 25px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 9px;
+  letter-spacing: 1.4px;
+  color: #36558b;
+  background: #fff9;
+  border: 1px solid #fff9;
+  padding: 8px 12px;
+  border-radius: 30px;
+}
+.royale-mini-orbit {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid #2455f5;
+  box-shadow: inset 3px 0 #d9ff58;
+}
+.rr-discovery .rr-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  background: #fff;
+  border: 1px solid #e0e5e9;
+  border-radius: 20px;
+  margin: 22px 0 38px;
+  overflow: hidden;
+}
+.rr-discovery .rr-stat {
+  padding: 20px;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  gap: 12px;
+  background: transparent;
+}
+.rr-discovery .rr-stat + .rr-stat {
+  border-left: 1px solid #edf0f3;
+}
+.rr-discovery .rr-stat strong {
+  font-family: 'Unbounded Variable', sans-serif;
+  font-size: 18px;
+}
+.rr-discovery .rr-stat-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+}
+.rr-discovery .rr-section-heading {
+  margin: 34px 0 19px;
+  gap: 15px;
+}
+.rr-discovery .rr-section-heading h2 {
+  font-size: clamp(20px, 2vw, 28px);
+  margin-bottom: 0;
+}
+.rr-discovery .rr-section-heading .rr-eyebrow {
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: #6c7891;
+}
+.royale-section-note {
+  color: #69768d;
+  font-size: 12px;
+}
+.rr-discovery .rr-game-grid,
+.rr-discovery .rr-game-grid.dashboard {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+.rr-discovery .rr-game-card {
+  border: 1px solid #e1e6ed;
+  background: #fff;
+  box-shadow: 0 4px 8px #14234403;
+  border-radius: 23px;
+  overflow: hidden;
+  transition:
+    transform 0.25s,
+    box-shadow 0.25s;
+}
+.rr-discovery .rr-game-card:hover,
+.rr-discovery .rr-game-card:focus-within {
+  transform: translateY(-5px);
+  box-shadow: 0 18px 30px -15px #18336130;
+}
+.rr-discovery .rr-game-card-art {
+  height: auto;
+  aspect-ratio: 1.55;
+  display: block;
+  position: relative;
+  padding: 0;
+  isolation: isolate;
+  overflow: hidden;
+}
+.rr-discovery .rr-game-card-art > .rr-world-art {
+  width: 100%;
+  height: 100%;
+}
+.rr-discovery .rr-game-status {
+  position: absolute;
+  z-index: 2;
+  top: 15px;
+  left: 15px;
+  right: auto;
+  font-size: 9px;
+  font-weight: 800;
+  border: 1px solid #ffffffad;
+  padding: 5px 9px;
+  color: #253857;
+  background: #fffffff0;
+  backdrop-filter: blur(8px);
+}
+.rr-discovery .rr-game-status > span {
+  background: #14805f;
+}
+.rr-discovery .rr-game-status.muted {
+  color: #526378;
+  background: #ffffffd9;
+}
+.rr-discovery .rr-game-card-body {
+  padding: 20px 20px 18px;
+}
+.rr-discovery .rr-game-card-body h3 {
+  font-size: 19px;
+  color: #172a49;
+  margin: 0 0 7px;
+}
+.rr-discovery .rr-game-card-body p {
+  font-size: 12px;
+  color: #6b7588;
+  margin-bottom: 19px;
+}
+.rr-discovery .rr-game-card-foot {
+  border-top: 1px solid #edf0f5;
+  padding-top: 13px;
+}
+.rr-discovery .rr-game-card-foot > span {
+  font-size: 10px;
+  color: #56657c;
+}
+.rr-discovery .rr-game-card-foot button {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: #fff;
+  background: #2455f5;
+}
+.rr-discovery .rr-game-card.upcoming {
+  opacity: 1;
+}
+.rr-discovery .arcade-modes {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 13px;
+  margin: 0 0 38px;
+}
+.rr-discovery .arcade-mode {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  align-items: stretch;
+  padding: 0;
+  background: #fff;
+  border: 1px solid #e1e6ed;
+  border-radius: 20px;
+  color: #172a49;
+  box-shadow: none;
+  overflow: hidden;
+  min-height: 0;
+}
+.rr-discovery .arcade-mode:hover {
+  transform: translateY(-5px);
+  filter: none;
+  box-shadow: 0 18px 30px -18px #18336140;
+}
+.rr-discovery .arcade-card-copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 16px;
+}
+.rr-discovery .arcade-card-tag {
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.7px;
+  color: #64728b;
+}
+.rr-discovery .arcade-mode h3 {
+  font-size: clamp(12px, 1.1vw, 16px);
+  letter-spacing: -0.04em;
+  margin: 10px 0;
+}
+.rr-discovery .arcade-mode p {
+  display: block;
+  color: #65728a;
+  font-size: 11px;
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+.rr-discovery .arcade-mode strong {
+  font-size: 10px;
+  color: #2455f5;
+  margin-top: auto;
+  padding-top: 5px;
+}
+.rr-discovery .rr-dashboard-columns {
+  margin-top: 42px;
+}
+.rr-discovery .rr-lesson-feature,
+.rr-discovery .rr-level-card {
+  border: 1px solid #dce5df;
+  box-shadow: none;
+  border-radius: 22px;
+  background: #f0f4e9;
+}
+.rr-discovery .rr-level-card {
+  background: #eaf0ff;
+}
+.rr-discovery .rr-community-strip {
+  background: #fff;
+  border: 1px solid #e1e6ed;
+  border-radius: 20px;
+}
+.rr-discovery .rr-catalog-tabs {
+  gap: 5px;
+  background: #e9ece8;
+  padding: 5px;
+  border-radius: 16px;
+}
+.rr-discovery .rr-catalog-tabs button {
+  border: 0;
+  background: transparent;
+  font-size: 12px;
+  border-radius: 12px;
+  box-shadow: none;
+}
+.rr-discovery .rr-catalog-tabs button[aria-pressed='true'] {
+  background: #fff;
+  color: #2455f5;
+  box-shadow: 0 2px 6px #172a4910;
+}
+.rr-discovery .rr-how-to {
+  margin-top: 32px;
+  border-radius: 24px;
+  background: #fff;
+}
+.rr-discovery .rr-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 16px;
+  background: #fff;
+}
+.rr-discovery .rr-search svg {
+  flex-shrink: 0;
+}
+.rr-discovery .rr-search input {
+  min-width: 0;
+  width: 100%;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.rr-world-welcome .rr-welcome-intro {
+  background: #f8f1e5;
+  color: #172a49;
+  border: 1px solid #eee7d7;
+  padding: 30px;
+}
+.rr-world-welcome .rr-welcome-intro h1 {
+  color: #172a49;
+  font-size: clamp(26px, 3.3vw, 47px);
+}
+.rr-world-welcome .rr-welcome-intro h1 span {
+  color: #2455f5;
+}
+.rr-world-welcome .rr-welcome-intro > p {
+  color: #536079;
+  max-width: 460px;
+}
+.rr-world-welcome .rr-welcome-intro .rr-pill {
+  background: #fff9;
+  color: #2455f5;
+  border-color: #fff;
+}
+.rr-world-welcome .royale-world {
+  width: calc(100% + 60px);
+  margin: -15px -30px 0;
+  aspect-ratio: 1.6;
+}
+.rr-world-welcome .royale-world img {
+  object-fit: contain;
+}
+.rr-world-welcome .rr-welcome-facts {
+  position: relative;
+  margin-top: -10px;
+  border: 0;
+  padding-top: 20px;
+}
+.rr-world-welcome .rr-welcome-facts strong,
+.rr-world-welcome .rr-welcome-facts svg {
+  color: #2455f5;
+}
+.rr-world-welcome .rr-welcome-facts span {
+  color: #647086;
+}
+.rr-discovery :is(button, a):focus-visible {
+  outline: 3px solid #2455f5;
+  outline-offset: 4px;
+}
+@keyframes world-float {
+  to {
+    translate: 0 -12px;
+  }
+}
+@keyframes world-spark {
+  to {
+    transform: rotate(60deg) scale(0.8);
+  }
+}
+@media (min-width: 1500px) {
+  .royale-hero {
+    min-height: 470px;
+  }
+  .royale-hero-copy {
+    padding: 50px;
+  }
+}
+@media (max-width: 1200px) {
+  .rr-discovery .arcade-modes {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .royale-hero-copy {
+    width: 54%;
+    padding-left: 25px;
+  }
+  .rr-discovery .rr-stat {
+    padding: 16px 12px;
+  }
+  .rr-discovery .rr-stat-icon {
+    display: none;
+  }
+}
+@media (max-width: 800px) {
+  .royale-hero {
+    min-height: 400px;
+  }
+  .royale-hero-copy {
+    padding: 28px 0 28px 25px;
+  }
+  .rr-app .royale-hero h2 {
+    font-size: 32px;
+  }
+  .royale-hero > .royale-world {
+    width: 80%;
+    right: -21%;
+  }
+  .royale-hero-meta {
+    margin-top: 20px;
+  }
+  .rr-discovery .rr-game-grid,
+  .rr-discovery .rr-game-grid.dashboard {
+    gap: 12px;
+  }
+  .rr-discovery .rr-game-card-body {
+    padding: 15px;
+  }
+  .rr-discovery .rr-game-card-body h3 {
+    font-size: 15px;
+  }
+  .rr-discovery .rr-game-card-foot {
+    align-items: center;
+    gap: 8px;
+  }
+  .rr-discovery .rr-game-card-foot > span {
+    font-size: 9px;
+  }
+}
+@media (max-width: 900px) {
+  .rr-discovery .rr-page-header {
+    margin-bottom: 22px;
+  }
+  .royale-hero {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    border-radius: 24px;
+  }
+  .royale-hero-copy {
+    width: 100%;
+    padding: 26px 22px 0;
+  }
+  .rr-app .royale-hero h2 {
+    font-size: clamp(28px, 8.4vw, 40px);
+    margin: 19px 0 15px;
+  }
+  .royale-hero-copy > p {
+    font-size: 13px;
+    line-height: 1.75;
+  }
+  .royale-hero-actions {
+    gap: 12px;
+    margin-top: 19px;
+  }
+  .rr-app .royale-primary {
+    font-size: 12px;
+    width: 100%;
+  }
+  .rr-app .royale-text-link {
+    width: 100%;
+    min-height: 44px;
+  }
+  .royale-hero-meta {
+    display: none;
+  }
+  .royale-hero > .royale-world {
+    position: relative;
+    inset: auto;
+    z-index: -1;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1.35;
+    margin-top: -10px;
+  }
+  .royale-hero > .royale-world::after {
+    background: linear-gradient(#f8f1e5, transparent 20%);
+  }
+  .royale-hero > .royale-world img {
+    object-fit: cover;
+  }
+  .royale-world-caption {
+    bottom: 13px;
+    right: 14px;
+    font-size: 8px;
+  }
+  .royale-world-token {
+    width: 32px;
+    height: 38px;
+    font-size: 20px;
+  }
+  .rr-discovery .rr-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 18px 0 28px;
+  }
+  .rr-discovery .rr-stat {
+    padding: 15px;
+  }
+  .rr-discovery .rr-stat:nth-child(3) {
+    border-left: 0;
+  }
+  .rr-discovery .rr-stat:nth-child(n + 3) {
+    border-top: 1px solid #edf0f3;
+  }
+  .rr-discovery .rr-stat strong {
+    font-size: 16px;
+  }
+  .rr-discovery .rr-game-grid,
+  .rr-discovery .rr-game-grid.dashboard {
+    grid-template-columns: 1fr;
+    gap: 19px;
+  }
+  .rr-discovery .rr-game-card-art {
+    aspect-ratio: 1.85;
+  }
+  .rr-discovery .rr-game-card-body {
+    padding: 19px;
+  }
+  .rr-discovery .rr-game-card-body h3 {
+    font-size: 20px;
+  }
+  .rr-discovery .rr-game-card-body p {
+    font-size: 12px;
+  }
+  .rr-discovery .rr-game-card-foot > span {
+    font-size: 12px;
+  }
+  .rr-discovery .arcade-modes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .rr-discovery .arcade-mode h3 {
+    font-size: 13px;
+  }
+  .rr-discovery .arcade-card-copy {
+    padding: 14px 12px;
+  }
+  .rr-discovery .arcade-mode:last-child {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .royale-section-note {
+    display: none;
+  }
+  .rr-world-welcome .rr-welcome-intro {
+    padding: 25px 22px;
+  }
+  .rr-world-welcome .royale-world {
+    width: calc(100% + 44px);
+    margin-left: -22px;
+    margin-right: -22px;
+  }
+  .rr-world-welcome .rr-welcome-facts {
+    margin-top: 8px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .royale-world * {
+    animation: none !important;
+  }
+  .rr-discovery .rr-game-card:hover,
+  .rr-discovery .arcade-mode:hover {
+    transform: none;
+  }
+}
+html[data-reduce-motion='true'] .royale-world * {
+  animation: none !important;
+}
+html[data-reduce-motion='true'] .rr-discovery .rr-game-card:hover,
+html[data-reduce-motion='true'] .rr-discovery .arcade-mode:hover {
+  transform: none;
+}

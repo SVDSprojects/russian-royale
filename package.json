@@ -1,0 +1,57 @@
+{
+  "name": "russian-royale",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.15.0 <25"
+  },
+  "scripts": {
+    "dev": "concurrently -k -n api,web \"npm:dev:api\" \"npm:dev:web\"",
+    "dev:api": "tsx watch --env-file-if-exists=.env server/index.ts",
+    "dev:web": "vite --host 0.0.0.0",
+    "build": "tsc --noEmit && vite build",
+    "start": "tsx --env-file-if-exists=.env server/index.ts",
+    "admin": "tsx --env-file-if-exists=.env server/admin-cli.ts",
+    "test": "vitest run",
+    "test:foundation": "vitest run tests/foundation.test.ts",
+    "test:game": "vitest run tests/game.test.ts",
+    "test:e2e": "playwright test",
+    "test:load": "tsx scripts/load-test.ts",
+    "check": "tsc --noEmit",
+    "backup": "tsx --env-file-if-exists=.env scripts/backup.ts",
+    "format": "prettier --write src server tests scripts *.ts *.json *.html *.md docs public/*.js public/*.html"
+  },
+  "dependencies": {
+    "@fontsource-variable/manrope": "^5.3.0",
+    "@fontsource-variable/unbounded": "^5.3.0",
+    "cookie-parser": "^1.4.7",
+    "express": "^5.1.0",
+    "image-size": "^2.0.4",
+    "lucide-react": "^0.468.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-router-dom": "^7.9.0",
+    "sharp": "^0.34.4",
+    "tsx": "^4.20.0",
+    "zod": "^4.1.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261028.1",
+    "@playwright/test": "^1.56.0",
+    "@types/cookie-parser": "^1.4.9",
+    "@types/express": "^5.0.0",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@types/supertest": "^6.0.3",
+    "@vitejs/plugin-react": "^5.0.0",
+    "concurrently": "^9.2.0",
+    "prettier": "^3.9.10",
+    "supertest": "^7.1.0",
+    "typescript": "^5.9.0",
+    "vite": "^7.1.0",
+    "vitest": "^3.2.0",
+    "wrangler": "^4.154.0"
+  }
+}

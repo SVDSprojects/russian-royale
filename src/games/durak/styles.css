@@ -1,0 +1,1160 @@
+.rr-game-durak {
+  --rr-durak-ink: #25366e;
+  --rr-durak-cream: #fff8e9;
+  --rr-durak-red: #ef6555;
+  --rr-durak-gold: #f3c969;
+  --rr-durak-muted: #62677b;
+  --rr-durak-line: #dcd9cd;
+  color: var(--rr-durak-ink);
+  background: #f3efe4;
+  font-family: Manrope, system-ui, sans-serif;
+  min-height: 100vh;
+  line-height: 1.5;
+  font-size: 14px;
+  color-scheme: light;
+}
+.rr-game-durak,
+.rr-game-durak * {
+  box-sizing: border-box;
+}
+.rr-game-durak button,
+.rr-game-durak input,
+.rr-game-durak select,
+.rr-game-durak textarea {
+  font: inherit;
+}
+.rr-game-durak button {
+  cursor: pointer;
+  min-height: 44px;
+  min-width: 44px;
+  border: 1px solid var(--rr-durak-line);
+  border-radius: 10px;
+  padding: 10px 16px;
+  color: var(--rr-durak-ink);
+  background: var(--rr-durak-cream);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition:
+    background 0.18s,
+    transform 0.18s;
+}
+.rr-game-durak button:hover:not(:disabled) {
+  background: #f5e9cb;
+}
+.rr-game-durak button:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+.rr-game-durak button:focus-visible,
+.rr-game-durak input:focus-visible,
+.rr-game-durak select:focus-visible,
+.rr-game-durak textarea:focus-visible,
+.rr-game-durak summary:focus-visible {
+  outline: 3px solid #b64921;
+  outline-offset: 3px;
+}
+.rr-game-durak h1,
+.rr-game-durak h2,
+.rr-game-durak p {
+  margin: 0;
+}
+.rr-game-durak h1,
+.rr-game-durak h2 {
+  font-family: Unbounded, Manrope, system-ui, sans-serif;
+}
+.rr-game-durak h1 {
+  font-size: 23px;
+  line-height: 1.4;
+  letter-spacing: -0.7px;
+}
+.rr-game-durak h1 span {
+  display: block;
+  font:
+    12px Manrope,
+    system-ui,
+    sans-serif;
+  color: var(--rr-durak-muted);
+  letter-spacing: 0;
+}
+.rr-game-durak h2 {
+  font-size: 21px;
+  line-height: 1.45;
+}
+.rr-game-durak small {
+  font-size: 11px;
+  letter-spacing: 0.6px;
+}
+.rr-game-durak svg {
+  flex-shrink: 0;
+}
+.rr-game-durak .rr-durak-shell {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 24px 36px;
+}
+.rr-game-durak .rr-durak-header {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 8px 0 26px;
+  border-bottom: 1px solid var(--rr-durak-line);
+  margin-bottom: 24px;
+}
+.rr-game-durak .rr-durak-header small {
+  font-size: 9px;
+  letter-spacing: 1.7px;
+}
+.rr-game-durak .rr-durak-header-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+}
+.rr-game-durak .rr-durak-icon {
+  padding: 10px;
+  background: transparent;
+}
+.rr-game-durak .rr-durak-primary {
+  background: var(--rr-durak-ink);
+  color: var(--rr-durak-cream);
+  border-color: var(--rr-durak-ink);
+  font-weight: 700;
+}
+.rr-game-durak .rr-durak-primary:hover:not(:disabled) {
+  background: #17264f;
+}
+.rr-game-durak .rr-durak-secondary {
+  background: transparent;
+  font-weight: 600;
+}
+.rr-game-durak .rr-durak-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid currentColor;
+  padding: 7px 12px;
+  border-radius: 20px;
+  font-size: 10px;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+.rr-game-durak .rr-durak-alert {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: #ffe4dc;
+  color: #80291f;
+  border: 1px solid #ca8b7b;
+  border-radius: 10px;
+  margin: 12px 0;
+  padding: 12px 18px;
+}
+.rr-game-durak .rr-durak-opponents {
+  display: flex;
+  gap: 10px;
+  overflow: auto;
+  margin-bottom: 20px;
+  padding: 4px;
+}
+.rr-game-durak .rr-durak-player {
+  display: flex;
+  flex: 1;
+  min-width: 160px;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--rr-durak-line);
+  padding: 12px;
+  border-radius: 12px;
+  background: #fffaf0;
+}
+.rr-game-durak .rr-durak-player small {
+  display: block;
+  letter-spacing: 0;
+  font-size: 10px;
+  color: var(--rr-durak-muted);
+}
+.rr-game-durak .rr-durak-active {
+  border: 2px solid var(--rr-durak-ink);
+  padding: 11px;
+}
+.rr-game-durak .rr-durak-avatar {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #e4e4da;
+  font-weight: 800;
+}
+.rr-game-durak .rr-durak-active .rr-durak-avatar {
+  background: var(--rr-durak-gold);
+}
+.rr-game-durak .rr-durak-mini-cards {
+  margin-left: auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.rr-game-durak .rr-durak-mini-cards svg {
+  width: 24px;
+  height: 34px;
+}
+.rr-game-durak .rr-durak-out {
+  background: #e9ecdf;
+}
+.rr-game-durak .rr-durak-table {
+  position: relative;
+  overflow: hidden;
+  border-radius: 22px;
+  background: var(--rr-durak-ink);
+  color: var(--rr-durak-cream);
+  padding: 24px 30px;
+  min-height: 380px;
+  box-shadow: 0 10px 20px #1c2c5714;
+}
+.rr-game-durak .rr-durak-table:before {
+  content: "";
+  position: absolute;
+  inset: 30px 15%;
+  border: 1px dashed #ffffff28;
+  border-radius: 50%;
+  transform: rotate(-12deg);
+  pointer-events: none;
+}
+.rr-game-durak .rr-durak-route {
+  position: absolute;
+  inset: 110px 45px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+  opacity: 0.3;
+  font-size: 9px;
+  letter-spacing: 2px;
+}
+.rr-game-durak .rr-durak-route span:before {
+  content: "";
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 2px solid #f3c969;
+  margin-bottom: 12px;
+}
+.rr-game-durak .rr-durak-table-top,
+.rr-game-durak .rr-durak-table-bottom {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+.rr-game-durak .rr-durak-table-top small {
+  display: block;
+  font-size: 10px;
+  color: #e3e4ed;
+}
+.rr-game-durak .rr-durak-deck {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+.rr-game-durak .rr-durak-stamp {
+  border: 3px dashed var(--rr-durak-gold);
+  background: #fff8e9;
+  color: var(--rr-durak-ink);
+  padding: 5px 9px;
+  font-size: 23px;
+  transform: rotate(-9deg);
+  font-weight: 700;
+}
+.rr-game-durak .rr-durak-stamp b {
+  font-size: 15px;
+}
+.rr-game-durak .rr-durak-phase {
+  position: relative;
+  text-align: center;
+  padding: 22px 52px 10px;
+  min-height: 100px;
+}
+.rr-game-durak .rr-durak-phase small {
+  color: var(--rr-durak-gold);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+}
+.rr-game-durak .rr-durak-phase h2 {
+  margin-top: 7px;
+  font-size: 20px;
+}
+.rr-game-durak .rr-durak-timer {
+  position: absolute;
+  right: 0;
+  top: 25px;
+  width: 54px;
+  height: 54px;
+  border: 1px solid #ffffff55;
+  border-radius: 50%;
+  font-size: 23px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 1.1;
+}
+.rr-game-durak .rr-durak-timer small {
+  font-size: 9px;
+  color: var(--rr-durak-cream);
+}
+.rr-game-durak .rr-durak-urgent {
+  background: #8b302f;
+}
+.rr-game-durak .rr-durak-pairs {
+  position: relative;
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  align-items: center;
+  min-height: 166px;
+  flex-wrap: wrap;
+  padding: 10px 0 30px;
+}
+.rr-game-durak .rr-durak-pair {
+  width: 84px;
+  height: 126px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  position: relative;
+  opacity: 1;
+  animation: rr-durak-fly 0.24s ease-out;
+}
+.rr-game-durak .rr-durak-pair:disabled {
+  opacity: 1;
+}
+.rr-game-durak .rr-durak-pair > svg {
+  width: 84px;
+  height: 123px;
+}
+.rr-game-durak .rr-durak-pair:hover:not(:disabled) {
+  background: transparent;
+}
+.rr-game-durak .rr-durak-target {
+  outline: 3px solid var(--rr-durak-gold);
+  outline-offset: 4px;
+}
+.rr-game-durak .rr-durak-cover {
+  position: absolute;
+  inset: 18px -14px -18px 14px;
+  transform: rotate(12deg);
+}
+.rr-game-durak .rr-durak-cover svg {
+  width: 84px;
+  height: 123px;
+}
+.rr-game-durak .rr-durak-empty {
+  text-align: center;
+  color: #e3e4ed;
+  padding: 15px;
+}
+.rr-game-durak .rr-durak-empty svg {
+  color: var(--rr-durak-gold);
+  margin-bottom: 8px;
+}
+.rr-game-durak .rr-durak-empty small {
+  font-size: 10px;
+  letter-spacing: 0;
+}
+.rr-game-durak .rr-durak-table-bottom {
+  font-size: 10px;
+  color: #e3e4ed;
+  padding-top: 10px;
+  border-top: 1px solid #ffffff30;
+}
+.rr-game-durak .rr-durak-table-bottom span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.rr-game-durak .rr-durak-hand-section {
+  padding-top: 20px;
+}
+.rr-game-durak .rr-durak-hand-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.rr-game-durak .rr-durak-hand-title h2 {
+  font-size: 16px;
+}
+.rr-game-durak .rr-durak-hand-title h2 span {
+  font-size: 12px;
+  font-family: Manrope, system-ui, sans-serif;
+  border: 1px solid var(--rr-durak-line);
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+.rr-game-durak .rr-durak-hand-title small {
+  color: var(--rr-durak-muted);
+  letter-spacing: 0;
+}
+.rr-game-durak .rr-durak-hand {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  overflow-x: auto;
+  padding: 23px 8px 14px;
+  scroll-snap-type: x proximity;
+  min-height: 174px;
+}
+.rr-game-durak .rr-durak-card {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  flex-shrink: 0;
+  width: 83px;
+  min-height: 122px;
+  scroll-snap-align: center;
+}
+.rr-game-durak .rr-durak-card svg {
+  width: 83px;
+  height: 122px;
+  filter: drop-shadow(0 3px 3px #25366e15);
+}
+.rr-game-durak .rr-durak-card:hover:not(:disabled) {
+  background: transparent;
+  transform: translateY(-5px);
+}
+.rr-game-durak .rr-durak-selected {
+  transform: translateY(-9px) scale(1.07) !important;
+  outline: 3px solid var(--rr-durak-ink);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+.rr-game-durak .rr-durak-legal {
+  box-shadow: 0 4px 0 #a36b00;
+}
+.rr-game-durak .rr-durak-controls {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+.rr-game-durak .rr-durak-controls .rr-durak-primary {
+  min-width: 190px;
+}
+.rr-game-durak .rr-durak-task,
+.rr-game-durak .rr-durak-feedback,
+.rr-game-durak .rr-durak-result,
+.rr-game-durak .rr-durak-help {
+  padding: 24px;
+  background: #fffaf0;
+  border: 1px solid var(--rr-durak-line);
+  border-radius: 16px;
+  margin: 18px 0;
+}
+.rr-game-durak .rr-durak-help p,
+.rr-game-durak .rr-durak-result p {
+  margin: 12px 0;
+}
+.rr-game-durak .rr-durak-task h2 {
+  margin: 10px 0;
+}
+.rr-game-durak .rr-durak-options {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 15px 0;
+}
+.rr-game-durak .rr-durak-options label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  border: 1px solid var(--rr-durak-line);
+  padding: 8px 16px;
+  border-radius: 10px;
+}
+.rr-game-durak input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  accent-color: var(--rr-durak-ink);
+}
+.rr-game-durak .rr-durak-feedback {
+  background: #e8ecdf;
+}
+.rr-game-durak .rr-durak-result {
+  text-align: center;
+  animation: rr-durak-reveal 0.4s ease-out;
+}
+.rr-game-durak .rr-durak-score-list {
+  max-width: 420px;
+  margin: 20px auto;
+}
+.rr-game-durak .rr-durak-score-list > div {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--rr-durak-line);
+}
+.rr-game-durak .rr-durak-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  font-size: 9px;
+  color: var(--rr-durak-muted);
+  margin-top: 30px;
+  padding: 16px 0;
+  border-top: 1px solid var(--rr-durak-line);
+  letter-spacing: 1px;
+}
+.rr-game-durak .rr-durak-lobby-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  min-height: 550px;
+}
+.rr-game-durak .rr-durak-lobby-art {
+  position: relative;
+  background: var(--rr-durak-ink);
+  border-radius: 22px;
+  color: var(--rr-durak-cream);
+  overflow: hidden;
+  padding: 48px 38px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 20px;
+}
+.rr-game-durak .rr-durak-lobby-art:before {
+  content: "";
+  position: absolute;
+  width: 500px;
+  height: 320px;
+  right: -230px;
+  top: 20px;
+  border: 1px dashed #f3c96977;
+  transform: rotate(-32deg);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.rr-game-durak .rr-durak-lobby-art > svg {
+  color: var(--rr-durak-gold);
+  transform: rotate(-12deg);
+}
+.rr-game-durak .rr-durak-lobby-art > small {
+  color: var(--rr-durak-gold);
+  letter-spacing: 2px;
+}
+.rr-game-durak .rr-durak-lobby-art h2 {
+  font-size: 30px;
+  line-height: 1.4;
+}
+.rr-game-durak .rr-durak-lobby-art p {
+  color: #e3e4ed;
+  max-width: 360px;
+  font-size: 14px;
+  line-height: 1.9;
+}
+.rr-game-durak .rr-durak-postmark {
+  position: absolute;
+  right: 28px;
+  top: 30px;
+  width: 100px;
+  height: 100px;
+  border: 2px solid #f3c96999;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  transform: rotate(16deg);
+  font-size: 9px;
+  color: var(--rr-durak-gold);
+  line-height: 1.1;
+  letter-spacing: 1px;
+}
+.rr-game-durak .rr-durak-postmark b {
+  font-size: 27px;
+}
+.rr-game-durak .rr-durak-lobby-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 15px;
+  font-size: 10px;
+}
+.rr-game-durak .rr-durak-lobby-tags span {
+  padding: 6px 10px;
+  border: 1px solid #ffffff50;
+  border-radius: 5px;
+}
+.rr-game-durak .rr-durak-panel {
+  background: #fffaf0;
+  padding: 30px;
+  border: 1px solid var(--rr-durak-line);
+  border-radius: 22px;
+}
+.rr-game-durak .rr-durak-panel > small {
+  letter-spacing: 2px;
+  color: var(--rr-durak-muted);
+}
+.rr-game-durak .rr-durak-panel h2 {
+  margin: 8px 0 10px;
+  font-size: 26px;
+}
+.rr-game-durak .rr-durak-panel > p {
+  font-size: 12px;
+  color: var(--rr-durak-muted);
+  margin: 12px 0;
+}
+.rr-game-durak .rr-durak-lobby-members {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 25px 0;
+}
+.rr-game-durak .rr-durak-lobby-members > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rr-durak-line);
+}
+.rr-game-durak .rr-durak-lobby-members small {
+  display: block;
+  font-size: 10px;
+  color: var(--rr-durak-muted);
+}
+.rr-game-durak .rr-durak-lobby-members > div > span:last-child {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+}
+.rr-game-durak .rr-durak-ready {
+  color: #35612d;
+  font-weight: 700;
+}
+.rr-game-durak .rr-durak-wait-seat {
+  border: 1px dashed var(--rr-durak-line);
+  border-radius: 10px;
+  padding: 15px !important;
+  color: var(--rr-durak-muted);
+}
+.rr-game-durak .rr-durak-lobby-settings {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  margin-bottom: 12px;
+  font-size: 12px;
+}
+.rr-game-durak .rr-durak-wide {
+  width: 100%;
+}
+.rr-game-durak .rr-durak-catalog {
+  max-width: 980px;
+  padding-top: 50px;
+}
+.rr-game-durak .rr-durak-catalog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 35px;
+  gap: 15px;
+}
+.rr-game-durak .rr-durak-catalog-header h1 {
+  font-size: 30px;
+}
+.rr-game-durak .rr-durak-cover-art {
+  background: var(--rr-durak-ink);
+  color: var(--rr-durak-cream);
+  border-radius: 22px;
+  padding: 36px;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 25px;
+}
+.rr-game-durak .rr-durak-cover-art img {
+  width: 160px;
+  transform: rotate(-8deg);
+}
+.rr-game-durak .rr-durak-cover-art h2 {
+  font-size: 28px;
+  margin: 8px 0;
+}
+.rr-game-durak .rr-durak-cover-art p {
+  color: #e3e4ed;
+}
+.rr-game-durak .rr-durak-room-list {
+  margin-top: 25px;
+  display: grid;
+  gap: 12px;
+}
+.rr-game-durak .rr-durak-room-list > div {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  justify-content: space-between;
+  padding: 18px;
+  background: #fffaf0;
+  border: 1px solid var(--rr-durak-line);
+  border-radius: 12px;
+}
+.rr-game-durak .rr-durak-room-list small {
+  display: block;
+  color: var(--rr-durak-muted);
+}
+.rr-game-durak .rr-durak-form-row {
+  display: flex;
+  align-items: end;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.rr-game-durak label {
+  font-size: 12px;
+}
+.rr-game-durak label:not(.rr-durak-options label):not(.rr-durak-import) {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.rr-game-durak input:not([type="checkbox"]):not([type="file"]),
+.rr-game-durak select,
+.rr-game-durak textarea {
+  min-height: 44px;
+  border: 1px solid #a7a9ad;
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: var(--rr-durak-ink);
+  background: var(--rr-durak-cream);
+  max-width: 100%;
+  width: 100%;
+}
+.rr-game-durak .rr-durak-login {
+  padding: 18px;
+  border: 1px dashed var(--rr-durak-line);
+  margin-bottom: 20px;
+  border-radius: 12px;
+}
+.rr-game-durak .rr-durak-login small {
+  display: block;
+  margin-bottom: 10px;
+}
+.rr-game-durak .rr-durak-login-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.rr-game-durak .rr-durak-admin {
+  padding-top: 45px;
+}
+.rr-game-durak .rr-durak-admin h1 {
+  margin-bottom: 10px;
+}
+.rr-game-durak .rr-durak-admin-grid {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 25px;
+  margin-top: 30px;
+}
+.rr-game-durak .rr-durak-admin nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.rr-game-durak .rr-durak-admin nav button {
+  display: block;
+  text-align: left;
+}
+.rr-game-durak .rr-durak-admin nav small {
+  display: block;
+}
+.rr-game-durak .rr-durak-admin form {
+  display: grid;
+  gap: 16px;
+}
+.rr-game-durak .rr-durak-admin fieldset {
+  border: 1px solid var(--rr-durak-line);
+  border-radius: 10px;
+  padding: 15px;
+}
+.rr-game-durak .rr-durak-option-edit {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.rr-game-durak .rr-durak-admin textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+.rr-game-durak .rr-durak-import {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.rr-game-durak .rr-durak-hidden * {
+  animation-play-state: paused !important;
+}
+.rr-game-durak summary {
+  cursor: pointer;
+  padding: 12px;
+  min-height: 44px;
+}
+@keyframes rr-durak-fly {
+  from {
+    transform: translate(-30px, 35px) rotate(-12deg);
+    opacity: 0;
+  }
+  60% {
+    transform: translate(-10px, -12px) rotate(-3deg);
+  }
+  to {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+@keyframes rr-durak-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (min-width: 1200px) {
+  .rr-game-durak .rr-durak-opponents {
+    justify-content: center;
+  }
+  .rr-game-durak .rr-durak-player {
+    max-width: 230px;
+  }
+}
+@media (max-width: 800px) {
+  .rr-game-durak .rr-durak-shell {
+    padding: 18px 20px;
+  }
+  .rr-game-durak .rr-durak-lobby-grid {
+    grid-template-columns: 1fr;
+  }
+  .rr-game-durak .rr-durak-lobby-art {
+    min-height: 280px;
+    padding: 30px;
+  }
+  .rr-game-durak .rr-durak-lobby-art > svg {
+    width: 55px;
+    height: 55px;
+  }
+  .rr-game-durak .rr-durak-lobby-art h2 {
+    font-size: 25px;
+  }
+  .rr-game-durak .rr-durak-lobby-art p {
+    max-width: 450px;
+  }
+  .rr-game-durak .rr-durak-admin-grid {
+    grid-template-columns: 1fr;
+  }
+  .rr-game-durak .rr-durak-admin nav {
+    max-height: 240px;
+    overflow: auto;
+  }
+  .rr-game-durak .rr-durak-hand {
+    justify-content: flex-start;
+  }
+  .rr-game-durak .rr-durak-cover-art {
+    padding: 25px;
+  }
+  .rr-game-durak .rr-durak-cover-art img {
+    width: 120px;
+  }
+}
+@media (max-width: 480px) {
+  .rr-game-durak .rr-durak-shell {
+    padding: 12px;
+  }
+  .rr-game-durak .rr-durak-header {
+    gap: 9px;
+    padding-bottom: 16px;
+    margin-bottom: 14px;
+  }
+  .rr-game-durak h1 {
+    font-size: 17px;
+    letter-spacing: -0.4px;
+  }
+  .rr-game-durak .rr-durak-header small {
+    font-size: 7px;
+    letter-spacing: 0.6px;
+  }
+  .rr-game-durak .rr-durak-header-actions {
+    gap: 0;
+  }
+  .rr-game-durak .rr-durak-header .rr-durak-icon {
+    padding: 8px;
+  }
+  .rr-game-durak .rr-durak-header .rr-durak-pill {
+    padding: 5px 8px;
+    font-size: 9px;
+    margin-left: auto;
+  }
+  .rr-game-durak .rr-durak-player {
+    min-width: 152px;
+    padding: 9px;
+  }
+  .rr-game-durak .rr-durak-active {
+    padding: 8px;
+  }
+  .rr-game-durak .rr-durak-opponents {
+    margin-bottom: 12px;
+    gap: 8px;
+  }
+  .rr-game-durak .rr-durak-table {
+    padding: 15px;
+    border-radius: 16px;
+    min-height: 350px;
+  }
+  .rr-game-durak .rr-durak-table-top .rr-durak-pill {
+    font-size: 8px;
+    padding: 5px 8px;
+  }
+  .rr-game-durak .rr-durak-deck {
+    gap: 8px;
+  }
+  .rr-game-durak .rr-durak-deck strong {
+    font-size: 11px;
+  }
+  .rr-game-durak .rr-durak-table-top small {
+    font-size: 8px;
+  }
+  .rr-game-durak .rr-durak-stamp {
+    font-size: 20px;
+    padding: 3px 6px;
+  }
+  .rr-game-durak .rr-durak-phase {
+    padding: 25px 37px 8px;
+    min-height: 110px;
+  }
+  .rr-game-durak .rr-durak-phase h2 {
+    font-size: 15px;
+  }
+  .rr-game-durak .rr-durak-timer {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    top: 32px;
+  }
+  .rr-game-durak .rr-durak-timer small {
+    font-size: 8px;
+  }
+  .rr-game-durak .rr-durak-pairs {
+    gap: 18px 14px;
+    min-height: 150px;
+  }
+  .rr-game-durak .rr-durak-pair {
+    width: 69px;
+    height: 101px;
+  }
+  .rr-game-durak .rr-durak-pair > svg,
+  .rr-game-durak .rr-durak-cover svg {
+    width: 69px;
+    height: 101px;
+  }
+  .rr-game-durak .rr-durak-cover {
+    inset: 12px -10px -12px 10px;
+  }
+  .rr-game-durak .rr-durak-table-bottom {
+    font-size: 8px;
+  }
+  .rr-game-durak .rr-durak-table-bottom svg {
+    width: 12px;
+  }
+  .rr-game-durak .rr-durak-empty p {
+    font-size: 12px;
+  }
+  .rr-game-durak .rr-durak-empty small {
+    font-size: 9px;
+  }
+  .rr-game-durak .rr-durak-hand-title {
+    align-items: start;
+  }
+  .rr-game-durak .rr-durak-hand-title small {
+    font-size: 9px;
+    max-width: 145px;
+    text-align: right;
+  }
+  .rr-game-durak .rr-durak-hand-title h2 {
+    font-size: 14px;
+  }
+  .rr-game-durak .rr-durak-hand {
+    min-height: 150px;
+    padding-top: 20px;
+  }
+  .rr-game-durak .rr-durak-card {
+    width: 72px;
+    min-height: 106px;
+  }
+  .rr-game-durak .rr-durak-card svg {
+    width: 72px;
+    height: 106px;
+  }
+  .rr-game-durak .rr-durak-controls {
+    gap: 8px;
+  }
+  .rr-game-durak .rr-durak-controls .rr-durak-primary {
+    min-width: 160px;
+  }
+  .rr-game-durak .rr-durak-controls button {
+    font-size: 12px;
+    padding: 10px 12px;
+  }
+  .rr-game-durak .rr-durak-footer {
+    font-size: 7px;
+    letter-spacing: 0.3px;
+    margin-top: 22px;
+  }
+  .rr-game-durak .rr-durak-footer span:last-child {
+    text-align: right;
+    max-width: 180px;
+  }
+  .rr-game-durak .rr-durak-lobby-art {
+    padding: 25px;
+    gap: 13px;
+    min-height: 310px;
+  }
+  .rr-game-durak .rr-durak-lobby-art h2 {
+    font-size: 23px;
+  }
+  .rr-game-durak .rr-durak-lobby-art p {
+    font-size: 12px;
+  }
+  .rr-game-durak .rr-durak-lobby-grid {
+    gap: 15px;
+  }
+  .rr-game-durak .rr-durak-panel {
+    padding: 22px 18px;
+  }
+  .rr-game-durak .rr-durak-panel h2 {
+    font-size: 22px;
+  }
+  .rr-game-durak .rr-durak-catalog {
+    padding-top: 25px;
+  }
+  .rr-game-durak .rr-durak-catalog-header h1 {
+    font-size: 24px;
+  }
+  .rr-game-durak .rr-durak-cover-art {
+    padding: 23px 18px;
+    gap: 15px;
+  }
+  .rr-game-durak .rr-durak-cover-art img {
+    width: 80px;
+  }
+  .rr-game-durak .rr-durak-cover-art h2 {
+    font-size: 22px;
+  }
+  .rr-game-durak .rr-durak-cover-art p {
+    font-size: 11px;
+  }
+  .rr-game-durak .rr-durak-cover-art small {
+    font-size: 8px;
+  }
+  .rr-game-durak .rr-durak-task,
+  .rr-game-durak .rr-durak-result,
+  .rr-game-durak .rr-durak-help {
+    padding: 18px;
+  }
+  .rr-game-durak .rr-durak-task h2 {
+    font-size: 17px;
+  }
+  .rr-game-durak .rr-durak-task small {
+    font-size: 8px;
+  }
+  .rr-game-durak .rr-durak-form-row label {
+    width: 100%;
+  }
+  .rr-game-durak .rr-durak-form-row > button {
+    width: 100%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rr-game-durak *,
+  .rr-game-durak *:before,
+  .rr-game-durak *:after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.rr-game-durak .rr-durak-discard-flight {
+  position: absolute;
+  top: 44%;
+  left: 45%;
+  pointer-events: none;
+  animation: rr-durak-postbox 0.4s ease-in forwards;
+}
+.rr-game-durak .rr-durak-discard-flight svg {
+  width: 72px;
+  height: 106px;
+}
+@keyframes rr-durak-postbox {
+  from {
+    transform: translate(0, 0) rotate(0);
+    opacity: 1;
+  }
+  to {
+    transform: translate(210px, 95px) rotate(15deg) scale(0.2);
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rr-game-durak .rr-durak-discard-flight {
+    display: none;
+  }
+}
+
+.rr-game-durak .rr-durak-envelope-stack {
+  display: block;
+  position: relative;
+  width: 30px;
+  height: 44px;
+  transform: rotate(-5deg);
+  margin-right: -4px;
+}
+.rr-game-durak .rr-durak-envelope-stack:before,
+.rr-game-durak .rr-durak-envelope-stack:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #fff8e9;
+  border: 1px solid #f3c969;
+  border-radius: 3px;
+  transform: translate(-4px, 2px);
+  z-index: 0;
+}
+.rr-game-durak .rr-durak-envelope-stack:after {
+  transform: translate(-2px, 1px);
+}
+.rr-game-durak .rr-durak-envelope-stack svg {
+  width: 30px;
+  height: 44px;
+  position: relative;
+  z-index: 1;
+}
+@media (max-width: 480px) {
+  .rr-game-durak .rr-durak-envelope-stack {
+    display: none;
+  }
+}

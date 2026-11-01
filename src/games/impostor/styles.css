@@ -1,0 +1,509 @@
+/* «Самозванец» — «Две орбиты одной темы». Все правила ограничены корнем .rr-game-impostor. */
+
+.rr-game-impostor {
+  --rr-impostor-night: #39245a;
+  --rr-impostor-night-deep: #2a1844;
+  --rr-impostor-lilac: #e6d7ff;
+  --rr-impostor-citrus: #e9ff79;
+  --rr-impostor-pink: #ff8ebd;
+  --rr-impostor-paper: #fffaf0;
+  --rr-impostor-ink: #2a1844;
+  --rr-impostor-muted: #cbb9ec;
+  --rr-impostor-line: rgba(230, 215, 255, 0.28);
+  --rr-impostor-radius: 18px;
+  --rr-impostor-ui: 200ms;
+  --rr-impostor-reveal: 450ms;
+  --rr-impostor-story: 1100ms;
+  --rr-impostor-font: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --rr-impostor-display: "Unbounded", "Manrope", system-ui, sans-serif;
+
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 100%;
+  padding: clamp(12px, 3vw, 28px);
+  color: var(--rr-impostor-lilac);
+  background: radial-gradient(120% 80% at 50% 0%, #4a2f73 0%, var(--rr-impostor-night) 45%, var(--rr-impostor-night-deep) 100%);
+  font-family: var(--rr-impostor-font);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.rr-game-impostor *,
+.rr-game-impostor *::before,
+.rr-game-impostor *::after {
+  box-sizing: border-box;
+}
+
+.rr-game-impostor h1,
+.rr-game-impostor h2,
+.rr-game-impostor h3,
+.rr-game-impostor h4 {
+  margin: 0 0 8px;
+  font-family: var(--rr-impostor-display);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--rr-impostor-lilac);
+}
+
+.rr-game-impostor h2 { font-size: clamp(20px, 3.4vw, 30px); }
+.rr-game-impostor h3 { display: flex; align-items: center; gap: 8px; font-size: 18px; }
+.rr-game-impostor h4 { font-size: 16px; }
+.rr-game-impostor p { margin: 0 0 8px; }
+.rr-game-impostor ul,
+.rr-game-impostor ol { margin: 0; padding: 0; list-style: none; }
+.rr-game-impostor svg { flex-shrink: 0; }
+.rr-game-impostor :focus-visible {
+  outline: 3px solid var(--rr-impostor-citrus);
+  outline-offset: 3px;
+}
+
+.rr-game-impostor .rr-impostor-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.rr-game-impostor .rr-impostor-kicker {
+  margin: 0 0 4px;
+  color: var(--rr-impostor-citrus);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.rr-game-impostor .rr-impostor-muted { color: var(--rr-impostor-muted); font-size: 14px; }
+.rr-game-impostor .rr-impostor-bad { color: var(--rr-impostor-pink); }
+.rr-game-impostor .rr-impostor-success { color: var(--rr-impostor-citrus); font-weight: 700; }
+
+/* ---------- раскладка ---------- */
+
+.rr-game-impostor .rr-impostor-top {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.rr-game-impostor .rr-impostor-top-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+
+.rr-game-impostor .rr-impostor-layout {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(240px, 320px) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.rr-game-impostor .rr-impostor-stack { display: grid; gap: 16px; min-width: 0; }
+.rr-game-impostor .rr-impostor-side { display: grid; gap: 16px; }
+
+.rr-game-impostor .rr-impostor-card {
+  position: relative;
+  z-index: 1;
+  padding: 16px;
+  border: 1px solid var(--rr-impostor-line);
+  border-radius: var(--rr-impostor-radius);
+  background: rgba(42, 24, 68, 0.72);
+  backdrop-filter: blur(6px);
+}
+
+.rr-game-impostor .rr-impostor-warning { border-color: var(--rr-impostor-pink); }
+.rr-game-impostor .rr-impostor-step {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border-left: 4px solid var(--rr-impostor-lilac);
+  border-radius: 12px;
+  background: rgba(230, 215, 255, 0.08);
+}
+.rr-game-impostor .rr-impostor-step.is-turn { border-color: var(--rr-impostor-citrus); color: var(--rr-impostor-citrus); font-weight: 700; }
+
+/* ---------- кнопки и поля ---------- */
+
+.rr-game-impostor button,
+.rr-game-impostor input,
+.rr-game-impostor textarea {
+  font: inherit;
+}
+
+.rr-game-impostor .rr-impostor-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 10px 18px;
+  border: 2px solid var(--rr-impostor-lilac);
+  border-radius: 999px;
+  background: var(--rr-impostor-lilac);
+  color: var(--rr-impostor-ink);
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform var(--rr-impostor-ui) ease, background-color var(--rr-impostor-ui) ease;
+}
+.rr-game-impostor .rr-impostor-btn:hover:not(:disabled) { transform: translateY(-1px); }
+.rr-game-impostor .rr-impostor-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.rr-game-impostor .rr-impostor-btn--accent { border-color: var(--rr-impostor-citrus); background: var(--rr-impostor-citrus); }
+.rr-game-impostor .rr-impostor-btn--ghost { background: transparent; color: var(--rr-impostor-lilac); }
+.rr-game-impostor .rr-impostor-btn--danger { border-color: var(--rr-impostor-pink); background: var(--rr-impostor-pink); }
+
+.rr-game-impostor .rr-impostor-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--rr-impostor-line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--rr-impostor-lilac);
+  cursor: pointer;
+}
+.rr-game-impostor .rr-impostor-icon-label { font-size: 14px; }
+
+.rr-game-impostor .rr-impostor-link {
+  min-height: 44px;
+  padding: 0 4px;
+  border: 0;
+  background: none;
+  color: var(--rr-impostor-pink);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.rr-game-impostor input:not([type="checkbox"]):not([type="file"]),
+.rr-game-impostor textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 2px solid var(--rr-impostor-line);
+  border-radius: 12px;
+  background: var(--rr-impostor-paper);
+  color: var(--rr-impostor-ink);
+}
+.rr-game-impostor label { display: block; margin: 8px 0 4px; font-weight: 600; }
+.rr-game-impostor .rr-impostor-switch { display: flex; align-items: center; gap: 8px; min-height: 44px; }
+.rr-game-impostor .rr-impostor-switch input { width: 22px; height: 22px; accent-color: var(--rr-impostor-citrus); }
+.rr-game-impostor .rr-impostor-input-row { display: flex; gap: 8px; align-items: center; }
+.rr-game-impostor .rr-impostor-form.is-turn { border: 2px solid var(--rr-impostor-citrus); }
+.rr-game-impostor .rr-impostor-controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.rr-game-impostor .rr-impostor-controls > .rr-impostor-blockers,
+.rr-game-impostor .rr-impostor-controls > p,
+.rr-game-impostor .rr-impostor-controls > .rr-impostor-error { flex-basis: 100%; }
+.rr-game-impostor .rr-impostor-blockers li::before { content: "• "; color: var(--rr-impostor-pink); }
+.rr-game-impostor .rr-impostor-confirm { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+.rr-game-impostor .rr-impostor-error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: var(--rr-impostor-pink);
+  color: var(--rr-impostor-ink);
+  font-weight: 600;
+  animation: rr-impostor-rise var(--rr-impostor-ui) ease-out;
+}
+.rr-game-impostor .rr-impostor-error .rr-impostor-icon-btn { border-color: var(--rr-impostor-ink); color: var(--rr-impostor-ink); }
+
+.rr-game-impostor .rr-impostor-banner {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  color: var(--rr-impostor-ink);
+  font-weight: 600;
+}
+.rr-game-impostor .rr-impostor-banner--ok { background: var(--rr-impostor-citrus); }
+.rr-game-impostor .rr-impostor-banner--warn { background: var(--rr-impostor-lilac); }
+.rr-game-impostor .rr-impostor-banner--bad { background: var(--rr-impostor-pink); }
+
+.rr-game-impostor .rr-impostor-dot {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--rr-impostor-lilac);
+  border-radius: 50%;
+}
+.rr-game-impostor .rr-impostor-dot--online { background: var(--rr-impostor-citrus); }
+.rr-game-impostor .rr-impostor-dot--reconnecting { background: var(--rr-impostor-lilac); }
+.rr-game-impostor .rr-impostor-dot--offline { background: var(--rr-impostor-pink); }
+
+.rr-game-impostor .rr-impostor-tag {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--rr-impostor-citrus);
+  color: var(--rr-impostor-ink);
+  font-size: 12px;
+  font-weight: 700;
+}
+.rr-game-impostor .rr-impostor-tag--muted { background: var(--rr-impostor-lilac); }
+.rr-game-impostor .rr-impostor-tag--bad { background: var(--rr-impostor-pink); }
+.rr-game-impostor .rr-impostor-tag--warn { background: #ffd28e; }
+
+/* ---------- таймер ---------- */
+
+.rr-game-impostor .rr-impostor-timer { position: relative; width: 52px; height: 52px; }
+.rr-game-impostor .rr-impostor-timer svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.rr-game-impostor .rr-impostor-timer-track { fill: none; stroke: var(--rr-impostor-line); stroke-width: 4; }
+.rr-game-impostor .rr-impostor-timer-arc { fill: none; stroke: var(--rr-impostor-citrus); stroke-width: 4; stroke-linecap: round; transition: stroke-dashoffset 250ms linear; }
+.rr-game-impostor .rr-impostor-timer span {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--rr-impostor-display);
+  font-weight: 600;
+}
+
+/* ---------- игроки-спутники ---------- */
+
+.rr-game-impostor .rr-impostor-players { display: grid; gap: 6px; }
+.rr-game-impostor .rr-impostor-player { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 4px 6px; border-radius: 12px; }
+.rr-game-impostor .rr-impostor-player.is-active { background: rgba(233, 255, 121, 0.12); }
+.rr-game-impostor .rr-impostor-player-name { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.rr-game-impostor .rr-impostor-player--empty { color: var(--rr-impostor-muted); }
+.rr-game-impostor .rr-impostor-sat-empty { width: 40px; height: 40px; border: 2px dashed var(--rr-impostor-line); border-radius: 50%; }
+.rr-game-impostor .rr-impostor-ready { padding: 2px 10px; border-radius: 999px; border: 1px solid var(--rr-impostor-line); font-size: 13px; }
+.rr-game-impostor .rr-impostor-ready.is-ready { border-color: var(--rr-impostor-citrus); color: var(--rr-impostor-citrus); }
+
+.rr-game-impostor .rr-impostor-sat { position: relative; display: inline-grid; flex-shrink: 0; place-items: center; }
+.rr-game-impostor .rr-impostor-sat svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.rr-game-impostor .rr-impostor-sat-ring { fill: none; stroke: var(--rr-impostor-lilac); stroke-width: 2; opacity: 0.7; }
+.rr-game-impostor .rr-impostor-sat-body { fill: var(--rr-impostor-lilac); }
+.rr-game-impostor .rr-impostor-sat-initials { position: relative; color: var(--rr-impostor-ink); font-size: 12px; font-weight: 800; }
+.rr-game-impostor .rr-impostor-sat.is-active .rr-impostor-sat-ring { stroke: var(--rr-impostor-citrus); opacity: 1; stroke-width: 3; }
+.rr-game-impostor .rr-impostor-sat.is-me .rr-impostor-sat-body { stroke: var(--rr-impostor-pink); stroke-width: 3; }
+.rr-game-impostor .rr-impostor-sat.is-offline { opacity: 0.55; }
+.rr-game-impostor .rr-impostor-sat.is-left { opacity: 0.35; }
+
+/* ---------- планеты и орбиты ---------- */
+
+.rr-game-impostor .rr-impostor-planets { position: relative; width: 100%; max-width: 560px; margin: 0 auto; }
+.rr-game-impostor .rr-impostor-planets svg { display: block; width: 100%; height: auto; overflow: visible; }
+.rr-game-impostor .rr-impostor-orbit { fill: none; stroke: var(--rr-impostor-line); stroke-width: 1.5; stroke-dasharray: 4 8; animation: rr-impostor-orbit 40s linear infinite; }
+.rr-game-impostor .rr-impostor-orbit--inner { animation-duration: 60s; animation-direction: reverse; }
+.rr-game-impostor .rr-impostor-planet circle:first-child { fill: var(--rr-impostor-lilac); opacity: 0.88; }
+.rr-game-impostor .rr-impostor-planet--b circle:first-child { fill: var(--rr-impostor-pink); opacity: 0.6; mix-blend-mode: screen; }
+.rr-game-impostor .rr-impostor-paper-line { stroke: rgba(57, 36, 90, 0.12); stroke-width: 1; }
+.rr-game-impostor .rr-impostor-planet { transition: transform var(--rr-impostor-story) cubic-bezier(0.2, 0.7, 0.2, 1); transform-box: fill-box; transform-origin: center; }
+.rr-game-impostor .rr-impostor-planets.is-diverged .rr-impostor-planet--a { transform: translateX(-48px) scale(0.92); }
+.rr-game-impostor .rr-impostor-planets.is-diverged .rr-impostor-planet--b { transform: translateX(48px) scale(0.92); }
+.rr-game-impostor .rr-impostor-planet-labels { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
+.rr-game-impostor .rr-impostor-planet-label {
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: var(--rr-impostor-paper);
+  color: var(--rr-impostor-ink);
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+  overflow-wrap: anywhere;
+  animation: rr-impostor-rise var(--rr-impostor-reveal) ease-out;
+}
+.rr-game-impostor .rr-impostor-planet-label--a { border-bottom: 4px solid var(--rr-impostor-lilac); }
+.rr-game-impostor .rr-impostor-planet-label--b { border-bottom: 4px solid var(--rr-impostor-pink); }
+
+.rr-game-impostor .rr-impostor-stars {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.rr-game-impostor .rr-impostor-stars circle { fill: var(--rr-impostor-lilac); opacity: 0.5; animation: rr-impostor-twinkle 9s ease-in-out infinite; }
+.rr-game-impostor.is-paused .rr-impostor-stars circle,
+.rr-game-impostor.is-paused .rr-impostor-orbit { animation-play-state: paused; }
+
+/* ---------- линза ---------- */
+
+.rr-game-impostor .rr-impostor-lens { display: grid; justify-items: center; gap: 10px; }
+.rr-game-impostor .rr-impostor-lens-glass {
+  display: grid;
+  place-items: center;
+  width: min(100%, 240px);
+  aspect-ratio: 1;
+  border: 6px solid var(--rr-impostor-lilac);
+  border-radius: 50%;
+  background: var(--rr-impostor-paper);
+  box-shadow: 0 0 0 10px rgba(230, 215, 255, 0.12);
+  overflow: hidden;
+}
+.rr-game-impostor .rr-impostor-lens-content {
+  padding: 18%;
+  color: var(--rr-impostor-ink);
+  text-align: center;
+  clip-path: circle(12% at 50% 50%);
+  transition: clip-path var(--rr-impostor-reveal) ease-out;
+}
+.rr-game-impostor .rr-impostor-lens.is-open .rr-impostor-lens-content { clip-path: circle(75% at 50% 50%); }
+.rr-game-impostor .rr-impostor-lens-content h3 { justify-content: center; color: var(--rr-impostor-night); font-size: 17px; }
+.rr-game-impostor .rr-impostor-lens-desc { margin: 0; font-size: 14px; text-align: center; animation: rr-impostor-rise var(--rr-impostor-reveal) ease-out; }
+.rr-game-impostor .rr-impostor-lens-content .rr-impostor-kicker { color: #6b4fa0; }
+
+/* ---------- примеры на бумажных карточках ---------- */
+
+.rr-game-impostor .rr-impostor-turn { display: flex; align-items: center; gap: 14px; }
+.rr-game-impostor .rr-impostor-belt { display: grid; gap: 12px; }
+.rr-game-impostor .rr-impostor-cards { display: flex; flex-wrap: wrap; gap: 10px; }
+.rr-game-impostor .rr-impostor-paper-card {
+  display: grid;
+  gap: 2px;
+  max-width: 260px;
+  padding: 10px 14px;
+  border-radius: 14px 14px 14px 4px;
+  background: var(--rr-impostor-paper);
+  color: var(--rr-impostor-ink);
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.18);
+  animation: rr-impostor-dock var(--rr-impostor-ui) ease-out;
+  overflow-wrap: anywhere;
+}
+.rr-game-impostor .rr-impostor-paper-card.is-skipped { background: var(--rr-impostor-lilac); font-style: italic; }
+.rr-game-impostor .rr-impostor-paper-author { color: #6b4fa0; font-size: 12px; font-weight: 700; }
+.rr-game-impostor .rr-impostor-paper-text { font-size: 16px; font-weight: 600; }
+.rr-game-impostor .rr-impostor-belt.is-compact .rr-impostor-paper-card { padding: 6px 10px; }
+
+/* ---------- чат и голосование ---------- */
+
+.rr-game-impostor .rr-impostor-chat ol { display: grid; gap: 4px; max-height: 220px; margin-bottom: 10px; overflow-y: auto; }
+.rr-game-impostor .rr-impostor-chat li { overflow-wrap: anywhere; }
+.rr-game-impostor .rr-impostor-chat li.is-me b { color: var(--rr-impostor-citrus); }
+.rr-game-impostor .rr-impostor-vote-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin-bottom: 12px; }
+.rr-game-impostor .rr-impostor-vote-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 56px;
+  padding: 6px 10px;
+  border: 2px solid var(--rr-impostor-line);
+  border-radius: 14px;
+  background: transparent;
+  color: var(--rr-impostor-lilac);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--rr-impostor-ui) ease;
+}
+.rr-game-impostor .rr-impostor-vote-btn.is-chosen { border-color: var(--rr-impostor-citrus); background: rgba(233, 255, 121, 0.1); }
+.rr-game-impostor .rr-impostor-voted { color: var(--rr-impostor-citrus); }
+
+/* ---------- раскрытие ---------- */
+
+.rr-game-impostor .rr-impostor-reveal { display: grid; gap: 16px; }
+.rr-game-impostor .rr-impostor-verdict { display: flex; gap: 14px; align-items: flex-start; animation: rr-impostor-rise var(--rr-impostor-reveal) ease-out; }
+.rr-game-impostor .rr-impostor-verdict.is-caught { border: 2px solid var(--rr-impostor-citrus); }
+.rr-game-impostor .rr-impostor-verdict.is-escaped { border: 2px solid var(--rr-impostor-pink); }
+.rr-game-impostor .rr-impostor-difference { background: var(--rr-impostor-paper); color: var(--rr-impostor-ink); }
+.rr-game-impostor .rr-impostor-difference h3 { color: var(--rr-impostor-night); }
+.rr-game-impostor .rr-impostor-difference .rr-impostor-kicker { color: #6b4fa0; }
+.rr-game-impostor .rr-impostor-topics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.rr-game-impostor .rr-impostor-topic--a { border-top: 6px solid var(--rr-impostor-lilac); }
+.rr-game-impostor .rr-impostor-topic--b { border-top: 6px solid var(--rr-impostor-pink); }
+.rr-game-impostor .rr-impostor-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.rr-game-impostor .rr-impostor-chips li { padding: 4px 10px; border-radius: 10px; background: var(--rr-impostor-paper); color: var(--rr-impostor-ink); font-size: 14px; }
+.rr-game-impostor .rr-impostor-tally li { display: grid; grid-template-columns: minmax(80px, 140px) 1fr auto; align-items: center; gap: 10px; min-height: 32px; }
+.rr-game-impostor .rr-impostor-bar { height: 10px; border-radius: 999px; background: var(--rr-impostor-citrus); transition: width var(--rr-impostor-story) ease-out; }
+.rr-game-impostor .rr-impostor-votes { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 10px; color: var(--rr-impostor-muted); font-size: 14px; }
+.rr-game-impostor .rr-impostor-scores li { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--rr-impostor-line); }
+.rr-game-impostor .rr-impostor-final-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+/* ---------- каталог, комната, админка ---------- */
+
+.rr-game-impostor .rr-impostor-cover { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 20px; align-items: center; margin-bottom: 20px; }
+.rr-game-impostor .rr-impostor-cover img { width: 100%; height: auto; border-radius: var(--rr-impostor-radius); }
+.rr-game-impostor .rr-impostor-rooms li { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--rr-impostor-line); }
+.rr-game-impostor .rr-impostor-rules summary { min-height: 44px; display: flex; align-items: center; font-weight: 700; cursor: pointer; }
+.rr-game-impostor .rr-impostor-rules ol { list-style: decimal; padding-left: 20px; }
+.rr-game-impostor .rr-impostor-rules li { margin-bottom: 6px; }
+.rr-game-impostor.rr-impostor-joinbar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; min-height: auto; padding: 12px 20px; border-bottom: 1px solid var(--rr-impostor-line); }
+.rr-game-impostor.rr-impostor-placeholder { display: grid; place-items: center; min-height: 60vh; }
+.rr-game-impostor .rr-impostor-loading { position: relative; z-index: 1; display: flex; gap: 10px; align-items: center; }
+.rr-game-impostor .rr-impostor-admin-grid { display: grid; grid-template-columns: minmax(220px, 300px) minmax(0, 1fr); gap: 16px; align-items: start; }
+.rr-game-impostor .rr-impostor-admin-list { display: grid; gap: 4px; max-height: 70vh; overflow-y: auto; }
+.rr-game-impostor .rr-impostor-admin-item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--rr-impostor-lilac);
+  text-align: left;
+  cursor: pointer;
+}
+.rr-game-impostor .rr-impostor-admin-item.is-selected { border-color: var(--rr-impostor-citrus); }
+.rr-game-impostor .rr-impostor-list-field { margin: 8px 0; padding: 0; border: 0; }
+.rr-game-impostor .rr-impostor-list-field .rr-impostor-input-row { margin-bottom: 6px; }
+.rr-game-impostor .rr-impostor-topic-editor legend { font-family: var(--rr-impostor-display); font-weight: 600; }
+.rr-game-impostor .rr-impostor-spin { animation: rr-impostor-spin 1s linear infinite; }
+
+/* ---------- анимации: короткие и прерываемые ---------- */
+
+@keyframes rr-impostor-dock {
+  from { opacity: 0; transform: translateY(-10px) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes rr-impostor-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes rr-impostor-orbit { to { stroke-dashoffset: -120; } }
+@keyframes rr-impostor-twinkle {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 0.65; }
+}
+@keyframes rr-impostor-spin { to { transform: rotate(360deg); } }
+
+/* Мобильный экран: орбиты превращаются в вертикальную дорожку. */
+@media (max-width: 760px) {
+  .rr-game-impostor .rr-impostor-layout,
+  .rr-game-impostor .rr-impostor-admin-grid,
+  .rr-game-impostor .rr-impostor-cover,
+  .rr-game-impostor .rr-impostor-topics { grid-template-columns: minmax(0, 1fr); }
+  .rr-game-impostor .rr-impostor-side { order: 2; }
+  .rr-game-impostor .rr-impostor-planets { max-width: 260px; }
+  .rr-game-impostor .rr-impostor-cards { flex-direction: column; padding-left: 18px; border-left: 2px dashed var(--rr-impostor-line); }
+  .rr-game-impostor .rr-impostor-paper-card { max-width: none; }
+  .rr-game-impostor .rr-impostor-lens-glass { width: min(100%, 220px); }
+  .rr-game-impostor .rr-impostor-icon-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .rr-game-impostor .rr-impostor-input-row { flex-wrap: wrap; }
+  .rr-game-impostor .rr-impostor-input-row .rr-impostor-btn { flex: 1 1 auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rr-game-impostor *,
+  .rr-game-impostor *::before,
+  .rr-game-impostor *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+  .rr-game-impostor .rr-impostor-stars circle,
+  .rr-game-impostor .rr-impostor-orbit { animation: none !important; }
+}

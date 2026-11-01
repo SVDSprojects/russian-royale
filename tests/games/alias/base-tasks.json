@@ -1,0 +1,7 @@
+{
+  "note": "Демо-фикстура нормализованных учебных заданий {id,ruleId,prompt,options,acceptedAnswers,explanation,difficulty,revision,status}. Только для preview и тестов адаптера.",
+  "tasks": [
+    { "id": "t1", "ruleId": "lexis-synonyms", "prompt": "Как называются слова, близкие по значению?", "options": ["синонимы", "антонимы", "омонимы"], "acceptedAnswers": ["синоним", "синонимы"], "explanation": "Синонимы — слова одной части речи, близкие по значению: смелый — храбрый.", "difficulty": 1, "revision": 1, "status": "published" },
+    { "id": "t2", "ruleId": "lexis-antonyms", "prompt": "Как называются слова с противоположным значением?", "options": ["синонимы", "антонимы"], "acceptedAnswers": ["антоним", "антонимы"], "explanation": "Антонимы — слова с противоположным значением: день — ночь.", "difficulty": 1, "revision": 1, "status": "draft" }
+  ]
+}

@@ -1,0 +1,395 @@
+/* «Кто я» — «Музей живых слов». Все правила ограничены корнем .rr-game-whoami. */
+
+.rr-game-whoami {
+  --rr-whoami-teal: #176b78;
+  --rr-whoami-teal-deep: #0f4f59;
+  --rr-whoami-peach: #ffd7b5;
+  --rr-whoami-cream: #fff9e9;
+  --rr-whoami-violet: #8168db;
+  --rr-whoami-violet-ink: #5b42b5;
+  --rr-whoami-ink: #12343a;
+  --rr-whoami-red: #a3361f;
+  --rr-whoami-line: rgba(23, 107, 120, 0.28);
+  --rr-whoami-radius: 16px;
+  --rr-whoami-ui: 200ms;
+  --rr-whoami-reveal: 450ms;
+  --rr-whoami-letters: 650ms;
+  --rr-whoami-font: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --rr-whoami-display: "Unbounded", "Manrope", system-ui, sans-serif;
+
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 100%;
+  padding: clamp(12px, 3vw, 28px);
+  color: var(--rr-whoami-ink);
+  background: linear-gradient(180deg, var(--rr-whoami-cream) 0%, #fdf1dc 100%);
+  font-family: var(--rr-whoami-font);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.rr-game-whoami *,
+.rr-game-whoami *::before,
+.rr-game-whoami *::after {
+  box-sizing: border-box;
+}
+
+.rr-game-whoami h1,
+.rr-game-whoami h2,
+.rr-game-whoami h3,
+.rr-game-whoami h4 {
+  margin: 0 0 8px;
+  font-family: var(--rr-whoami-display);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--rr-whoami-teal-deep);
+}
+
+.rr-game-whoami h2 { font-size: clamp(20px, 3.4vw, 30px); }
+.rr-game-whoami h3 { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 18px; }
+.rr-game-whoami p { margin: 0 0 8px; }
+.rr-game-whoami ul,
+.rr-game-whoami ol { margin: 0; padding: 0; list-style: none; }
+.rr-game-whoami svg { flex-shrink: 0; }
+.rr-game-whoami :focus-visible { outline: 3px solid var(--rr-whoami-violet-ink); outline-offset: 3px; }
+
+.rr-game-whoami .rr-whoami-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.rr-game-whoami .rr-whoami-kicker { margin: 0 0 4px; color: var(--rr-whoami-violet-ink); font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+.rr-game-whoami .rr-whoami-muted { color: #3d5a5f; font-size: 14px; }
+.rr-game-whoami .rr-whoami-bad { color: var(--rr-whoami-red); font-weight: 600; }
+.rr-game-whoami .rr-whoami-success { color: var(--rr-whoami-teal); font-weight: 700; }
+.rr-game-whoami .rr-whoami-match-clock { color: #3d5a5f; font-size: 13px; }
+
+/* ---------- зал ---------- */
+
+.rr-game-whoami .rr-whoami-hall { position: absolute; inset: auto 0 0 0; z-index: 0; width: 100%; height: 180px; pointer-events: none; }
+.rr-game-whoami .rr-whoami-arch { fill: rgba(129, 104, 219, 0.07); stroke: rgba(23, 107, 120, 0.18); stroke-width: 2; }
+.rr-game-whoami .rr-whoami-lamp { fill: var(--rr-whoami-peach); opacity: 0.5; animation: rr-whoami-glow 10s ease-in-out infinite; }
+.rr-game-whoami.is-paused .rr-whoami-lamp { animation-play-state: paused; }
+
+/* ---------- раскладка ---------- */
+
+.rr-game-whoami .rr-whoami-top { position: relative; z-index: 1; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.rr-game-whoami .rr-whoami-top-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.rr-game-whoami .rr-whoami-layout { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, 300px); gap: 16px; align-items: start; }
+.rr-game-whoami .rr-whoami-stack { display: grid; gap: 16px; min-width: 0; }
+.rr-game-whoami .rr-whoami-side { display: grid; gap: 16px; }
+.rr-game-whoami .rr-whoami-card {
+  position: relative;
+  z-index: 1;
+  padding: 16px;
+  border: 2px solid var(--rr-whoami-line);
+  border-radius: var(--rr-whoami-radius);
+  background: #fffdf6;
+  box-shadow: 0 4px 0 rgba(18, 52, 58, 0.06);
+}
+.rr-game-whoami .rr-whoami-warning { border-color: var(--rr-whoami-red); }
+.rr-game-whoami .rr-whoami-step {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border-left: 5px solid var(--rr-whoami-teal);
+  border-radius: 12px;
+  background: rgba(23, 107, 120, 0.08);
+}
+.rr-game-whoami .rr-whoami-step.is-turn { border-color: var(--rr-whoami-violet-ink); background: rgba(129, 104, 219, 0.12); font-weight: 700; }
+
+/* ---------- кнопки и поля ---------- */
+
+.rr-game-whoami button,
+.rr-game-whoami input,
+.rr-game-whoami select,
+.rr-game-whoami textarea { font: inherit; }
+
+.rr-game-whoami .rr-whoami-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 10px 18px;
+  border: 2px solid var(--rr-whoami-teal);
+  border-radius: 12px;
+  background: var(--rr-whoami-teal);
+  color: var(--rr-whoami-cream);
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform var(--rr-whoami-ui) ease;
+}
+.rr-game-whoami .rr-whoami-btn:hover:not(:disabled) { transform: translateY(-1px); }
+.rr-game-whoami .rr-whoami-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.rr-game-whoami .rr-whoami-btn--accent { border-color: var(--rr-whoami-violet-ink); background: var(--rr-whoami-violet-ink); color: #ffffff; }
+.rr-game-whoami .rr-whoami-btn--ghost { background: transparent; color: var(--rr-whoami-teal-deep); }
+.rr-game-whoami .rr-whoami-btn--danger { border-color: var(--rr-whoami-red); background: var(--rr-whoami-red); color: #ffffff; }
+
+.rr-game-whoami .rr-whoami-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 2px solid var(--rr-whoami-line);
+  border-radius: 12px;
+  background: #fffdf6;
+  color: var(--rr-whoami-teal-deep);
+  cursor: pointer;
+}
+.rr-game-whoami .rr-whoami-icon-label { font-size: 14px; }
+.rr-game-whoami .rr-whoami-link { min-height: 44px; padding: 0 4px; border: 0; background: none; color: var(--rr-whoami-red); text-decoration: underline; cursor: pointer; }
+.rr-game-whoami .rr-whoami-chip-btn,
+.rr-game-whoami .rr-whoami-chip {
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 2px dashed var(--rr-whoami-violet);
+  border-radius: 12px;
+  background: #fffdf6;
+  color: var(--rr-whoami-violet-ink);
+  font-size: 14px;
+  cursor: pointer;
+}
+.rr-game-whoami .rr-whoami-chip { display: inline-flex; align-items: center; cursor: default; }
+
+.rr-game-whoami input:not([type="checkbox"]):not([type="file"]),
+.rr-game-whoami select,
+.rr-game-whoami textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 2px solid var(--rr-whoami-line);
+  border-radius: 12px;
+  background: #ffffff;
+  color: var(--rr-whoami-ink);
+}
+.rr-game-whoami label { display: block; margin: 8px 0 4px; font-weight: 600; }
+.rr-game-whoami .rr-whoami-select { display: grid; gap: 4px; margin: 0; min-width: 160px; flex: 1; }
+.rr-game-whoami .rr-whoami-switch { display: flex; align-items: center; gap: 8px; min-height: 44px; }
+.rr-game-whoami .rr-whoami-switch input { width: 22px; height: 22px; accent-color: var(--rr-whoami-teal); }
+.rr-game-whoami .rr-whoami-input-row { display: flex; gap: 8px; align-items: flex-end; }
+.rr-game-whoami .rr-whoami-form.is-turn { border-color: var(--rr-whoami-violet-ink); }
+.rr-game-whoami .rr-whoami-samples { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.rr-game-whoami .rr-whoami-controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.rr-game-whoami .rr-whoami-controls > .rr-whoami-blockers,
+.rr-game-whoami .rr-whoami-controls > p,
+.rr-game-whoami .rr-whoami-controls > .rr-whoami-error { flex-basis: 100%; }
+.rr-game-whoami .rr-whoami-blockers li::before { content: "• "; color: var(--rr-whoami-red); }
+.rr-game-whoami .rr-whoami-confirm { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+.rr-game-whoami .rr-whoami-error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: #fbe3dc;
+  color: var(--rr-whoami-red);
+  font-weight: 700;
+  animation: rr-whoami-rise var(--rr-whoami-ui) ease-out;
+}
+
+.rr-game-whoami .rr-whoami-banner { position: relative; z-index: 2; display: flex; align-items: center; gap: 10px; margin-bottom: 12px; padding: 10px 14px; border-radius: 12px; font-weight: 600; }
+.rr-game-whoami .rr-whoami-banner--ok { background: #d9efe9; color: var(--rr-whoami-teal-deep); }
+.rr-game-whoami .rr-whoami-banner--warn { background: var(--rr-whoami-peach); color: var(--rr-whoami-ink); }
+.rr-game-whoami .rr-whoami-banner--bad { background: #fbe3dc; color: var(--rr-whoami-red); }
+
+.rr-game-whoami .rr-whoami-dot { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--rr-whoami-teal-deep); border-radius: 50%; }
+.rr-game-whoami .rr-whoami-dot--online { background: var(--rr-whoami-teal); }
+.rr-game-whoami .rr-whoami-dot--reconnecting { background: var(--rr-whoami-peach); }
+.rr-game-whoami .rr-whoami-dot--offline { background: var(--rr-whoami-red); }
+
+.rr-game-whoami .rr-whoami-tag { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px; background: var(--rr-whoami-teal); color: var(--rr-whoami-cream); font-size: 12px; font-weight: 700; }
+.rr-game-whoami .rr-whoami-tag--muted { background: var(--rr-whoami-peach); color: var(--rr-whoami-ink); }
+.rr-game-whoami .rr-whoami-tag--bad { background: var(--rr-whoami-red); color: #ffffff; }
+.rr-game-whoami .rr-whoami-tag--warn { background: var(--rr-whoami-violet-ink); color: #ffffff; }
+
+/* ---------- часы ---------- */
+
+.rr-game-whoami .rr-whoami-timer { position: relative; display: grid; grid-template-columns: 48px auto; align-items: center; gap: 6px; min-height: 48px; }
+.rr-game-whoami .rr-whoami-timer svg { width: 48px; height: 48px; }
+.rr-game-whoami .rr-whoami-timer-face { fill: var(--rr-whoami-cream); stroke: var(--rr-whoami-teal); stroke-width: 3; }
+.rr-game-whoami .rr-whoami-timer-hand { stroke: var(--rr-whoami-violet-ink); stroke-width: 3; stroke-linecap: round; }
+.rr-game-whoami .rr-whoami-timer-pin { fill: var(--rr-whoami-teal-deep); }
+.rr-game-whoami .rr-whoami-timer span { font-family: var(--rr-whoami-display); font-weight: 600; color: var(--rr-whoami-teal-deep); }
+
+/* ---------- посетители ---------- */
+
+.rr-game-whoami .rr-whoami-players { display: grid; gap: 6px; }
+.rr-game-whoami .rr-whoami-player { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 4px 6px; border-radius: 12px; }
+.rr-game-whoami .rr-whoami-player.is-active { background: rgba(129, 104, 219, 0.12); }
+.rr-game-whoami .rr-whoami-player-name { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.rr-game-whoami .rr-whoami-player--empty { color: #3d5a5f; }
+.rr-game-whoami .rr-whoami-avatar,
+.rr-game-whoami .rr-whoami-avatar-empty {
+  display: inline-grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--rr-whoami-teal);
+  border-radius: 10px;
+  background: var(--rr-whoami-peach);
+  color: var(--rr-whoami-ink);
+  font-size: 13px;
+  font-weight: 800;
+}
+.rr-game-whoami .rr-whoami-avatar.is-me { border-color: var(--rr-whoami-violet-ink); }
+.rr-game-whoami .rr-whoami-avatar.is-offline { opacity: 0.55; }
+.rr-game-whoami .rr-whoami-avatar-empty { border-style: dashed; background: transparent; }
+.rr-game-whoami .rr-whoami-ready { padding: 2px 10px; border: 2px solid var(--rr-whoami-line); border-radius: 999px; font-size: 13px; }
+.rr-game-whoami .rr-whoami-ready.is-ready { border-color: var(--rr-whoami-teal); color: var(--rr-whoami-teal-deep); font-weight: 700; }
+
+/* ---------- галерея табличек ---------- */
+
+.rr-game-whoami .rr-whoami-gallery { position: relative; z-index: 1; margin-bottom: 16px; }
+.rr-game-whoami .rr-whoami-gallery-nav { display: none; justify-content: flex-end; gap: 8px; margin-bottom: 8px; }
+.rr-game-whoami .rr-whoami-frames { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; }
+.rr-game-whoami .rr-whoami-frame { margin: 0; display: grid; gap: 6px; text-align: center; animation: rr-whoami-sway 7s ease-in-out infinite; transform-origin: 50% 0; }
+.rr-game-whoami .rr-whoami-frame figcaption { font-weight: 700; overflow-wrap: anywhere; }
+.rr-game-whoami .rr-whoami-plaque {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 120px;
+  padding: 14px;
+  border: 8px solid var(--rr-whoami-teal);
+  border-radius: 6px;
+  outline: 2px solid var(--rr-whoami-peach);
+  outline-offset: -14px;
+  background: var(--rr-whoami-cream);
+  transform-style: preserve-3d;
+  transition: transform var(--rr-whoami-reveal) ease;
+}
+.rr-game-whoami.is-paused .rr-whoami-frame { animation-play-state: paused; }
+.rr-game-whoami .rr-whoami-frame.is-active .rr-whoami-plaque { border-color: var(--rr-whoami-violet-ink); box-shadow: 0 0 0 4px rgba(129, 104, 219, 0.35); }
+.rr-game-whoami .rr-whoami-frame.is-solved .rr-whoami-plaque { background: #e7f4f1; }
+.rr-game-whoami .rr-whoami-plaque.is-back { background: repeating-linear-gradient(45deg, var(--rr-whoami-peach), var(--rr-whoami-peach) 10px, #ffe4cc 10px, #ffe4cc 20px); transform: rotateY(180deg); }
+.rr-game-whoami .rr-whoami-plaque-back { display: grid; place-items: center; transform: rotateY(180deg); color: var(--rr-whoami-violet-ink); font-family: var(--rr-whoami-display); font-size: 56px; font-weight: 700; line-height: 1; }
+.rr-game-whoami .rr-whoami-plaque-front { display: grid; gap: 4px; }
+.rr-game-whoami .rr-whoami-plaque-cat { color: var(--rr-whoami-violet-ink); font-size: 12px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; }
+.rr-game-whoami .rr-whoami-plaque-term { color: var(--rr-whoami-ink); font-family: var(--rr-whoami-display); font-size: 18px; font-weight: 600; overflow-wrap: break-word; hyphens: auto; }
+.rr-game-whoami .rr-whoami-plaque-term.is-long { font-size: 14px; }
+
+.rr-game-whoami .rr-whoami-letters { display: inline-flex; flex-wrap: wrap; justify-content: center; font-family: var(--rr-whoami-display); font-size: 18px; font-weight: 600; color: var(--rr-whoami-teal-deep); }
+.rr-game-whoami .rr-whoami-letter { display: inline-block; white-space: pre; animation: rr-whoami-fly var(--rr-whoami-letters) cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+
+/* ---------- штампы ---------- */
+
+.rr-game-whoami .rr-whoami-stamps { display: flex; flex-wrap: wrap; gap: 12px; }
+.rr-game-whoami .rr-whoami-stamp-btn { min-width: 44px; min-height: 44px; padding: 4px; border: 0; border-radius: 16px; background: transparent; cursor: pointer; }
+.rr-game-whoami .rr-whoami-stamp-btn:hover .rr-whoami-stamp { transform: translateY(-3px); }
+.rr-game-whoami .rr-whoami-stamp { position: relative; display: inline-grid; place-items: center; width: 108px; height: 108px; transition: transform var(--rr-whoami-ui) ease; }
+.rr-game-whoami .rr-whoami-stamp svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.rr-game-whoami .rr-whoami-stamp svg * { fill: #fffdf6; stroke-width: 4; stroke-dasharray: 6 3; }
+.rr-game-whoami .rr-whoami-stamp-text { position: relative; padding: 0 8px; font-size: 14px; font-weight: 800; text-align: center; text-transform: uppercase; }
+.rr-game-whoami .rr-whoami-stamp--yes svg * { stroke: var(--rr-whoami-teal); }
+.rr-game-whoami .rr-whoami-stamp--yes .rr-whoami-stamp-text { color: var(--rr-whoami-teal-deep); }
+.rr-game-whoami .rr-whoami-stamp--no svg * { stroke: var(--rr-whoami-red); }
+.rr-game-whoami .rr-whoami-stamp--no .rr-whoami-stamp-text { color: var(--rr-whoami-red); }
+.rr-game-whoami .rr-whoami-stamp--ambiguous svg * { stroke: var(--rr-whoami-violet-ink); }
+.rr-game-whoami .rr-whoami-stamp--ambiguous .rr-whoami-stamp-text { max-width: 60px; padding: 0; color: var(--rr-whoami-violet-ink); font-size: 12px; line-height: 1.15; hyphens: manual; text-transform: none; }
+.rr-game-whoami .rr-whoami-stamp.is-pressed { animation: rr-whoami-press 300ms ease-out; }
+.rr-game-whoami .rr-whoami-stamp.is-pressed svg * { stroke-dasharray: none; fill: #f1ecff; }
+.rr-game-whoami .rr-whoami-voted .rr-whoami-stamp { width: 84px; height: 84px; vertical-align: middle; }
+.rr-game-whoami .rr-whoami-tally { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 8px 0; }
+.rr-game-whoami .rr-whoami-tally .rr-whoami-stamp { width: 108px; height: 108px; }
+.rr-game-whoami .rr-whoami-tally .rr-whoami-stamp.is-pressed { transform: scale(1.06); }
+.rr-game-whoami .rr-whoami-question { font-family: var(--rr-whoami-font); font-size: 20px; font-weight: 700; color: var(--rr-whoami-ink); }
+
+.rr-game-whoami .rr-whoami-answer { display: inline-block; margin-left: 8px; padding: 1px 8px; border-radius: 6px; border: 2px solid currentColor; font-size: 13px; font-weight: 800; }
+.rr-game-whoami .rr-whoami-answer--yes { color: var(--rr-whoami-teal-deep); }
+.rr-game-whoami .rr-whoami-answer--no { color: var(--rr-whoami-red); }
+.rr-game-whoami .rr-whoami-answer--ambiguous { color: var(--rr-whoami-violet-ink); }
+.rr-game-whoami .rr-whoami-history { display: grid; gap: 8px; }
+.rr-game-whoami .rr-whoami-history li { padding-bottom: 8px; border-bottom: 1px solid var(--rr-whoami-line); overflow-wrap: anywhere; }
+
+.rr-game-whoami .rr-whoami-pinned {
+  position: sticky;
+  top: 8px;
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 10px 14px;
+  border: 2px solid var(--rr-whoami-violet-ink);
+  border-radius: 12px;
+  background: #fffdf6;
+  box-shadow: 0 6px 16px rgba(18, 52, 58, 0.12);
+  overflow-wrap: anywhere;
+}
+
+/* ---------- итоги ---------- */
+
+.rr-game-whoami .rr-whoami-results { display: grid; gap: 16px; }
+.rr-game-whoami .rr-whoami-verdict { display: flex; gap: 14px; align-items: flex-start; border-color: var(--rr-whoami-teal); animation: rr-whoami-rise var(--rr-whoami-reveal) ease-out; }
+.rr-game-whoami .rr-whoami-verdict.is-draw { border-color: var(--rr-whoami-violet-ink); }
+.rr-game-whoami .rr-whoami-exhibits { display: grid; gap: 10px; }
+.rr-game-whoami .rr-whoami-exhibits p { margin: 2px 0 0; }
+.rr-game-whoami .rr-whoami-outcome { border-color: var(--rr-whoami-violet-ink); }
+.rr-game-whoami .rr-whoami-final-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+/* ---------- каталог, комната, админка ---------- */
+
+.rr-game-whoami .rr-whoami-cover { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 20px; align-items: center; margin-bottom: 20px; }
+.rr-game-whoami .rr-whoami-cover img { width: 100%; height: auto; border-radius: var(--rr-whoami-radius); }
+.rr-game-whoami .rr-whoami-rooms li { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--rr-whoami-line); }
+.rr-game-whoami .rr-whoami-rules summary { min-height: 44px; display: flex; align-items: center; font-weight: 700; cursor: pointer; }
+.rr-game-whoami .rr-whoami-rules ol { list-style: decimal; padding-left: 20px; }
+.rr-game-whoami .rr-whoami-rules li { margin-bottom: 6px; }
+.rr-game-whoami.rr-whoami-joinbar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; min-height: auto; padding: 12px 20px; border-bottom: 2px solid var(--rr-whoami-line); }
+.rr-game-whoami.rr-whoami-placeholder { display: grid; place-items: center; min-height: 60vh; }
+.rr-game-whoami .rr-whoami-loading { position: relative; z-index: 1; display: flex; gap: 10px; align-items: center; }
+.rr-game-whoami .rr-whoami-admin-grid { display: grid; grid-template-columns: minmax(220px, 300px) minmax(0, 1fr); gap: 16px; align-items: start; }
+.rr-game-whoami .rr-whoami-admin-list { display: grid; gap: 4px; max-height: 70vh; overflow-y: auto; }
+.rr-game-whoami .rr-whoami-admin-item { display: flex; flex-wrap: wrap; gap: 4px; width: 100%; min-height: 44px; padding: 8px 10px; border: 2px solid transparent; border-radius: 10px; background: transparent; color: var(--rr-whoami-ink); text-align: left; cursor: pointer; }
+.rr-game-whoami .rr-whoami-admin-item.is-selected { border-color: var(--rr-whoami-teal); }
+.rr-game-whoami .rr-whoami-list-field { margin: 8px 0; padding: 0; border: 0; }
+.rr-game-whoami .rr-whoami-list-field li { margin-bottom: 6px; }
+.rr-game-whoami .rr-whoami-list-field legend { font-family: var(--rr-whoami-display); font-weight: 600; color: var(--rr-whoami-teal-deep); }
+.rr-game-whoami .rr-whoami-spin { animation: rr-whoami-spin 1s linear infinite; }
+
+/* ---------- анимации: короткие и прерываемые ---------- */
+
+@keyframes rr-whoami-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes rr-whoami-fly {
+  from { opacity: 0; transform: translate(var(--rr-whoami-dx), var(--rr-whoami-dy)) rotate(-25deg); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes rr-whoami-press { 0% { transform: scale(1.25) rotate(-8deg); } 100% { transform: none; } }
+@keyframes rr-whoami-sway { 0%, 100% { transform: rotate(-0.6deg); } 50% { transform: rotate(0.6deg); } }
+@keyframes rr-whoami-glow { 0%, 100% { opacity: 0.35; } 50% { opacity: 0.6; } }
+@keyframes rr-whoami-spin { to { transform: rotate(360deg); } }
+
+/* Телефон: горизонтальная галерея с кнопками и закреплённая карточка своего вопроса. */
+@media (max-width: 760px) {
+  .rr-game-whoami .rr-whoami-layout,
+  .rr-game-whoami .rr-whoami-admin-grid,
+  .rr-game-whoami .rr-whoami-cover { grid-template-columns: minmax(0, 1fr); }
+  .rr-game-whoami .rr-whoami-gallery-nav { display: flex; }
+  .rr-game-whoami .rr-whoami-frames { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 6px; }
+  .rr-game-whoami .rr-whoami-frames > li { flex: 0 0 72%; scroll-snap-align: start; }
+  .rr-game-whoami .rr-whoami-icon-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .rr-game-whoami .rr-whoami-input-row { flex-wrap: wrap; }
+  .rr-game-whoami .rr-whoami-input-row .rr-whoami-btn { flex: 1 1 auto; }
+  .rr-game-whoami .rr-whoami-stamp { width: 92px; height: 92px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rr-game-whoami *,
+  .rr-game-whoami *::before,
+  .rr-game-whoami *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+  .rr-game-whoami .rr-whoami-lamp,
+  .rr-game-whoami .rr-whoami-frame { animation: none !important; }
+}

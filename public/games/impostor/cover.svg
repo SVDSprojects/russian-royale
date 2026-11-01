@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-labelledby="t d">
+  <title id="t">Самозванец</title>
+  <desc id="d">Две перекрывающиеся бумажные планеты на общей орбите, вокруг — одинаковые спутники и карточки примеров.</desc>
+  <defs>
+    <radialGradient id="sky" cx="50%" cy="10%" r="90%">
+      <stop offset="0" stop-color="#4a2f73"/>
+      <stop offset=".5" stop-color="#39245a"/>
+      <stop offset="1" stop-color="#2a1844"/>
+    </radialGradient>
+    <pattern id="paper" width="10" height="10" patternUnits="userSpaceOnUse">
+      <path d="M0 10 L10 0" stroke="#39245a" stroke-opacity=".12"/>
+    </pattern>
+  </defs>
+  <rect width="640" height="360" fill="url(#sky)"/>
+  <g fill="#e6d7ff" opacity=".6">
+    <circle cx="48" cy="40" r="1.6"/><circle cx="120" cy="300" r="1.2"/><circle cx="210" cy="64" r="1"/>
+    <circle cx="560" cy="52" r="1.6"/><circle cx="600" cy="250" r="1"/><circle cx="420" cy="320" r="1.2"/>
+    <circle cx="330" cy="28" r="1"/><circle cx="30" cy="200" r="1"/>
+  </g>
+  <ellipse cx="320" cy="190" rx="270" ry="104" fill="none" stroke="#e6d7ff" stroke-opacity=".35" stroke-width="2" stroke-dasharray="6 10"/>
+  <ellipse cx="320" cy="190" rx="210" ry="74" fill="none" stroke="#e6d7ff" stroke-opacity=".25" stroke-width="2" stroke-dasharray="4 12"/>
+  <circle cx="275" cy="190" r="92" fill="#e6d7ff"/>
+  <circle cx="275" cy="190" r="92" fill="url(#paper)"/>
+  <circle cx="365" cy="190" r="92" fill="#ff8ebd" fill-opacity=".72"/>
+  <circle cx="365" cy="190" r="92" fill="url(#paper)"/>
+  <g transform="rotate(-8 120 120)">
+    <rect x="70" y="96" width="120" height="44" rx="12" fill="#fffaf0"/>
+    <rect x="86" y="112" width="70" height="6" rx="3" fill="#39245a" fill-opacity=".55"/>
+    <rect x="86" y="124" width="46" height="6" rx="3" fill="#39245a" fill-opacity=".3"/>
+  </g>
+  <g transform="rotate(7 520 270)">
+    <rect x="450" y="250" width="130" height="44" rx="12" fill="#fffaf0"/>
+    <rect x="466" y="266" width="84" height="6" rx="3" fill="#39245a" fill-opacity=".55"/>
+    <rect x="466" y="278" width="52" height="6" rx="3" fill="#39245a" fill-opacity=".3"/>
+  </g>
+  <g fill="#e6d7ff" stroke="#e6d7ff">
+    <g transform="translate(70 230)"><ellipse rx="22" ry="7" fill="none" stroke-width="2"/><circle r="12"/></g>
+    <g transform="translate(560 140)"><ellipse rx="22" ry="7" fill="none" stroke-width="2"/><circle r="12"/></g>
+    <g transform="translate(320 300)"><ellipse rx="22" ry="7" fill="none" stroke-width="2"/><circle r="12"/></g>
+    <g transform="translate(470 88)"><ellipse rx="22" ry="7" fill="none" stroke-width="2"/><circle r="12"/></g>
+    <g transform="translate(160 82)"><ellipse rx="22" ry="7" fill="none" stroke="#e9ff79" stroke-width="3"/><circle r="12"/></g>
+  </g>
+  <text x="320" y="198" text-anchor="middle" font-family="Unbounded, Manrope, sans-serif" font-size="30" font-weight="700" fill="#2a1844">?</text>
+</svg>

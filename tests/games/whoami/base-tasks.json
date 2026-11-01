@@ -1,0 +1,9 @@
+{
+  "note": "Демо-фикстура нормализованных учебных заданий {id,ruleId,prompt,options,acceptedAnswers,explanation,difficulty,revision,status}. Только для preview и тестов адаптера.",
+  "categoryByRule": { "rule-pos": "Части речи", "rule-lexis": "Лексика" },
+  "tasks": [
+    { "id": "b1", "ruleId": "rule-pos", "prompt": "Какая часть речи отвечает на вопрос «как?» и не изменяется?", "options": ["наречие", "прилагательное"], "acceptedAnswers": ["Наречие"], "explanation": "Неизменяемая самостоятельная часть речи, которая обозначает признак действия, признака или предмета.", "difficulty": 2, "revision": 3, "status": "published" },
+    { "id": "b2", "ruleId": "rule-lexis", "prompt": "Как называются слова с противоположным значением?", "options": ["антонимы", "синонимы"], "acceptedAnswers": ["Антоним", "антонимы"], "explanation": "Слова одной части речи с противоположным значением: горячий — холодный.", "difficulty": 1, "revision": 1, "status": "published" },
+    { "id": "b3", "ruleId": "rule-lexis", "prompt": "Черновик", "options": [], "acceptedAnswers": ["Скрытыйтермин"], "explanation": "Черновик не должен стать термином.", "difficulty": 1, "revision": 1, "status": "draft" }
+  ]
+}
