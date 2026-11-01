@@ -1,3 +1,5 @@
+import type { EmailDelivery } from './email-codes';
+import { registerPreferences } from './preferences';
 import { registerSocial } from './social';
 import { registerPublicServers } from './public-servers';
 import { saveLocalImage } from './local-images.js';
@@ -17,7 +19,13 @@ import { registerGameRoutes } from './game.js';
 import { HttpError } from './core.js';
 
 export function createApp(
-  options: { dbPath?: string; testMode?: boolean; now?: () => number; uploadsDir?: string } = {},
+  options: {
+    dbPath?: string;
+    testMode?: boolean;
+    now?: () => number;
+    uploadsDir?: string;
+    emailDelivery?: EmailDelivery;
+  } = {},
 ) {
   const now = options.now || Date.now;
   const dbPath = options.dbPath || process.env.DATABASE_PATH || resolve('data/royale.sqlite');
@@ -87,7 +95,7 @@ export function createApp(
     if (++value.count > 3000) return next(new HttpError(429, 'Слишком много запросов. Подождите минуту.'));
     next();
   });
-  const auth = setupAuth(app, db, now, !!options.testMode);
+  const auth = setupAuth(app, db, now, !!options.testMode, options.emailDelivery);
   app.use('/api', (req, _res, next) => {
     if (req.user) onlineUsers.set(req.user.id, now());
     next();
@@ -157,6 +165,7 @@ export function createApp(
     uploadsDir,
     saveImage: (buffer: Buffer) => saveLocalImage(buffer, uploadsDir),
   };
+  registerPreferences(app, ctx);
   registerSocial(app, ctx);
   registerPublicServers(app, ctx);
   const game = registerGameRoutes(app, ctx);

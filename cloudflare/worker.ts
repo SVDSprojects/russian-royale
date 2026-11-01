@@ -1,3 +1,5 @@
+import { registerPreferences } from '../server/preferences';
+import { emailDelivery } from '../server/email-codes';
 import { registerSocial } from '../server/social';
 import { registerPublicServers } from '../server/public-servers';
 import { addContentPack } from '../server/content-pack';
@@ -18,6 +20,9 @@ import multiplayer from '../migrations/002-multiplayer.sql';
 interface Env {
   ROYALE: DurableObjectNamespace<Royale>;
   ASSETS: Fetcher;
+  BREVO_API_KEY?: string;
+  MAIL_FROM?: string;
+  AUTH_CODE_SECRET?: string;
 }
 
 export class Royale extends DurableObject<Env> {
@@ -46,7 +51,17 @@ export class Royale extends DurableObject<Env> {
       this.revision = crypto.randomUUID();
       for (const finish of [...this.waiters]) finish();
     };
-    this.auth = setupAuth(app, this.db, Date.now, false);
+    this.auth = setupAuth(
+      app,
+      this.db,
+      Date.now,
+      false,
+      emailDelivery({
+        BREVO_API_KEY: env.BREVO_API_KEY,
+        MAIL_FROM: env.MAIL_FROM,
+        AUTH_CODE_SECRET: env.AUTH_CODE_SECRET,
+      }),
+    );
     app.use('/api', (req, _res, next) => {
       if (req.user) this.online.set(req.user.id, Date.now());
       next();
@@ -118,6 +133,7 @@ export class Royale extends DurableObject<Env> {
         return name;
       },
     };
+    registerPreferences(app, context);
     registerSocial(app, context);
     registerPublicServers(app, context);
     this.game = registerGameRoutes(app, context);

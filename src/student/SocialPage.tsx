@@ -251,6 +251,19 @@ export function SocialPage({ id }: { id?: string }) {
                 Где играет
               </button>
             )}
+            {f.status === 'accepted' && (
+              <button
+                disabled={busy}
+                onClick={() =>
+                  void run(async () => {
+                    await api('/notifications/invite/' + f.publicId, json('POST'));
+                    setNotice('Приглашение отправлено.');
+                  })
+                }
+              >
+                Позвать играть
+              </button>
+            )}
             <button disabled={busy} onClick={() => void run(() => friend(f, true))}>
               {f.status === 'accepted' ? 'Удалить' : 'Отменить / отклонить'}
             </button>
