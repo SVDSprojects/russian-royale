@@ -1,3 +1,4 @@
+import { SocialPage } from './SocialPage';
 import { RemainingGamesPage } from '../games/RemainingGamesPage';
 import { CheckpointPage } from '../games/CheckpointPage';
 import { DurakPage } from '../games/DurakPage';
@@ -31,7 +32,7 @@ import {
   EyeOff,
 } from 'lucide-react';
 import { useAuth, useLive } from '../api';
-import { Avatar, ConnectionContext, ErrorNotice, go, Loading, message, SpyArt } from './common';
+import { Avatar, ConnectionContext, ErrorNotice, go, Loading, message, SpyArt, useResource } from './common';
 import { Dashboard, Games, HistoryPage, Leaderboard, ProfilePage, SettingsPage, Roadmap } from './dashboard';
 import { Lessons, LessonPlayer, Rules, RuleDetail } from './learning';
 import { Servers, ServerDetail, Invitation } from './community';
@@ -43,6 +44,7 @@ import '../royale-world.css';
 const nav = [
   { id: 'home', label: 'Главная', icon: Home },
   { id: 'games', label: 'Игры', icon: Gamepad2 },
+  { id: 'friends', label: 'Друзья и серии', icon: Flame },
   { id: 'servers', label: 'Серверы игр', icon: Users },
   { id: 'lessons', label: 'Уроки', icon: GraduationCap },
   { id: 'rules', label: 'Справочник правил', icon: BookOpen },
@@ -60,6 +62,7 @@ export default function StudentApp() {
     [route, setRoute] = useState(readRoute),
     [menu, setMenu] = useState(false),
     [online, setOnline] = useState(navigator.onLine);
+  const social = useResource<{ me: { streak: number } }>(auth.user ? '/social/me' : null, true);
   const { connected } = useLive(() => window.dispatchEvent(new Event('rr-live')));
   useEffect(() => {
     const change = () => {
@@ -95,7 +98,13 @@ export default function StudentApp() {
     content = id === 'memory' ? <MemoryGame /> : <Arcade key={id} mode={id || 'practice'} />;
   else if (page === 'games')
     content =
-      (id === 'alias' || id === 'whoami' || id === 'impostor') ? <RemainingGamesPage key={route} game={id} roomId={route.split('/')[2]}/> : (id === 'mafia' || id === 'bunker' || id === 'broken-text') ? <CheckpointPage key={route} game={id} roomId={route.split('/')[2]}/> : id === 'durak' ? <DurakPage key={route} roomId={route.split('/')[2]} /> : id === 'jeopardy' || id === 'roulette' ? (
+      id === 'alias' || id === 'whoami' || id === 'impostor' ? (
+        <RemainingGamesPage key={route} game={id} roomId={route.split('/')[2]} />
+      ) : id === 'mafia' || id === 'bunker' || id === 'broken-text' ? (
+        <CheckpointPage key={route} game={id} roomId={route.split('/')[2]} />
+      ) : id === 'durak' ? (
+        <DurakPage key={route} roomId={route.split('/')[2]} />
+      ) : id === 'jeopardy' || id === 'roulette' ? (
         <GameRooms game={id} roomId={route.split('/')[2]} />
       ) : (
         <Games />
@@ -104,7 +113,7 @@ export default function StudentApp() {
   else if (page === 'rooms') content = <RoomPage key={id} id={id ?? ''} />;
   else if (page === 'lessons') content = id ? <LessonPlayer key={id} id={id} /> : <Lessons />;
   else if (page === 'rules') content = id ? <RuleDetail key={id} id={id} /> : <Rules />;
-  else if (page === 'profile') content = <ProfilePage />;
+  else if (page === 'profile' || page === 'friends') content = <SocialPage key={id || 'me'} id={id} />;
   else if (page === 'history') content = <HistoryPage />;
   else if (page === 'leaderboard') content = <Leaderboard />;
   else if (page === 'settings') content = <SettingsPage />;
@@ -140,7 +149,10 @@ export default function StudentApp() {
                 className={`rr-nav-item ${page === item.id || (page === 'rooms' && item.id === 'servers') ? 'active' : ''}`}
               >
                 <item.icon size={19} />
-                <span>{item.label}</span>
+                <span>
+                  {item.label}
+                  {item.id === 'friends' && social.data?.me && <span> 🔥 {social.data.me.streak}</span>}
+                </span>
                 {item.id === 'games' && <span className="rr-nav-count">8</span>}
                 {i === 2 && <span className="rr-nav-dot" />}
               </a>

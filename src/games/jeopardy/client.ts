@@ -4,8 +4,8 @@ import {
   type Action,
   type Settings,
   type Content,
-} from "../../../shared/games/jeopardy/types";
-const base = "/api/games/jeopardy";
+} from '../../../shared/games/jeopardy/types';
+const base = '/api/games/jeopardy';
 export class HttpError extends Error {
   constructor(
     public status: number,
@@ -18,27 +18,20 @@ export type Api = (path: string, options?: RequestInit) => Promise<unknown>;
 export const api: Api = async (path, options) => {
   const response = await fetch(path, {
     ...options,
-    credentials: "same-origin",
-    headers: { "Content-Type": "application/json", ...options?.headers },
+    credentials: 'same-origin',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
   });
   const data: unknown = await response.json();
   if (!response.ok) {
     const message =
-      typeof data === "object" &&
-      data !== null &&
-      "error" in data &&
-      typeof data.error === "string"
+      typeof data === 'object' && data !== null && 'error' in data && typeof data.error === 'string'
         ? data.error
-        : "Ошибка запроса";
+        : 'Ошибка запроса';
     throw new HttpError(response.status, message);
   }
   return data;
 };
-export function roomClient(
-  roomId: string,
-  onUpdate: (data: Envelope) => void,
-  request: Api = api,
-) {
+export function roomClient(roomId: string, onUpdate: (data: Envelope) => void, request: Api = api) {
   let current: Envelope | null = null;
   let refreshing: Promise<void> | null = null;
   const accept = (value: unknown) => {
@@ -50,9 +43,7 @@ export function roomClient(
   };
   const refresh = (): Promise<void> => {
     if (!refreshing)
-      refreshing = request(
-        base + "/rooms/" + encodeURIComponent(roomId) + "/view",
-      )
+      refreshing = request(base + '/rooms/' + encodeURIComponent(roomId) + '/view')
         .then(accept)
         .finally(() => {
           refreshing = null;
@@ -61,26 +52,38 @@ export function roomClient(
   };
   async function command(kind: string, extra: object = {}) {
     if (!current) await refresh();
+    const previous = current!;
+    const commandId = crypto.randomUUID();
     try {
-      const value = await request(
-        base + "/rooms/" + encodeURIComponent(roomId) + "/" + kind,
-        {
-          method: "POST",
-          body: JSON.stringify({
-            ...extra,
-            commandId: crypto.randomUUID(),
-            expectedVersion: current!.version,
-          }),
-        },
-      );
-      if (kind !== "leave") accept(value);
+      const value = await request(base + '/rooms/' + encodeURIComponent(roomId) + '/' + kind, {
+        method: 'POST',
+        body: JSON.stringify({
+          ...extra,
+          commandId,
+          expectedVersion: current!.version,
+        }),
+      });
+      if (kind !== 'leave') accept(value);
     } catch (error) {
       if (error instanceof HttpError && error.status === 409) {
         await refresh();
-        throw new HttpError(
-          409,
-          "Состояние обновлено. Проверьте экран и повторите действие вручную",
-        );
+        const action = (extra as { action?: Action }).action;
+        if (
+          current &&
+          current.view.sessionId === previous.view.sessionId &&
+          current.view.round === previous.view.round &&
+          current.view.phase === previous.view.phase &&
+          current.view.answererId === previous.view.answererId &&
+          (kind === 'ready' || action?.type === 'answer' || action?.type === 'pass')
+        ) {
+          const value = await request(base + '/rooms/' + encodeURIComponent(roomId) + '/' + kind, {
+            method: 'POST',
+            body: JSON.stringify({ ...extra, commandId, expectedVersion: current.version }),
+          });
+          accept(value);
+          return;
+        }
+        throw new HttpError(409, 'Состояние обновлено. Проверьте экран и повторите действие вручную');
       }
       throw error;
     }
@@ -88,24 +91,19 @@ export function roomClient(
   return {
     refresh,
     send: (action: Action) =>
-      action.type === "ready"
-        ? command("ready", { ready: action.ready })
-        : action.type === "start"
-          ? command("start")
-          : action.type === "rematch"
-            ? command("rematch")
-            : command("actions", { action }),
-    leave: () => command("leave"),
+      action.type === 'ready'
+        ? command('ready', { ready: action.ready })
+        : action.type === 'start'
+          ? command('start')
+          : action.type === 'rematch'
+            ? command('rematch')
+            : command('actions', { action }),
+    leave: () => command('leave'),
   };
 }
-export const createRoom = (
-  serverId: string,
-  name: string,
-  settings: Settings,
-  request: Api = api,
-) =>
-  request(base + "/rooms", {
-    method: "POST",
+export const createRoom = (serverId: string, name: string, settings: Settings, request: Api = api) =>
+  request(base + '/rooms', {
+    method: 'POST',
     body: JSON.stringify({
       serverId,
       name,
@@ -115,11 +113,11 @@ export const createRoom = (
     }),
   });
 export const joinRoom = (roomId: string, version: number, request: Api = api) =>
-  request(base + "/rooms/" + roomId + "/join", {
-    method: "POST",
+  request(base + '/rooms/' + roomId + '/join', {
+    method: 'POST',
     body: JSON.stringify({
       commandId: crypto.randomUUID(),
       expectedVersion: version,
     }),
   });
-export type ContentList = { content: Pick<Content, "id" | "title">[] };
+export type ContentList = { content: Pick<Content, 'id' | 'title'>[] };

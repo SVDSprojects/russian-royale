@@ -174,6 +174,11 @@ export function Game(props: GameProps) {
                     </p>
                   </>
                 )}
+                {view.phase === 'answer' && me.teamId === answerer?.teamId && (
+                  <button disabled={disabled} onClick={() => void act({ type: 'pass' })}>
+                    Пропустить без штрафа
+                  </button>
+                )}
                 {view.phase === 'answer' &&
                   (view.answererId === currentUserId ? (
                     <form

@@ -1,3 +1,4 @@
+import { useClock } from './ui';
 import { useEffect, useState } from 'react';
 import type { GameProps } from '../../../shared/games/roulette/types';
 import { Frame, Scoreboard, ResultPanel, Reveal, useAction } from './ui';
@@ -14,6 +15,7 @@ export function Game(props: GameProps) {
     setText('');
     setChoice('');
   }, [view.round]);
+  const clockNow = useClock(props.serverNowMs);
   if (view.phase === 'lobby') return <Lobby {...props} />;
   const me = view.players.find((p) => p.id === currentUserId)!,
     answered = view.answeredUserIds.includes(currentUserId),
@@ -40,6 +42,12 @@ export function Game(props: GameProps) {
             <div className="rr-play-area">
               <div className="rr-question" data-phase={view.phase} data-answered={answered}>
                 <div className="rr-studio-question-meta">
+                  {view.phase === 'question' && (
+                    <strong aria-live="off">
+                      {Math.max(0, Math.min(100, Math.ceil(((view.deadline ?? clockNow) - clockNow) / 1000)))}{' '}
+                      баллов
+                    </strong>
+                  )}
                   <p className="rr-kicker">РАУНД {String(view.round).padStart(2, '0')}</p>
                   {view.question ? (
                     <span className="rr-studio-difficulty">

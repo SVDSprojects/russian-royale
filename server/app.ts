@@ -1,4 +1,5 @@
-import {registerPublicServers} from './public-servers';
+import { registerSocial } from './social';
+import { registerPublicServers } from './public-servers';
 import { saveLocalImage } from './local-images.js';
 import express from 'express';
 import type { Request, Response, NextFunction } from 'express';
@@ -156,7 +157,8 @@ export function createApp(
     uploadsDir,
     saveImage: (buffer: Buffer) => saveLocalImage(buffer, uploadsDir),
   };
-  registerPublicServers(app,ctx);
+  registerSocial(app, ctx);
+  registerPublicServers(app, ctx);
   const game = registerGameRoutes(app, ctx);
   const extraGames = registerExtraGames(app, ctx);
   registerWaitingGames(app, ctx);

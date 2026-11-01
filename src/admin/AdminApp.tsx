@@ -1,6 +1,6 @@
-import {AdminPanel as ImpostorAdmin} from '../games/impostor';
-import {AdminPanel as WhoamiAdmin} from '../games/whoami';
-import {AdminPanel as AliasAdmin} from '../games/alias';
+import { AdminPanel as ImpostorAdmin } from '../games/impostor';
+import { AdminPanel as WhoamiAdmin } from '../games/whoami';
+import { AdminPanel as AliasAdmin } from '../games/alias';
 import { AdminPanel as BrokenTextAdmin } from '../games/broken-text/AdminPanel';
 import { AdminPanel as BunkerAdmin } from '../games/bunker/AdminPanel';
 import { AdminPanel as MafiaAdmin } from '../games/mafia/AdminPanel';
@@ -42,7 +42,15 @@ import { api, useAuth } from '../api';
 import '../admin.css';
 
 type Section =
-  | 'jeopardy' | 'roulette' | 'mafia' | 'bunker' | 'broken-text' | 'alias' | 'whoami' | 'impostor' | 'durak'
+  | 'jeopardy'
+  | 'roulette'
+  | 'mafia'
+  | 'bunker'
+  | 'broken-text'
+  | 'alias'
+  | 'whoami'
+  | 'impostor'
+  | 'durak'
   | 'overview'
   | 'rules'
   | 'exercises'
@@ -107,7 +115,15 @@ type Stats = {
   lessons: number;
   games: number;
 };
-type AdminUser = { id: string; username: string; email: string; role: Role; xp: number; createdAt: string };
+type AdminUser = {
+  publicId?: string;
+  id: string;
+  username: string;
+  email: string;
+  role: Role;
+  xp: number;
+  createdAt: string;
+};
 type AdminServer = {
   id: string;
   name: string;
@@ -133,9 +149,9 @@ const nav: { key: Section; label: string; icon: typeof BookOpen; group: string; 
   { key: 'mafia', label: 'Мафия', icon: Sparkles, group: 'ИГРЫ' },
   { key: 'bunker', label: 'Бункер', icon: Sparkles, group: 'ИГРЫ' },
   { key: 'broken-text', label: 'Испорченный текст', icon: Sparkles, group: 'ИГРЫ' },
-  {key:'alias',label:'Alias',icon:Sparkles,group:'ИГРЫ'},
-  {key:'whoami',label:'Кто я',icon:Sparkles,group:'ИГРЫ'},
-  {key:'impostor',label:'Самозванец',icon:Sparkles,group:'ИГРЫ'},
+  { key: 'alias', label: 'Alias', icon: Sparkles, group: 'ИГРЫ' },
+  { key: 'whoami', label: 'Кто я', icon: Sparkles, group: 'ИГРЫ' },
+  { key: 'impostor', label: 'Самозванец', icon: Sparkles, group: 'ИГРЫ' },
   { key: 'durak', label: 'Дурак', icon: Sparkles, group: 'ИГРЫ' },
   { key: 'jeopardy', label: 'Своя игра', icon: Sparkles, group: 'ИГРЫ' },
   { key: 'roulette', label: 'Русская рулетка', icon: Sparkles, group: '' },
@@ -555,15 +571,45 @@ export default function AdminApp() {
             <ErrorBox error="Этот раздел доступен только главному администратору." />
           ) : (
             <>
-              {section === 'mafia' && <MafiaAdmin api={durakHttp} roles={[user.role]}/>}
-              {section === 'bunker' && <BunkerAdmin api={durakHttp} roles={[user.role]}/>}
-              {section === 'broken-text' && <BrokenTextAdmin api={durakHttp} roles={[user.role]}/>}
-              {section === 'alias' && <AliasAdmin permissions={{canEdit:['admin','editor'].includes(user.role)}} api={(path,options)=>durakHttp(path,{method:options?.method,body:options?.body===undefined?undefined:JSON.stringify(options.body)})}/>}
-              {section === 'whoami' && <WhoamiAdmin permissions={{canEdit:['admin','editor'].includes(user.role)}} api={(path,options)=>durakHttp(path,{method:options?.method,body:options?.body===undefined?undefined:JSON.stringify(options.body)})}/>}
-              {section === 'impostor' && <ImpostorAdmin permissions={{canEdit:['admin','editor'].includes(user.role)}} api={(path,options)=>durakHttp(path,{method:options?.method,body:options?.body===undefined?undefined:JSON.stringify(options.body)})}/>}
-              {section === 'durak' && <DurakAdmin api={durakHttp} roles={[user.role]}/>}
-              {section === 'jeopardy' && <JeopardyAdmin api={gameApi} role={user.role}/>}
-              {section === 'roulette' && <RouletteAdmin api={gameApi} role={user.role}/>}
+              {section === 'mafia' && <MafiaAdmin api={durakHttp} roles={[user.role]} />}
+              {section === 'bunker' && <BunkerAdmin api={durakHttp} roles={[user.role]} />}
+              {section === 'broken-text' && <BrokenTextAdmin api={durakHttp} roles={[user.role]} />}
+              {section === 'alias' && (
+                <AliasAdmin
+                  permissions={{ canEdit: ['admin', 'editor'].includes(user.role) }}
+                  api={(path, options) =>
+                    durakHttp(path, {
+                      method: options?.method,
+                      body: options?.body === undefined ? undefined : JSON.stringify(options.body),
+                    })
+                  }
+                />
+              )}
+              {section === 'whoami' && (
+                <WhoamiAdmin
+                  permissions={{ canEdit: ['admin', 'editor'].includes(user.role) }}
+                  api={(path, options) =>
+                    durakHttp(path, {
+                      method: options?.method,
+                      body: options?.body === undefined ? undefined : JSON.stringify(options.body),
+                    })
+                  }
+                />
+              )}
+              {section === 'impostor' && (
+                <ImpostorAdmin
+                  permissions={{ canEdit: ['admin', 'editor'].includes(user.role) }}
+                  api={(path, options) =>
+                    durakHttp(path, {
+                      method: options?.method,
+                      body: options?.body === undefined ? undefined : JSON.stringify(options.body),
+                    })
+                  }
+                />
+              )}
+              {section === 'durak' && <DurakAdmin api={durakHttp} roles={[user.role]} />}
+              {section === 'jeopardy' && <JeopardyAdmin api={gameApi} role={user.role} />}
+              {section === 'roulette' && <RouletteAdmin api={gameApi} role={user.role} />}
               {section === 'overview' && <Overview go={go} />}
               {section === 'rules' && <RulesEditor notify={notify} />}
               {section === 'exercises' && <ExercisesEditor notify={notify} />}
@@ -2305,7 +2351,9 @@ function UsersEditor({ selfId, notify }: { selfId: string; notify: Notify }) {
                             {u.username}
                             {u.id === selfId && <span className="adm-self">вы</span>}
                           </strong>
-                          <small>{u.email}</small>
+                          <small>
+                            {u.email} · ID {u.publicId ?? '—'}
+                          </small>
                         </div>
                       </div>
                     </td>
@@ -2367,7 +2415,49 @@ function UsersEditor({ selfId, notify }: { selfId: string; notify: Notify }) {
   );
 }
 
-function ServersEditor({notify}:{notify:Notify}){const resource=useResource<AdminServer[]>('/admin/servers');const [names,setNames]=useState<Record<string,string>>({}),[busy,setBusy]=useState('');async function save(id:string,name:string){setBusy(id);try{await api('/admin/servers/'+id,request('PATCH',{name}));await resource.reload();notify('Название сохранено.');}catch(e){notify(messageOf(e),true);}finally{setBusy('');}}return <section className="adm-panel"><h2>Общие серверы игр</h2><p>Название может изменить только администратор.</p>{resource.data?.map(s=><div className="adm-server-row" key={s.id}><label>{s.description}<input aria-label={'Название '+s.name} maxLength={80} value={names[s.id]??s.name} onChange={e=>setNames({...names,[s.id]:e.target.value})}/></label><button className="adm-btn" disabled={!!busy||!(names[s.id]??s.name).trim()} onClick={()=>void save(s.id,names[s.id]??s.name)}>Сохранить</button></div>)}</section>;}
+function ServersEditor({ notify }: { notify: Notify }) {
+  const resource = useResource<AdminServer[]>('/admin/servers');
+  const [names, setNames] = useState<Record<string, string>>({}),
+    [busy, setBusy] = useState('');
+  async function save(id: string, name: string) {
+    setBusy(id);
+    try {
+      await api('/admin/servers/' + id, request('PATCH', { name }));
+      await resource.reload();
+      notify('Название сохранено.');
+    } catch (e) {
+      notify(messageOf(e), true);
+    } finally {
+      setBusy('');
+    }
+  }
+  return (
+    <section className="adm-panel">
+      <h2>Общие серверы игр</h2>
+      <p>Название может изменить только администратор.</p>
+      {resource.data?.map((s) => (
+        <div className="adm-server-row" key={s.id}>
+          <label>
+            {s.description}
+            <input
+              aria-label={'Название ' + s.name}
+              maxLength={80}
+              value={names[s.id] ?? s.name}
+              onChange={(e) => setNames({ ...names, [s.id]: e.target.value })}
+            />
+          </label>
+          <button
+            className="adm-btn"
+            disabled={!!busy || !(names[s.id] ?? s.name).trim()}
+            onClick={() => void save(s.id, names[s.id] ?? s.name)}
+          >
+            Сохранить
+          </button>
+        </div>
+      ))}
+    </section>
+  );
+}
 
 function AuditLog() {
   const resource = useResource<Audit[]>('/admin/audit');
