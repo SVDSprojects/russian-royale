@@ -37,7 +37,7 @@ export function GameRooms({ game, roomId }: { game: GameKind; roomId?: string })
   return <Browser key={game} game={game} />;
 }
 function Browser({ game }: { game: GameKind }) {
-  const servers = useResource<Server[]>('/servers?game='+game, true);
+  const servers = useResource<Server[]>('/servers?game=' + game, true);
   const [server, setServer] = useState(''),
     [content, setContent] = useState(''),
     [name, setName] = useState('Новая партия'),
@@ -60,7 +60,7 @@ function Browser({ game }: { game: GameKind }) {
       const contentId = content || packs.data?.content[0]?.id;
       const settings = island
         ? { contentId, teamCount }
-        : { contentId, mode, durations: [30000, 25000, 20000] };
+        : { contentId, mode, durations: [100000, 100000, 100000] };
       const result = await api<{ roomId: string }>(
         base + '/rooms',
         json('POST', {

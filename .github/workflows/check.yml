@@ -18,4 +18,4 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - run: pnpm exec tsc --noEmit -p cloudflare/tsconfig.json
-      - run: pnpm exec vitest run tests/public-servers.test.ts tests/games/alias tests/games/whoami tests/games/impostor tests/games/durak/engine.test.ts tests/games/durak/server.test.ts tests/games/durak/client.test.ts tests/games/mafia tests/games/bunker tests/games/broken-text
+      - run: pnpm exec vitest run tests/public-servers.test.ts tests/social.test.ts tests/game-updates.test.ts tests/games/jeopardy/engine.test.ts tests/games/roulette/engine.test.ts tests/games/alias tests/games/whoami tests/games/impostor tests/games/durak/engine.test.ts tests/games/durak/server.test.ts tests/games/durak/client.test.ts tests/games/mafia tests/games/bunker tests/games/broken-text

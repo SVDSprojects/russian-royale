@@ -1,4 +1,5 @@
-import {registerPublicServers} from '../server/public-servers';
+import { registerSocial } from '../server/social';
+import { registerPublicServers } from '../server/public-servers';
 import { addContentPack } from '../server/content-pack';
 import { DurableObject } from 'cloudflare:workers';
 import { imageSize } from 'image-size';
@@ -117,7 +118,8 @@ export class Royale extends DurableObject<Env> {
         return name;
       },
     };
-    registerPublicServers(app,context);
+    registerSocial(app, context);
+    registerPublicServers(app, context);
     this.game = registerGameRoutes(app, context);
     this.extraGames = registerExtraGames(app, context);
     registerWaitingGames(app, context);

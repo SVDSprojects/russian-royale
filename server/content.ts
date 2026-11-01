@@ -665,7 +665,16 @@ export function setupContent(
     res.status(201).json({ ok: true, counts: data.counts });
   });
   app.get('/api/admin/users', admin, (_req, res) =>
-    res.json(db.prepare('SELECT * FROM users ORDER BY created_at DESC LIMIT 1000').all().map(publicUser)),
+    res.json(
+      db
+        .prepare('SELECT * FROM users ORDER BY created_at DESC LIMIT 1000')
+        .all()
+        .map((u) => ({
+          ...publicUser(u),
+          publicId:
+            db.prepare('SELECT public_id FROM rr_profiles WHERE user_id=?').get(u.id)?.public_id || null,
+        })),
+    ),
   );
   app.patch('/api/admin/users/:id', admin, (req, res) => {
     const uid = String(req.params.id),
@@ -730,7 +739,10 @@ export function setupContent(
     const b = body(req),
       username = str(b.username, 'Имя', 2, 40);
     const avatar = b.avatar === undefined ? req.user!.avatar : str(b.avatar, 'Аватар', 1, 50);
-    if (!['🦊', '🐱', '🐻', '🐼', '🦉', '🐸', '🐺', '🐰', '⭐', '🎮', '👑', '🦋'].includes(avatar))
+    if (
+      avatar !== req.user!.avatar &&
+      !['🦊', '🐱', '🐻', '🐼', '🦉', '🐸', '🐺', '🐰', '⭐', '🎮', '👑', '🦋'].includes(avatar)
+    )
       throw new HttpError(400, 'Выберите один из предложенных аватаров.');
     db.prepare('UPDATE users SET username=?,avatar=? WHERE id=?').run(username, avatar, req.user!.id);
     broadcast();

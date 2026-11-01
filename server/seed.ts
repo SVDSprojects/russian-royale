@@ -88,7 +88,7 @@ export function seed(db: DB) {
     );
     db.prepare('INSERT INTO teacher(id,config) VALUES(1,?)').run(
       JSON.stringify({
-        name: 'Мария Ивановна',
+        name: 'Белова Надежда Юрьевна',
         images,
         phrases: {
           intro: 'Ну что, мои дорогие, начнём?',

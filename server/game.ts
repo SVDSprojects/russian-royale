@@ -18,6 +18,36 @@ export function normalizeGuess(value: string) {
     .replace(/ё/g, 'е')
     .replace(/[^\p{L}\p{N}]/gu, '');
 }
+export function matchesSpyTopic(answer: string, title: string) {
+  if (normalizeGuess(answer) === normalizeGuess(title)) return true;
+  const tokens = (v: string) =>
+    v
+      .toLowerCase()
+      .replace(/ё/g, 'е')
+      .match(/[а-яa-z0-9]+/g) || [];
+  const roots = (v: string) =>
+    tokens(v).filter((t) =>
+      /^(раст|ращ|рос|рост|лаг|лож|кас|кос|бер|бир|дер|дир|мер|мир|тер|тир|гар|гор|зар|зор|клан|клон|твар|твор|плав|плов|скак|скоч)$/.test(
+        t,
+      ),
+    );
+  const expected = [...new Set(roots(title))],
+    actual = new Set(roots(answer));
+  if (/(^|\s)(не|нет)(\s|$)/i.test(answer)) return false;
+  const groups = [
+    ['раст', 'ращ', 'рос', 'рост'],
+    ['лаг', 'лож'],
+    ['кас', 'кос'],
+    ['бер', 'бир'],
+    ['дер', 'дир'],
+    ['мер', 'мир'],
+    ['тер', 'тир'],
+    ['гар', 'гор'],
+    ['зар', 'зор'],
+  ];
+  const group = groups.find((g) => expected.length >= 2 && expected.every((x) => g.includes(x)));
+  return !!group && actual.size >= 2 && [...actual].every((x) => group.includes(x));
+}
 export function majorityTarget(votes: { target_id: string }[], size: number): string | null {
   const counts = new Map<string, number>();
   for (const vote of votes) counts.set(vote.target_id, (counts.get(vote.target_id) || 0) + 1);
@@ -487,14 +517,14 @@ export function registerGameRoutes(app: Express, ctx: Context) {
     advanceExpired(r);
     r = get('SELECT * FROM rooms WHERE id=?', r.id);
     participant(r, req.user!.id);
-    if (r.phase !== 'guess')
+    if (!['discussion', 'voting', 'guess'].includes(r.phase))
       throw new HttpError(409, 'Время ответа шпиона ещё не началось или уже закончилось.');
     const session = get('SELECT * FROM game_sessions WHERE id=?', r.session_id);
     if (session.spy_id !== req.user!.id) throw new HttpError(403, 'Ответить может только шпион.');
     if (session.guess !== null) throw new HttpError(409, 'Ответ уже принят.');
     const answer = str(body(req).answer, 'Тема', 1, 300);
     run('UPDATE game_sessions SET guess=? WHERE id=?', answer, session.id);
-    const correct = normalizeGuess(answer) === normalizeGuess(session.topic_title);
+    const correct = matchesSpyTopic(answer, session.topic_title);
     finish(
       r,
       correct ? 'spy' : 'citizens',

@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 export const Id = z
   .string()
   .min(1)
@@ -28,15 +28,9 @@ export const QuestionSchema = z.strictObject({
   explanation: Text,
   difficulty: z.union([z.literal(1), z.literal(2), z.literal(3)]),
   revision: Num.min(1),
-  status: z.enum(["draft", "published"]),
+  status: z.enum(['draft', 'published']),
   categoryId: Id,
-  cost: z.union([
-    z.literal(100),
-    z.literal(200),
-    z.literal(300),
-    z.literal(400),
-    z.literal(500),
-  ]),
+  cost: z.union([z.literal(100), z.literal(200), z.literal(300), z.literal(400), z.literal(500)]),
   normalization: NormalizationSchema,
 });
 export type Question = z.infer<typeof QuestionSchema>;
@@ -50,7 +44,7 @@ export const ContentSchema = z
     id: Id,
     title: z.string().min(1).max(120),
     revision: Num.min(1),
-    status: z.enum(["draft", "published"]),
+    status: z.enum(['draft', 'published']),
     categories: z.array(CategorySchema).min(1).max(12),
     questions: z.array(QuestionSchema).max(1000),
   })
@@ -59,12 +53,11 @@ export const ContentSchema = z
       cats = c.categories.map((x) => x.id);
     if (new Set(ids).size !== ids.length || new Set(cats).size !== cats.length)
       ctx.addIssue({
-        code: "custom",
-        message: "Идентификаторы должны быть уникальны",
+        code: 'custom',
+        message: 'Идентификаторы должны быть уникальны',
       });
     for (const q of c.questions)
-      if (!cats.includes(q.categoryId))
-        ctx.addIssue({ code: "custom", message: "Неизвестная категория" });
+      if (!cats.includes(q.categoryId)) ctx.addIssue({ code: 'custom', message: 'Неизвестная категория' });
   });
 export type Content = z.infer<typeof ContentSchema>;
 export const SettingsSchema = z.strictObject({
@@ -76,7 +69,7 @@ export const ResultSchema = z.strictObject({
   sessionId: Id,
   winnerUserIds: z.array(Id).max(16),
   scores: z.array(z.strictObject({ userId: Id, score: Num })).max(16),
-  outcome: z.enum(["win", "draw", "cancelled"]),
+  outcome: z.enum(['win', 'draw', 'cancelled']),
 });
 export type Result = z.infer<typeof ResultSchema>;
 export const PlayerSchema = z.strictObject({
@@ -106,15 +99,7 @@ export const ChatSchema = z.strictObject({
 export const StateSchema = z.strictObject({
   sessionId: Id,
   hostId: Id,
-  phase: z.enum([
-    "lobby",
-    "board",
-    "reading",
-    "buzz",
-    "answer",
-    "reveal",
-    "finished",
-  ]),
+  phase: z.enum(['lobby', 'board', 'reading', 'buzz', 'answer', 'reveal', 'finished']),
   phaseStartedAt: Num.nonnegative(),
   deadline: Num.nonnegative().nullable(),
   settings: SettingsSchema,
@@ -124,11 +109,7 @@ export const StateSchema = z.strictObject({
   round: Num.min(0).max(25),
   currentId: Id.nullable(),
   used: z.array(Id).max(1000),
-  answers: z
-    .array(
-      z.strictObject({ userId: Id, text: Text, receivedAt: Num.nonnegative() }),
-    )
-    .max(16),
+  answers: z.array(z.strictObject({ userId: Id, text: Text, receivedAt: Num.nonnegative() })).max(16),
   roundPlayers: z.array(Id).max(16),
   sectorIndex: Num.min(0),
   sectorIds: z.array(Id).max(12),
@@ -140,18 +121,19 @@ export const StateSchema = z.strictObject({
   finishedResult: ResultSchema.nullable(),
 });
 export type State = z.infer<typeof StateSchema>;
-export const ActionSchema = z.discriminatedUnion("type", [
-  z.strictObject({ type: z.literal("ready"), ready: z.boolean() }),
-  z.strictObject({ type: z.literal("start") }),
-  z.strictObject({ type: z.literal("cancel") }),
-  z.strictObject({ type: z.literal("rematch") }),
-  z.strictObject({ type: z.literal("answer"), text: Text }),
-  z.strictObject({ type: z.literal("team"), teamId: Id }),
-  z.strictObject({ type: z.literal("captain"), userId: Id }),
-  z.strictObject({ type: z.literal("select"), questionId: Id }),
-  z.strictObject({ type: z.literal("buzz") }),
+export const ActionSchema = z.discriminatedUnion('type', [
+  z.strictObject({ type: z.literal('pass') }),
+  z.strictObject({ type: z.literal('ready'), ready: z.boolean() }),
+  z.strictObject({ type: z.literal('start') }),
+  z.strictObject({ type: z.literal('cancel') }),
+  z.strictObject({ type: z.literal('rematch') }),
+  z.strictObject({ type: z.literal('answer'), text: Text }),
+  z.strictObject({ type: z.literal('team'), teamId: Id }),
+  z.strictObject({ type: z.literal('captain'), userId: Id }),
+  z.strictObject({ type: z.literal('select'), questionId: Id }),
+  z.strictObject({ type: z.literal('buzz') }),
   z.strictObject({
-    type: z.literal("chat"),
+    type: z.literal('chat'),
     text: z.string().trim().min(1).max(500),
   }),
 ]);
@@ -194,9 +176,7 @@ export const ViewSchema = z.strictObject({
       explanation: Text,
       ruleId: Id,
       ruleUrl: z.string(),
-      answers: z.array(
-        z.strictObject({ userId: Id, text: Text, correct: z.boolean() }),
-      ),
+      answers: z.array(z.strictObject({ userId: Id, text: Text, correct: z.boolean() })),
     })
     .nullable(),
   answeredUserIds: z.array(Id).max(16),
@@ -227,7 +207,7 @@ export type GameProps = {
   view: View;
   currentUserId: string;
   send: (action: Action) => Promise<void>;
-  connection: "online" | "reconnecting" | "offline";
+  connection: 'online' | 'reconnecting' | 'offline';
   serverNowMs: number;
   onExit: () => void;
 };
@@ -243,48 +223,41 @@ export class GameError extends Error {
     message: string,
   ) {
     super(message);
-    this.name = "GameError";
+    this.name = 'GameError';
   }
 }
 export class EmptyRosterError extends GameError {
   constructor() {
-    super(422, "В партии нет участников");
+    super(422, 'В партии нет участников');
   }
 }
 export class CancelledMatchError extends GameError {
   constructor() {
-    super(422, "Партия отменена");
+    super(422, 'Партия отменена');
   }
 }
 export function normalize(text: string, n: Normalization): string {
   let s = text;
   if (n.trim) s = s.trim();
-  if (n.collapseSpaces) s = s.replace(/\s+/gu, " ");
-  if (n.caseFold) s = s.toLocaleLowerCase("ru-RU");
-  if (n.foldYo) s = s.replace(/ё/g, "е").replace(/Ё/g, "Е");
-  if (n.stripPunctuation) s = s.replace(/\p{P}/gu, "");
+  if (n.collapseSpaces) s = s.replace(/\s+/gu, ' ');
+  if (n.caseFold) s = s.toLocaleLowerCase('ru-RU');
+  if (n.foldYo) s = s.replace(/ё/g, 'е').replace(/Ё/g, 'Е');
+  if (n.stripPunctuation) s = s.replace(/\p{P}/gu, '');
   return s;
 }
 export function isCorrect(q: Question, text: string): boolean {
-  return q.acceptedAnswers.some(
-    (a) => normalize(a, q.normalization) === normalize(text, q.normalization),
-  );
+  return q.acceptedAnswers.some((a) => normalize(a, q.normalization) === normalize(text, q.normalization));
 }
 export function contentIssues(c: Content): string[] {
   const issues: string[] = [];
-  const qs = c.questions.filter((q) => q.status === "published");
-  if (c.status !== "published") issues.push("Набор не опубликован");
-  if (c.categories.length !== 5) issues.push("Нужно ровно пять категорий");
+  const qs = c.questions.filter((q) => q.status === 'published');
+  if (c.status !== 'published') issues.push('Набор не опубликован');
+  if (c.categories.length !== 5) issues.push('Нужно ровно пять категорий');
   for (const cat of c.categories)
     for (const cost of [100, 200, 300, 400, 500])
-      if (
-        qs.filter((q) => q.categoryId === cat.id && q.cost === cost).length !==
-        1
-      )
-        issues.push(
-          `${cat.label}, ${cost}: нужна ровно одна опубликованная карточка`,
-        );
-  if (qs.length !== 25) issues.push("Нужно ровно 25 опубликованных карточек");
+      if (qs.filter((q) => q.categoryId === cat.id && q.cost === cost).length !== 1)
+        issues.push(`${cat.label}, ${cost}: нужна ровно одна опубликованная карточка`);
+  if (qs.length !== 25) issues.push('Нужно ровно 25 опубликованных карточек');
   return issues.slice(0, 30);
 }
-export const defaultSettings: Settings = { contentId: "demo", teamCount: 2 };
+export const defaultSettings: Settings = { contentId: 'demo', teamCount: 2 };
