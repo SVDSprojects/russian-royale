@@ -25,3 +25,8 @@ docs/game-prompts/Word-v2/
 *.pem
 *.key
 coverage/
+android-app/build/
+*.jks
+*.keystore
+*.apk
+*.idsig
