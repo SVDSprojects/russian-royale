@@ -36,6 +36,10 @@ it('email codes verify signup, rate limit, reset password once and revoke sessio
       .expect(201);
     expect(a.db.prepare('SELECT COUNT(*) AS n FROM rr_verified_emails').get().n).toBe(1);
     now += 61000;
+    await c.post('/api/auth/email-code').send({ email: 'codes@test.ru', purpose: 'register' }).expect(409);
+    expect(sent).toHaveLength(1);
+
+    now += 61000;
     await c.post('/api/auth/email-code').send({ email: 'codes@test.ru', purpose: 'reset' }).expect(200);
     const code = sent.at(-1)!.code;
     await c

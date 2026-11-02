@@ -1,21 +1,19 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { api, useAuth } from '../api';
 export type Preferences = { theme: 'light' | 'dark' | 'system'; notifications: boolean };
-const defaults: Preferences = { theme: 'system', notifications: true };
+const defaults: Preferences = { theme: 'light', notifications: true };
 function local(): Preferences {
   try {
     const v = JSON.parse(localStorage.getItem('rr-preferences') || 'null');
     return v && ['light', 'dark', 'system'].includes(v.theme) && typeof v.notifications === 'boolean'
-      ? v
+      ? { ...v, theme: 'light' as const }
       : defaults;
   } catch {
     return defaults;
   }
 }
 export function initializeTheme(p = local()) {
-  const dark =
-    p.theme === 'dark' || (p.theme === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
-  document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+  document.documentElement.dataset.theme = 'light';
 }
 const Context = createContext<{ prefs: Preferences; save: (p: Preferences) => Promise<void> }>({
   prefs: defaults,
@@ -25,6 +23,7 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth(),
     [prefs, setPrefs] = useState(local);
   function apply(p: Preferences) {
+    p = { ...p, theme: 'light' };
     setPrefs(p);
     initializeTheme(p);
     try {
@@ -58,6 +57,7 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener('storage', changed);
   }, []);
   async function save(p: Preferences) {
+    p = { ...p, theme: 'light' };
     if (user) await api('/preferences', { method: 'PATCH', body: JSON.stringify(p) });
     apply(p);
   }
@@ -84,7 +84,7 @@ export function PreferenceSettings() {
       <div className="rr-setting-row">
         <div>
           <h3>Тема оформления</h3>
-          <p>Настройка сохраняется в аккаунте и применяется на других устройствах после входа.</p>
+          <p>Светлая тема. Тёмная временно отключена для читаемости всех экранов.</p>
         </div>
         <select
           aria-label="Тема оформления"
@@ -93,8 +93,6 @@ export function PreferenceSettings() {
           onChange={(e) => void update({ ...prefs, theme: e.target.value as Preferences['theme'] })}
         >
           <option value="light">Светлая</option>
-          <option value="dark">Тёмная</option>
-          <option value="system">Как на устройстве</option>
         </select>
       </div>
       <div className="rr-setting-row">

@@ -187,3 +187,42 @@
   color: #edf3ff;
   border-color: #667d9e;
 }
+/* Authentication always uses a light, high-contrast surface, even in dark mode. */
+:root[data-theme] .rr-app form.rr-auth-form {
+  color-scheme: light;
+  background: #fff;
+  color: #172642;
+  border-color: #c4d1e3;
+}
+:root[data-theme] .rr-app form.rr-auth-form :is(h2, p, label, small, .rr-auth-note) {
+  color: #263b5a;
+}
+:root[data-theme] .rr-app form.rr-auth-form :is(input, select, textarea) {
+  color: #172642;
+  background: #f7f9fd;
+  border-color: #8399b9;
+  caret-color: #172642;
+}
+:root[data-theme] .rr-app form.rr-auth-form input::placeholder {
+  color: #536781;
+  opacity: 1;
+}
+:root[data-theme] .rr-app form.rr-auth-form :is(.rr-auth-tabs, .rr-auth-tabs button) {
+  color: #263b5a;
+  background: #eef2f8;
+}
+:root[data-theme] .rr-app form.rr-auth-form :is(.rr-auth-tabs button.active, .rr-button.primary) {
+  color: #fff;
+  background: #2455f5;
+  border-color: #2455f5;
+}
+:root[data-theme] .rr-app form.rr-auth-form :is(.rr-button.secondary, .rr-password-field button) {
+  color: #172642;
+  background: #fff;
+  border-color: #8399b9;
+}
+:root[data-theme] .rr-app form.rr-auth-form .rr-notice.error {
+  color: #852d24;
+  background: #ffede9;
+  border-color: #d59b8f;
+}
