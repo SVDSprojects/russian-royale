@@ -1,16 +1,289 @@
-import React,{useState} from 'react';
-import type {Props,Action} from '../../../shared/games/bunker/types';
+import { useServerTime } from '../useServerTime';
+import { useRef } from 'react';
+import { PlayerName } from '../../student/Identity';
+import React, { useState } from 'react';
+import type { Props, Action } from '../../../shared/games/bunker/types';
 import './styles.css';
-const names:Record<string,string>={lobby:'Сбор игроков',night:'Ночь',dawn:'Рассвет',discussion:'Обсуждение',voting:'Голосование',resolution:'Итог голосования',reveal:'Раскрытие',challenge:'Учебное задание',elimination:'Выход участника',reading:'Приготовьтесь читать',editing:'Исправьте текст',finished:'Результат'};
-export function Game(p:Props){const [error,setError]=useState(''),[busy,setBusy]=useState(false),[target,setTarget]=useState(''),[answer,setAnswer]=useState(''),[token,setToken]=useState(''),[replacement,setReplacement]=useState(''),[chat,setChat]=useState('');const v=p.view;const run=async(a:Action)=>{setBusy(true);setError('');try{await p.send(a);}catch(e){setError((e as Error).message);}finally{setBusy(false);}};
-return <main className="rr-game-bunker"><header><div><small>РУССКИЙ ROYALE · Бункер</small><h1>{names[v.phase]??v.phase}</h1><p aria-live="polite">Круг {v.round} · {v.deadline?`${Math.max(0,Math.ceil((v.deadline-p.serverNowMs)/1000))} сек.`:'Ожидание'}</p></div><button onClick={p.onExit}>Выйти</button></header><img className="scene" src="/games/bunker/scene.svg" alt="Оранжерея после шторма"/><p role="status">{p.connection==='online'?'На связи':p.connection==='reconnecting'?'Восстанавливаем связь…':'Нет связи'}</p>{error&&<p role="alert" className="error">{error}</p>}{v.scenario&&<p>{v.scenario}</p>}<section className="players" aria-label="Участники">{v.participants.map(x=><article key={x.id} className={x.alive?'':'out'}><strong>{x.username}</strong><p>{x.ready?'Готов · ':''}{x.alive?'В игре':'Наблюдает'} {x.role&&`· ${x.role}`}</p>{x.cards.map(c=><p key={c.index}>{c.text}</p>)}{v.phase==='finished'&&<p>{v.result?.scores.find(s=>s.userId===x.id)?.score} очков</p>}</article>)}</section>
-{v.phase==='lobby'?<section className="actions"><button disabled={busy} onClick={()=>run({type:'ready',ready:!v.participants.find(x=>x.id===p.currentUserId)?.ready})}>Изменить готовность</button>{v.hostId===p.currentUserId&&<button disabled={busy} onClick={()=>run({type:'start'})}>Начать партию</button>}<p>Все участники должны подтвердить готовность.</p></section>:<>
-<details className="private"><summary>Мои данные — открыть приватно</summary><p>{v.self.role}</p>{v.self.allies.length>0&&<p>Союзники: {v.participants.filter(x=>v.self.allies.includes(x.id)).map(x=>x.username).join(', ')}</p>}{v.self.cards.map((c,i)=><p key={i}>{c}</p>)}{v.self.notes.map((n,i)=><p key={i}>{n}</p>)}<p>Жетонов: {v.self.tokens}</p></details>
-{v.text&&<section className="paper"><h2>{v.text.title}</h2><div className="text">{v.text.tokens.map(t=><button key={t.id} aria-pressed={token===t.id} disabled={v.phase!=='editing'||v.self.submitted} onClick={()=>{setToken(t.id);setReplacement(v.draft[t.id]??t.text);}}>{(v.draft[t.id]??t.text)||'▯'}</button>)}</div>{v.text.errorMap&&Object.entries(v.text.errorMap).map(([id,e])=><p key={id}>Исправление «{v.text!.tokens.find(t=>t.id===id)?.text}» → «{e.allowedReplacements.join(' / ')}». {e.explanation} ({e.ruleId})</p>)}</section>}
-{v.phase==='editing'&&!v.self.submitted&&<section className="actions"><label>Замена выбранного фрагмента<input value={replacement} maxLength={1000} onChange={e=>setReplacement(e.target.value)}/></label><button disabled={busy||!token} onClick={()=>run({type:'edit',token,replacement})}>Сохранить правку</button><button disabled={busy} onClick={()=>run({type:'submit'})}>Сдать текст</button></section>}
-{v.phase==='reveal'&&String('bunker')==='bunker'&&v.round>1&&<section className="actions">{v.self.cards.map((c,index)=><button disabled={busy||v.participants.find(x=>x.id===p.currentUserId)?.cards.some(x=>x.index===index)} key={index} onClick={()=>run({type:'reveal',index})}>Раскрыть: {c}</button>)}</section>}
-{v.task&&<section className="paper"><h2>{v.task.prompt}</h2><label>Ответ<select value={answer} onChange={e=>setAnswer(e.target.value)}><option value="">Выберите вариант</option>{v.task.options.map(o=><option key={o}>{o}</option>)}</select></label>{v.phase==='challenge'&&<button disabled={busy||!answer} onClick={()=>run({type:'answer',answer})}>Ответить</button>}</section>}
-{(v.phase==='voting'||v.phase==='night'&&v.self.role!=='Мирный')&&<section className="actions"><label>Выберите участника<select value={target} onChange={e=>setTarget(e.target.value)}><option value="">Выберите</option>{v.participants.filter(x=>x.alive).map(x=><option value={x.id} key={x.id}>{x.username}</option>)}</select></label><button disabled={busy||!target} onClick={()=>run(v.phase==='voting'?{type:'vote',target}:{type:'night',target,answer})}>{v.phase==='voting'?'Поставить печать — голосовать':'Подтвердить ночное действие'}</button>{v.phase==='voting'&&String('bunker')==='mafia'&&<button disabled={busy} onClick={()=>run({type:'vote',target:null})}>Воздержаться</button>}</section>}
-{(v.phase==='discussion'||!v.participants.find(x=>x.id===p.currentUserId)?.alive)&&v.phase!=='finished'&&<section><label>Сообщение<input maxLength={300} value={chat} onChange={e=>setChat(e.target.value)}/></label><button disabled={busy||!chat.trim()} onClick={()=>{void run({type:'chat',text:chat});setChat('');}}>Отправить</button></section>}
-{v.chat.map((c,i)=><p key={i}>{v.participants.find(x=>x.id===c.userId)?.username}: {c.text}</p>)}{v.result&&<section className="paper"><h2>{v.result.outcome==='draw'?'Ничья':'Партия завершена'}</h2><p>Победители: {v.participants.filter(x=>v.result!.winnerUserIds.includes(x.id)).map(x=>x.username).join(', ')||'нет'}</p></section>}<details><summary>Дневник партии</summary>{v.log.map((l,i)=><p key={i}>{l}</p>)}</details></>}
-</main>;}
+const names: Record<string, string> = {
+  lobby: 'Сбор игроков',
+  night: 'Ночь',
+  dawn: 'Рассвет',
+  discussion: 'Обсуждение',
+  voting: 'Голосование',
+  resolution: 'Итог голосования',
+  reveal: 'Раскрытие',
+  challenge: 'Учебное задание',
+  elimination: 'Выход участника',
+  reading: 'Приготовьтесь читать',
+  editing: 'Исправьте текст',
+  finished: 'Результат',
+};
+export function Game(p: Props) {
+  const [error, setError] = useState(''),
+    [busy, setBusy] = useState(false),
+    [target, setTarget] = useState(''),
+    [answer, setAnswer] = useState(''),
+    [token, setToken] = useState(''),
+    [replacement, setReplacement] = useState(''),
+    [chat, setChat] = useState('');
+  const v = p.view;
+  const clock = useServerTime(p.serverNowMs);
+  const actionLock = useRef(false);
+  const run = async (a: Action) => {
+    if (actionLock.current || p.connection !== 'online') return;
+    actionLock.current = true;
+    setBusy(true);
+    setError('');
+    try {
+      await p.send(a);
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setBusy(false);
+      actionLock.current = false;
+    }
+  };
+  return (
+    <main className="rr-game-bunker">
+      <header>
+        <div>
+          <small>РУССКИЙ ROYALE · Бункер</small>
+          <h1>{names[v.phase] ?? v.phase}</h1>
+          <p>
+            Круг {v.round} ·{' '}
+            {v.deadline ? `${Math.max(0, Math.ceil((v.deadline - clock) / 1000))} сек.` : 'Ожидание'}
+          </p>
+        </div>
+        <button onClick={p.onExit}>Выйти</button>
+      </header>
+      <img className="scene" src="/games/bunker/scene.svg" alt="Оранжерея после шторма" />
+      <p role="status">
+        {p.connection === 'online'
+          ? 'На связи'
+          : p.connection === 'reconnecting'
+            ? 'Восстанавливаем связь…'
+            : 'Нет связи'}
+      </p>
+      {error && (
+        <p role="alert" className="error">
+          {error}
+        </p>
+      )}
+      {v.scenario && <p>{v.scenario}</p>}
+      <details className="sdvs-game-roster">
+        <summary>Участники · {v.participants.length}</summary>
+        <section className="players" aria-label="Участники">
+          {v.participants.map((x) => (
+            <article key={x.id} className={x.alive ? '' : 'out'}>
+              <strong>
+                <PlayerName id={x.id} name={x.username} />
+              </strong>
+              <p>
+                {x.ready ? 'Готов · ' : ''}
+                {x.alive ? 'В игре' : 'Наблюдает'} {x.role && `· ${x.role}`}
+              </p>
+              {x.cards.map((c) => (
+                <p key={c.index}>{c.text}</p>
+              ))}
+              {v.phase === 'finished' && (
+                <p>{v.result?.scores.find((s) => s.userId === x.id)?.score} очков</p>
+              )}
+            </article>
+          ))}
+        </section>
+      </details>
+      {v.phase === 'lobby' ? (
+        <section className="actions">
+          <button
+            disabled={busy}
+            onClick={() =>
+              run({ type: 'ready', ready: !v.participants.find((x) => x.id === p.currentUserId)?.ready })
+            }
+          >
+            Изменить готовность
+          </button>
+          {v.hostId === p.currentUserId && (
+            <button disabled={busy} onClick={() => run({ type: 'start' })}>
+              Начать партию
+            </button>
+          )}
+          <p>Все участники должны подтвердить готовность.</p>
+        </section>
+      ) : (
+        <>
+          <details className="private">
+            <summary>Мои данные — открыть приватно</summary>
+            <p>{v.self.role}</p>
+            {v.self.allies.length > 0 && (
+              <p>
+                Союзники:{' '}
+                {v.participants
+                  .filter((x) => v.self.allies.includes(x.id))
+                  .map((x) => x.username)
+                  .join(', ')}
+              </p>
+            )}
+            {v.self.cards.map((c, i) => (
+              <p key={i}>{c}</p>
+            ))}
+            {v.self.notes.map((n, i) => (
+              <p key={i}>{n}</p>
+            ))}
+            <p>Жетонов: {v.self.tokens}</p>
+          </details>
+          {v.text && (
+            <section className="paper">
+              <h2>{v.text.title}</h2>
+              <div className="text">
+                {v.text.tokens.map((t) => (
+                  <button
+                    key={t.id}
+                    aria-pressed={token === t.id}
+                    disabled={v.phase !== 'editing' || v.self.submitted}
+                    onClick={() => {
+                      setToken(t.id);
+                      setReplacement(v.draft[t.id] ?? t.text);
+                    }}
+                  >
+                    {(v.draft[t.id] ?? t.text) || '▯'}
+                  </button>
+                ))}
+              </div>
+              {v.text.errorMap &&
+                Object.entries(v.text.errorMap).map(([id, e]) => (
+                  <p key={id}>
+                    Исправление «{v.text!.tokens.find((t) => t.id === id)?.text}» → «
+                    {e.allowedReplacements.join(' / ')}». {e.explanation} ({e.ruleId})
+                  </p>
+                ))}
+            </section>
+          )}
+          {v.phase === 'editing' && !v.self.submitted && (
+            <section className="actions">
+              <label>
+                Замена выбранного фрагмента
+                <input
+                  value={replacement}
+                  maxLength={1000}
+                  onChange={(e) => setReplacement(e.target.value)}
+                />
+              </label>
+              <button disabled={busy || !token} onClick={() => run({ type: 'edit', token, replacement })}>
+                Сохранить правку
+              </button>
+              <button disabled={busy} onClick={() => run({ type: 'submit' })}>
+                Сдать текст
+              </button>
+            </section>
+          )}
+          {v.phase === 'reveal' && String('bunker') === 'bunker' && v.round > 1 && (
+            <section className="actions">
+              {v.self.cards.map((c, index) => (
+                <button
+                  disabled={
+                    busy ||
+                    v.participants.find((x) => x.id === p.currentUserId)?.cards.some((x) => x.index === index)
+                  }
+                  key={index}
+                  onClick={() => run({ type: 'reveal', index })}
+                >
+                  Раскрыть: {c}
+                </button>
+              ))}
+            </section>
+          )}
+          {v.task && (
+            <section className="paper">
+              <h2>{v.task.prompt}</h2>
+              <label>
+                Ответ
+                <select value={answer} onChange={(e) => setAnswer(e.target.value)}>
+                  <option value="">Выберите вариант</option>
+                  {v.task.options.map((o) => (
+                    <option key={o}>{o}</option>
+                  ))}
+                </select>
+              </label>
+              {v.phase === 'challenge' && (
+                <button disabled={busy || !answer} onClick={() => run({ type: 'answer', answer })}>
+                  Ответить
+                </button>
+              )}
+            </section>
+          )}
+          {(v.phase === 'voting' || (v.phase === 'night' && v.self.role !== 'Мирный')) && (
+            <section className="actions">
+              <label>
+                Выберите участника
+                <select value={target} onChange={(e) => setTarget(e.target.value)}>
+                  <option value="">Выберите</option>
+                  {v.participants
+                    .filter((x) => x.alive)
+                    .map((x) => (
+                      <option value={x.id} key={x.id}>
+                        {x.username}
+                      </option>
+                    ))}
+                </select>
+              </label>
+              <button
+                disabled={busy || !target}
+                onClick={() =>
+                  run(v.phase === 'voting' ? { type: 'vote', target } : { type: 'night', target, answer })
+                }
+              >
+                {v.phase === 'voting' ? 'Поставить печать — голосовать' : 'Подтвердить ночное действие'}
+              </button>
+              {v.phase === 'voting' && String('bunker') === 'mafia' && (
+                <button disabled={busy} onClick={() => run({ type: 'vote', target: null })}>
+                  Воздержаться
+                </button>
+              )}
+            </section>
+          )}
+          {(v.phase === 'discussion' || !v.participants.find((x) => x.id === p.currentUserId)?.alive) &&
+            v.phase !== 'finished' && (
+              <section>
+                <label>
+                  Сообщение
+                  <input maxLength={300} value={chat} onChange={(e) => setChat(e.target.value)} />
+                </label>
+                <button
+                  disabled={busy || !chat.trim()}
+                  onClick={() => {
+                    void run({ type: 'chat', text: chat });
+                    setChat('');
+                  }}
+                >
+                  Отправить
+                </button>
+              </section>
+            )}
+          {v.chat.map((c, i) => (
+            <p key={i}>
+              {v.participants.find((x) => x.id === c.userId)?.username}: {c.text}
+            </p>
+          ))}
+          {v.result && (
+            <section className="paper">
+              <h2>{v.result.outcome === 'draw' ? 'Ничья' : 'Партия завершена'}</h2>
+              <p>
+                Победители:{' '}
+                {v.participants
+                  .filter((x) => v.result!.winnerUserIds.includes(x.id))
+                  .map((x) => x.username)
+                  .join(', ') || 'нет'}
+              </p>
+            </section>
+          )}
+          <details>
+            <summary>Дневник партии</summary>
+            {v.log.map((l, i) => (
+              <p key={i}>{l}</p>
+            ))}
+          </details>
+        </>
+      )}
+    </main>
+  );
+}

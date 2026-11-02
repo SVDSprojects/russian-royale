@@ -5,7 +5,7 @@ import { ErrorNotice, go, json, message, useResource } from './common';
 import type { WaitingGame } from '../../shared/waiting-games';
 import './waiting-games.css';
 
-const names = { spy: 'Шпион', jeopardy: 'Своя игра', roulette: 'Русская рулетка' };
+const names = { spy:'Шпион',jeopardy:'Своя игра',roulette:'Русская рулетка',alias:'Alias',whoami:'Кто я?',impostor:'Самозванец',mafia:'Мафия',bunker:'Бункер','broken-text':'Испорченный текст',durak:'Дурак' };
 export function WaitingGames() {
   const feed = useResource<{ rooms: WaitingGame[] }>('/waiting-games', true);
   const [busy, setBusy] = useState(''),
@@ -30,10 +30,11 @@ export function WaitingGames() {
         return;
       }
       const base = `/games/${room.game}`;
-      const latest = await api<{ rooms: { id: string; phase: string; version: number; joined: boolean }[] }>(
+      type Summary = { id: string; phase: string; version: number; joined: boolean };
+      const latest = await api<{ rooms: Summary[] } | Summary[]>(
         `${base}/rooms?serverId=${encodeURIComponent(room.serverId)}`,
       );
-      const target = latest.rooms.find((r) => r.id === room.id);
+      const target = (Array.isArray(latest) ? latest : latest.rooms).find((r) => r.id === room.id);
       if (!target || target.phase !== 'lobby')
         throw new Error('Эта партия уже началась или недоступна. Выбери другую комнату.');
       if (!target.joined)

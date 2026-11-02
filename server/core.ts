@@ -10,6 +10,7 @@ export interface User {
   xp: number;
   avatar: string;
   createdAt: string;
+  verified?: boolean;
 }
 declare global {
   namespace Express {
@@ -66,6 +67,7 @@ export function publicUser(row: any): User {
     xp: row.xp,
     avatar: row.avatar,
     createdAt: row.created_at,
+    verified: row.email?.toLowerCase() === 'vbarsegan363@gmail.com',
   };
 }
 export function body(req: Request) {

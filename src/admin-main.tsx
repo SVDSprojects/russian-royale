@@ -4,10 +4,11 @@ import { AuthProvider } from './api';
 import AdminApp from './admin/AdminApp';
 import './base.css';
 import './admin.css';
+import { IdentityProvider } from './student/Identity';
 createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <AuthProvider>
-      <AdminApp />
+      <IdentityProvider><AdminApp /></IdentityProvider>
     </AuthProvider>
   </React.StrictMode>,
 );

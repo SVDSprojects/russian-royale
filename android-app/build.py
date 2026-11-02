@@ -11,6 +11,7 @@ import secrets
 import shutil
 import subprocess
 import tempfile
+import xml.etree.ElementTree as ET
 import zipfile
 
 ROOT = Path(__file__).resolve().parent
@@ -65,7 +66,8 @@ if not key.exists():
         "-keyalg", "RSA", "-keysize", "3072", "-validity", "10000", "-storetype", "JKS",
         "-storepass:env", "ROYALE_STORE_PASS", "-keypass:env", "ROYALE_STORE_PASS",
         "-dname", "CN=Russian Royale, O=Russian Royale, C=AM", env=env)
-output = PROJECT / "exports" / "russian-royale-android-v1.apk"
+version = ET.parse(ROOT / "AndroidManifest.xml").getroot().attrib["{http://schemas.android.com/apk/res/android}versionName"]
+output = PROJECT / "exports" / f"russian-royale-android-v{version}.apk"
 output.parent.mkdir(exist_ok=True)
 run(JAVA / "java.exe", "-jar", TOOLS / "lib/apksigner.jar", "sign", "--ks", key,
     "--ks-key-alias", "royale", "--ks-pass", "env:ROYALE_STORE_PASS", "--key-pass",

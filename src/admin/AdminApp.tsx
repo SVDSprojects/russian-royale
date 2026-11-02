@@ -1,3 +1,5 @@
+import { DictionaryImport } from '../student/DictionaryPage';
+import { PlayerName } from '../student/Identity';
 import { AdminPanel as ImpostorAdmin } from '../games/impostor';
 import { AdminPanel as WhoamiAdmin } from '../games/whoami';
 import { AdminPanel as AliasAdmin } from '../games/alias';
@@ -55,6 +57,7 @@ type Section =
   | 'rules'
   | 'exercises'
   | 'lessons'
+  | 'dictionary'
   | 'teacher'
   | 'categories'
   | 'import'
@@ -141,6 +144,7 @@ const nav: { key: Section; label: string; icon: typeof BookOpen; group: string; 
   { key: 'rules', label: 'Правила', icon: BookOpen, group: 'УЧЕБНЫЕ МАТЕРИАЛЫ' },
   { key: 'exercises', label: 'Задания', icon: ClipboardList, group: '' },
   { key: 'lessons', label: 'Уроки', icon: GraduationCap, group: '' },
+  { key: 'dictionary', label: 'Академический словарь', icon: BookOpen, group: '' },
   { key: 'teacher', label: 'Учительница', icon: Sparkles, group: '' },
   { key: 'categories', label: 'Категории', icon: Settings2, group: '' },
   { key: 'import', label: 'Импорт', icon: Upload, group: '' },
@@ -449,8 +453,11 @@ export default function AdminApp() {
           <span className="adm-eyebrow">РУССКИЙ ROYALE ADMIN</span>
           <h1>Это пространство редакторов</h1>
           <p>
-            Вы вошли как <strong>{user.username}</strong>. Для доступа нужна роль редактора или главного
-            администратора.
+            Вы вошли как{' '}
+            <strong>
+              <PlayerName id={user.id} name={user.username} />
+            </strong>
+            . Для доступа нужна роль редактора или главного администратора.
           </p>
           <div className="adm-info">
             Владелец проекта может назначить первого администратора в терминале на сервере:
@@ -517,7 +524,9 @@ export default function AdminApp() {
           <div className="adm-account">
             <span className="adm-avatar">{user.username.slice(0, 2).toUpperCase()}</span>
             <div>
-              <strong>{user.username}</strong>
+              <strong>
+                <PlayerName id={user.id} name={user.username} />
+              </strong>
               <small>{user.role === 'admin' ? 'Администратор' : 'Редактор'}</small>
             </div>
             <button aria-label="Выйти" onClick={() => void logout()}>
@@ -614,6 +623,14 @@ export default function AdminApp() {
               {section === 'rules' && <RulesEditor notify={notify} />}
               {section === 'exercises' && <ExercisesEditor notify={notify} />}
               {section === 'lessons' && <LessonsEditor notify={notify} />}
+              {section === 'dictionary' && (
+                <section className="adm-panel sdvs-admin-dictionary">
+                  <p>
+                    Загрузка академического словаря с проверкой файла, предпросмотром и сохранением источника.
+                  </p>
+                  <DictionaryImport />
+                </section>
+              )}
               {section === 'teacher' && <TeacherEditor notify={notify} />}
               {section === 'categories' && <CategoriesEditor notify={notify} />}
               {section === 'import' && <ImportEditor notify={notify} />}
@@ -2348,7 +2365,7 @@ function UsersEditor({ selfId, notify }: { selfId: string; notify: Notify }) {
                         <span className="adm-avatar">{u.username.slice(0, 2).toUpperCase()}</span>
                         <div>
                           <strong>
-                            {u.username}
+                            <PlayerName id={u.id} name={u.username} />
                             {u.id === selfId && <span className="adm-self">вы</span>}
                           </strong>
                           <small>

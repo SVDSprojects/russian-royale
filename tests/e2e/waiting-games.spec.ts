@@ -19,25 +19,24 @@ test('home invites a server member into waiting games and removes vacated rooms'
         email: `${randomUUID()}@waiting.test`,
         password: 'Browser-test-password-2026!',
       });
-    const server = await post(host, '/servers', { name: 'Ара Срго' });
-    const invite = await post(host, `/servers/${server.id}/invites`);
-    await post(guest, `/invites/${invite.token}/join`);
+    const server={id:'public-spy'};
+    for(const c of [host,guest])expect((await c.request.get('/api/servers')).ok()).toBe(true);
     const page = await guest.newPage();
     await page.goto('/#home');
-    await expect(page.locator('.waiting-games')).toHaveCount(0);
+    await expect(page.locator('.waiting-games article').filter({hasText:'Собираемся играть'})).toHaveCount(0);
     const spy = await post(host, `/servers/${server.id}/rooms`, { name: 'Собираемся играть' });
     await expect(page.getByRole('heading', { name: 'Скорее присоединяйтесь к игре!' })).toBeVisible();
-    await expect(page.locator('.waiting-games')).toContainText('Ара Срго');
+    await expect(page.locator('.waiting-games')).toContainText('Собираемся играть');
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
     await page.locator('.waiting-games').screenshot({ path: 'artifacts/waiting-games-mobile.png' });
-    await page.locator('.waiting-games button').click();
+    await page.locator('.waiting-games article').filter({hasText:'Собираемся играть'}).getByRole('button').click();
     await expect(page.getByRole('button', { name: 'Я готов играть', exact: true })).toBeVisible();
     await post(host, `/rooms/${spy.id}/leave`);
     await page.goto('/#home');
-    await expect(page.locator('.waiting-games')).toHaveCount(0);
+    await expect(page.locator('.waiting-games article').filter({hasText:'Собираемся играть'})).toHaveCount(0);
     for (const game of ['jeopardy', 'roulette']) {
       const r = await post(host, `/games/${game}/rooms`, {
-        serverId: server.id,
+        serverId: 'public-'+game,
         name: game,
         commandId: randomUUID(),
         expectedVersion: 0,

@@ -134,6 +134,7 @@ export function EmailAuthForm({ onSuccess }: { onSuccess?: () => void }) {
         <div className="rr-password-field">
           <input
             type={visible ? 'text' : 'password'}
+            aria-label={mode === 'reset' ? 'Новый пароль' : 'Пароль'}
             autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
             minLength={mode === 'login' ? 1 : 10}
             maxLength={128}

@@ -1,3 +1,4 @@
+import { PlayerName } from '../../student/Identity';
 import { useState } from "react";
 import { ArrowLeft, ArrowRight, Check, Mail, Copy, Users } from "lucide-react";
 import type { RoomView } from "./client";
@@ -109,7 +110,7 @@ export function Lobby({
                   </span>
                   <div>
                     <strong>
-                      {m.username}
+                      <PlayerName id={m.id} name={m.username} />
                       {m.id === id ? " · вы" : ""}
                     </strong>
                     <small>

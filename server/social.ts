@@ -15,6 +15,10 @@ export function registerSocial(app: Express, ctx: Ctx) {
     `CREATE TABLE IF NOT EXISTS rr_profiles(user_id TEXT PRIMARY KEY REFERENCES users(id),public_id TEXT NOT NULL UNIQUE,bio TEXT NOT NULL DEFAULT '');CREATE TABLE IF NOT EXISTS rr_friends(sender TEXT NOT NULL REFERENCES users(id),receiver TEXT NOT NULL REFERENCES users(id),status TEXT NOT NULL CHECK(status IN ('pending','accepted')),PRIMARY KEY(sender,receiver));CREATE TABLE IF NOT EXISTS rr_social_presence(user_id TEXT PRIMARY KEY REFERENCES users(id),game TEXT NOT NULL,room_id TEXT NOT NULL,last_seen INTEGER NOT NULL);CREATE TABLE IF NOT EXISTS rr_daily_events(user_id TEXT NOT NULL,event_id TEXT NOT NULL,PRIMARY KEY(user_id,event_id));CREATE TABLE IF NOT EXISTS rr_daily(user_id TEXT NOT NULL REFERENCES users(id),day TEXT NOT NULL,points INTEGER NOT NULL DEFAULT 0,PRIMARY KEY(user_id,day));`,
   );
   const teacher = db.prepare('SELECT config FROM teacher WHERE id=1').get();
+  db.exec(
+    'CREATE TABLE IF NOT EXISTS rr_room_presence(game TEXT NOT NULL,room_id TEXT NOT NULL,user_id TEXT NOT NULL,last_seen INTEGER NOT NULL,PRIMARY KEY(game,room_id,user_id));CREATE INDEX IF NOT EXISTS rr_room_presence_recent ON rr_room_presence(last_seen);',
+  );
+  db.prepare('DELETE FROM rr_room_presence WHERE last_seen<?').run(ctx.now() - 86400000);
   if (teacher) {
     const config = JSON.parse(teacher.config);
     if (['Мария Ивановна', 'Марья Ивановна'].includes(config.name)) {
@@ -35,6 +39,30 @@ export function registerSocial(app: Express, ctx: Ctx) {
           } while (db.prepare('SELECT 1 FROM rr_profiles WHERE public_id=?').get(id));
         }
         db.prepare('INSERT INTO rr_profiles(user_id,public_id) VALUES(?,?)').run(u.id, id);
+      }
+      const owner = db.prepare("SELECT id FROM users WHERE lower(email)='vbarsegan363@gmail.com'").get();
+      if (owner && !db.prepare("SELECT 1 FROM seed_metadata WHERE key='sdvs-founder-identity-v1'").get()) {
+        db.prepare('UPDATE users SET username=? WHERE id=?').run('CEO"SDVS"', owner.id);
+        db.prepare('UPDATE rr_profiles SET public_id=? WHERE user_id=?').run('000001', owner.id);
+        db.prepare('INSERT INTO seed_metadata VALUES(?,?)').run(
+          'sdvs-founder-identity-v1',
+          new Date(ctx.now()).toISOString(),
+        );
+      }
+      if (!db.prepare("SELECT 1 FROM seed_metadata WHERE key='sdvs-hayk-identity-v1'").get()) {
+        const candidates = db.prepare("SELECT id FROM users WHERE lower(trim(username))='hayk'").all();
+        if (
+          candidates.length === 1 &&
+          !db
+            .prepare("SELECT 1 FROM rr_profiles WHERE public_id='000007' AND user_id<>?")
+            .get(candidates[0].id)
+        ) {
+          db.prepare("UPDATE rr_profiles SET public_id='000007' WHERE user_id=?").run(candidates[0].id);
+          db.prepare('INSERT INTO seed_metadata VALUES(?,?)').run(
+            'sdvs-hayk-identity-v1',
+            new Date(ctx.now()).toISOString(),
+          );
+        }
       }
     });
   }
@@ -101,10 +129,14 @@ export function registerSocial(app: Express, ctx: Ctx) {
             db.prepare(
               'INSERT INTO rr_daily VALUES(?,?,1) ON CONFLICT(user_id,day) DO UPDATE SET points=points+1',
             ).run(req.user!.id, day());
-          if (view)
+          if (view) {
             db.prepare(
               'INSERT INTO rr_social_presence VALUES(?,?,?,?) ON CONFLICT(user_id) DO UPDATE SET game=excluded.game,room_id=excluded.room_id,last_seen=excluded.last_seen',
             ).run(req.user!.id, view[1] === 'rooms' ? 'spy' : view[1], view[2], ctx.now());
+            db.prepare(
+              'INSERT INTO rr_room_presence VALUES(?,?,?,?) ON CONFLICT(game,room_id,user_id) DO UPDATE SET last_seen=excluded.last_seen',
+            ).run(view[1] === 'rooms' ? 'spy' : view[1], view[2], req.user!.id, ctx.now());
+          }
         }
         return original(value);
       }) as typeof res.json;

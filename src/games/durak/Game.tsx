@@ -1,3 +1,4 @@
+import { PlayerName } from '../../student/Identity';
 import { useEffect, useState, useRef } from "react";
 import {
   ArrowLeft,
@@ -216,7 +217,7 @@ export function Game({
                 </span>
                 <div>
                   <strong>
-                    {p.username}
+                    <PlayerName id={p.id} name={p.username} />
                     {p.id === id ? " · вы" : ""}
                   </strong>
                   <small>
@@ -420,7 +421,7 @@ export function Game({
                 <summary>Учебная статистика</summary>
                 {v.players.map((p) => (
                   <p key={p.id}>
-                    {p.username}: заданий {p.stats.asked}, верно{" "}
+                    <PlayerName id={p.id} name={p.username} />: заданий {p.stats.asked}, верно{" "}
                     {p.stats.correct}, неверно {p.stats.wrong}, таймаутов{" "}
                     {p.stats.timedOut}
                   </p>

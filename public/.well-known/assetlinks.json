@@ -1,0 +1,10 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.russianroyale.app",
+      "sha256_cert_fingerprints": ["97:CE:04:B7:D3:B2:DF:7E:08:FA:76:A6:35:DD:A7:61:B2:30:D2:28:74:82:63:B7:15:F8:12:27:34:8A:6E:58"]
+    }
+  }
+]

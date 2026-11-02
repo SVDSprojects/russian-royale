@@ -1,3 +1,4 @@
+import { PlayerName } from '../../student/Identity';
 // Общие элементы интерфейса «Alias»: манометр, связь, звук, декор фабрики, значки команд, конвейер.
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { LoaderCircle, Volume2, VolumeX, Wifi, WifiOff } from "lucide-react";
@@ -216,7 +217,7 @@ export function PlayerChip({ player, me, children, highlight }: { player: ViewPa
         {initials(player.username)}
       </span>
       <span className="rr-alias-player-name">
-        {player.username}
+        <PlayerName id={player.id} name={player.username} />
         {me ? " (вы)" : ""}
         {player.isHost ? <span className="rr-alias-tag">ведущий</span> : null}
         {status ? <span className="rr-alias-tag rr-alias-tag--muted">{status}</span> : null}

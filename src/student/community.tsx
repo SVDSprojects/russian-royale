@@ -1,3 +1,4 @@
+import { PlayerName } from './Identity';
 import { useCallback, useState, type FormEvent } from 'react';
 import {
   ArrowRight,
@@ -209,7 +210,7 @@ export function ServerDetail({ id }: { id: string }) {
                 <span className={`rr-presence ${member.online ? 'online' : ''}`} />
               </div>
               <div>
-                <strong>{member.username}</strong>
+                <strong><PlayerName id={member.id} name={member.username} /></strong>
                 <span>
                   {member.id === s.ownerId ? 'Владелец сервера' : member.online ? 'В сети' : 'Не в сети'}
                 </span>

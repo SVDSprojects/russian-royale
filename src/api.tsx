@@ -7,6 +7,7 @@ export type User = {
   xp: number;
   avatar: string;
   createdAt?: string;
+  verified?: boolean;
 };
 export async function api<T = any>(path: string, options: RequestInit = {}): Promise<T> {
   const response = await fetch(`/api${path}`, {

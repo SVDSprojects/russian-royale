@@ -1,7 +1,9 @@
+import { PlayerName } from './Identity';
 import { useEffect, useState } from 'react';
 import { api, useAuth } from '../api';
 import { Avatar, ErrorNotice, go, json, useResource, PageHeader } from './common';
 import './social.css';
+import { ProfileShowcase } from './Identity';
 type Person = {
   id: string;
   publicId: string;
@@ -26,6 +28,7 @@ export function SocialPage({ id }: { id?: string }) {
     [photo, setPhoto] = useState(''),
     [error, setError] = useState(''),
     [busy, setBusy] = useState(false),
+    [editing, setEditing] = useState(false),
     [notice, setNotice] = useState(''),
     [games, setGames] = useState<any[]>([]),
     [chartMode, setChartMode] = useState<'streak' | 'activity'>('streak');
@@ -115,12 +118,25 @@ export function SocialPage({ id }: { id?: string }) {
       {p && (
         <section className="rr-panel">
           <Avatar name={p.username} url={p.avatar} size="large" />
-          <h2>{p.username}</h2>
+          <h2>
+            <PlayerName id={p.id} name={p.username} />
+          </h2>
+          <ProfileShowcase id={p.id} />
           <p>
             ID: <strong>{p.publicId}</strong>
           </p>
           <p>{p.bio || 'Пока без описания'}</p>
           <strong>🔥 {p.streak} дней подряд</strong>
+          {own && (
+            <div className="sdvs-profile-actions">
+              <button className="rr-button secondary" onClick={() => setEditing(!editing)}>
+                {editing ? 'Скрыть редактирование' : 'Редактировать профиль'}
+              </button>
+              <a className="rr-button primary" href="#collection">
+                Мои коллекции
+              </a>
+            </div>
+          )}
           {own && (
             <p>
               {stats.data?.stats.games ?? 0} партий в Шпионе · {stats.data?.stats.wins ?? 0} побед ·{' '}
@@ -134,7 +150,7 @@ export function SocialPage({ id }: { id?: string }) {
           )}
         </section>
       )}
-      {own && (
+      {own && editing && (
         <form
           className="rr-panel rr-form"
           onSubmit={(e) => {
@@ -149,6 +165,9 @@ export function SocialPage({ id }: { id?: string }) {
           }}
         >
           <h2>Редактировать профиль</h2>
+          <a className="rr-button secondary" href="#collection">
+            Коллекции, подарки и оформление
+          </a>
           <label>
             Ник
             <input
@@ -207,7 +226,7 @@ export function SocialPage({ id }: { id?: string }) {
         {results.map((f) => (
           <div className="social-person" key={f.id}>
             <button onClick={() => go('profile/' + f.publicId)}>
-              {f.username} · {f.publicId}
+              <PlayerName id={f.id} name={f.username} /> · {f.publicId}
             </button>
             {f.id !== data.data?.me.id && (
               <button disabled={busy} onClick={() => void run(() => friend(f))}>
@@ -223,7 +242,7 @@ export function SocialPage({ id }: { id?: string }) {
           <div className="social-person" key={f.id}>
             <Avatar name={f.username} url={f.avatar} />
             <button onClick={() => go('profile/' + f.publicId)}>
-              {f.username} · {f.publicId}
+              <PlayerName id={f.id} name={f.username} /> · {f.publicId}
             </button>
             <span>
               {f.status === 'accepted'
@@ -320,7 +339,7 @@ export function SocialPage({ id }: { id?: string }) {
         <div className="social-legend">
           {series.map((s, i) => (
             <span key={s.id} style={{ color: colors[i] }}>
-              ● {s.username} · 🔥 {s.streak}
+              ● <PlayerName id={s.id} name={s.username} /> · 🔥 {s.streak}
             </span>
           ))}
         </div>

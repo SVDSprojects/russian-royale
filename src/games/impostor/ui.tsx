@@ -1,3 +1,4 @@
+import { PlayerName } from '../../student/Identity';
 // Общие элементы интерфейса «Самозванца»: таймер, связь, звук, звёзды, спутники, линза.
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Volume2, VolumeX, Wifi, WifiOff, LoaderCircle } from "lucide-react";
@@ -208,7 +209,7 @@ export function PlayerChip({ player, active, me, children }: { player: ViewParti
     <li className={`rr-impostor-player${active ? " is-active" : ""}`}>
       <Satellite player={player} active={active} me={me} />
       <span className="rr-impostor-player-name">
-        {player.username}
+        <PlayerName id={player.id} name={player.username} />
         {me ? " (вы)" : ""}
         {player.isHost ? <span className="rr-impostor-tag">ведущий</span> : null}
         {status ? <span className="rr-impostor-tag rr-impostor-tag--muted">{status}</span> : null}

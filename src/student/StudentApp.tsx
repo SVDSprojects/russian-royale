@@ -39,9 +39,16 @@ import { Dashboard, Games, HistoryPage, Leaderboard, ProfilePage, SettingsPage, 
 import { Lessons, LessonPlayer, Rules, RuleDetail } from './learning';
 import { Servers, ServerDetail, Invitation } from './community';
 import { RoomPage } from './room';
+import { CollectionPage } from './CollectionPage';
+import { DictionaryPage } from './DictionaryPage';
+import { ChallengesPage } from './ChallengesPage';
+import { LearnHub, FeedbackPage, InstallPage } from './LearnHub';
+import { PlayerName } from './Identity';
 import '../student.css';
 import '../royale-refresh.css';
 import '../royale-world.css';
+import './sdvs.css';
+import './mobile.css';
 
 const nav = [
   { id: 'home', label: 'Главная', icon: Home },
@@ -50,6 +57,8 @@ const nav = [
   { id: 'servers', label: 'Серверы игр', icon: Users },
   { id: 'lessons', label: 'Уроки', icon: GraduationCap },
   { id: 'rules', label: 'Справочник правил', icon: BookOpen },
+  { id: 'dictionary', label: 'Академический словарь', icon: BookOpen },
+  { id: 'collection', label: 'Коллекции и премиум', icon: Crown },
   { id: 'history', label: 'Моя активность', icon: History },
   { id: 'leaderboard', label: 'Рейтинг', icon: Trophy },
 ];
@@ -94,8 +103,14 @@ export default function StudentApp() {
   let content;
   if (auth.loading) content = <Loading />;
   else if (page === 'invite') content = <Invitation token={id ?? ''} />;
+  else if (page === 'feedback') content = <FeedbackPage />;
+  else if (page === 'install') content = <InstallPage />;
   else if (!user) content = <Welcome />;
   else if (page === 'home') content = <Dashboard />;
+  else if (page === 'learn') content = <LearnHub />;
+  else if (page === 'dictionary') content = <DictionaryPage />;
+  else if (page === 'collection') content = <CollectionPage />;
+  else if (page === 'challenge') content = <ChallengesPage key={id} mode={id || 'editor'} />;
   else if (page === 'arcade')
     content = id === 'memory' ? <MemoryGame /> : <Arcade key={id} mode={id || 'practice'} />;
   else if (page === 'games')
@@ -155,22 +170,20 @@ export default function StudentApp() {
                   {item.label}
                   {item.id === 'friends' && social.data?.me && <span> 🔥 {social.data.me.streak}</span>}
                 </span>
-                {item.id === 'games' && <span className="rr-nav-count">8</span>}
+                {item.id === 'games' && <span className="rr-nav-count">10</span>}
                 {i === 2 && <span className="rr-nav-dot" />}
               </a>
             ))}
           </nav>
-          <div className="rr-sidebar-section-label secondary-label">НА ПЕРСПЕКТИВУ</div>
+          <div className="rr-sidebar-section-label secondary-label">SDVS</div>
           <nav aria-label="План развития">
-            <a className={`rr-nav-item ${page === 'ege' ? 'active' : ''}`} href="#ege">
+            <a className={`rr-nav-item ${page === 'learn' ? 'active' : ''}`} href="#learn">
               <Sparkles size={19} />
-              <span>Подготовка к ЕГЭ</span>
-              <span className="rr-soon-dot" />
+              <span>Центр обучения</span>
             </a>
-            <a className={`rr-nav-item ${page === 'friends' ? 'active' : ''}`} href="#friends">
+            <a className={`rr-nav-item ${page === 'feedback' ? 'active' : ''}`} href="#feedback">
               <Users size={19} />
-              <span>Друзья</span>
-              <span className="rr-soon-dot" />
+              <span>Обратная связь</span>
             </a>
           </nav>
           <div className="rr-sidebar-bottom">
@@ -192,7 +205,7 @@ export default function StudentApp() {
               <ShieldCheck size={19} />
               <span>Администраторам</span>
             </a>
-            <span className="rr-build-label">ТЕСТОВАЯ ВЕРСИЯ · ЭТАПЫ 1–3</span>
+            <span className="rr-build-label">СОЗДАНО SDVS · УЧИСЬ ИГРАЯ</span>
           </div>
         </aside>
         <div className="rr-workspace">
@@ -208,6 +221,13 @@ export default function StudentApp() {
               Твоё пространство <ChevronRight size={14} />{' '}
               <strong>
                 {nav.find((n) => n.id === page)?.label ??
+                  (page === 'learn'
+                    ? 'Обучение'
+                    : page === 'feedback'
+                      ? 'Обратная связь'
+                      : page === 'challenge'
+                        ? 'Практика'
+                        : undefined) ??
                   (page === 'rooms'
                     ? 'Игровая комната'
                     : page === 'profile'
@@ -235,7 +255,7 @@ export default function StudentApp() {
                   <button className="rr-account" onClick={() => go('profile')}>
                     <Avatar name={user.username} url={user.avatar} />
                     <span>
-                      {user.username}
+                      <PlayerName id={user.id} name={user.username} />
                       <small>Уровень {Math.floor(user.xp / 100) + 1}</small>
                     </span>
                     <ChevronRight size={15} />
@@ -252,16 +272,65 @@ export default function StudentApp() {
               восстановится.
             </div>
           )}
-          <main className={`rr-main ${page === 'rooms' ? 'rr-main-room' : ''}`}>{content}</main>
+          <main
+            className={`rr-main ${page === 'rooms' ? 'rr-main-room' : ''} ${page === 'rooms' || page === 'challenge' || (page === 'games' && route.split('/')[2]) ? 'sdvs-active-game' : ''}`}
+          >
+            {content}
+          </main>
           <footer className="rr-footer">
-            <span>
-              Русский Royale <span>·</span> Учиться интереснее вместе
-            </span>
-            <a href="#roadmap">
-              Что уже работает <CircleHelp size={13} />
-            </a>
+            <div className="sdvs-footer-brand">
+              <strong>SDVS</strong>
+              <span>Русский Royale · Учиться интереснее вместе</span>
+              <span>улица Терьяна, 107</span>
+            </div>
+            <div className="sdvs-footer-creators">
+              <strong>Создатели</strong>
+              <span>Барсегян Ваган · Атаев Сейд</span>
+              <span>Саргсян Айк · Зограбян Давид</span>
+            </div>
+            <div className="sdvs-footer-links">
+              <a href="#feedback">Обратная связь</a>
+              <a href="mailto:vbarsegan363@gmail.com">vbarsegan363@gmail.com</a>
+              <a href="#install">Приложение на телефон</a>
+              <a href="#collection">Коллекции SDVS</a>
+            </div>
           </footer>
         </div>
+        {user && (
+          <nav className="sdvs-bottom-nav" aria-label="Навигация на телефоне">
+            {[
+              { id: 'home', label: 'Главная', icon: Home, active: page === 'home' },
+              {
+                id: 'games',
+                label: 'Играть',
+                icon: Gamepad2,
+                active: ['games', 'rooms', 'arcade', 'challenge', 'servers'].includes(page),
+              },
+              {
+                id: 'learn',
+                label: 'Учиться',
+                icon: GraduationCap,
+                active: ['learn', 'lessons', 'rules', 'dictionary'].includes(page),
+              },
+              {
+                id: 'profile',
+                label: 'Профиль',
+                icon: Users,
+                active: ['profile', 'friends', 'collection', 'settings'].includes(page),
+              },
+            ].map((item) => (
+              <a
+                key={item.id}
+                href={'#' + item.id}
+                aria-current={item.active ? 'page' : undefined}
+                className={item.active ? 'active' : ''}
+              >
+                <item.icon size={22} />
+                <span>{item.label}</span>
+              </a>
+            ))}
+          </nav>
+        )}
       </div>
     </ConnectionContext.Provider>
   );

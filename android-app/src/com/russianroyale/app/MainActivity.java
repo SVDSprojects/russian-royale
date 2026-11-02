@@ -129,10 +129,17 @@ public final class MainActivity extends Activity {
                 return true;
             }
         });
-        if (saved == null || web.restoreState(saved) == null) web.loadUrl(HOME);
+        Uri launch = getIntent().getData();
+        if (isSite(launch)) web.loadUrl(launch.toString());
+        else if (saved == null || web.restoreState(saved) == null) web.loadUrl(HOME);
     }
 
-    private boolean isSite(Uri uri) { return "https".equals(uri.getScheme()) && HOST.equalsIgnoreCase(uri.getHost()) && (uri.getPort() == -1 || uri.getPort() == 443); }
+    private boolean isSite(Uri uri) { return uri != null && "https".equals(uri.getScheme()) && HOST.equalsIgnoreCase(uri.getHost()) && (uri.getPort() == -1 || uri.getPort() == 443); }
+    @Override protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        if (web != null && isSite(intent.getData())) web.loadUrl(intent.getData().toString());
+    }
     private int dp(int n) { return Math.round(n * getResources().getDisplayMetrics().density); }
     private void showError() { pageFailed = true; progress.setVisibility(View.GONE); error.setVisibility(View.VISIBLE); }
     @Override protected void onActivityResult(int request, int result, Intent data) {

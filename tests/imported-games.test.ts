@@ -8,9 +8,8 @@ for (const game of ['jeopardy','roulette']) it(`${game} integrates with real acc
  try {
  const players=[request.agent(app.app),request.agent(app.app),request.agent(app.app)];
  for(const [i,p] of players.entries()) await p.post('/api/auth/register').send({email:`${i}@${game}.test`,username:`Игрок ${i}`,password:'Import-test-password!'}).expect(201);
- const server=(await players[0].post('/api/servers').send({name:'Игровой сервер',description:''}).expect(200)).body;
- const invite=(await players[0].post(`/api/servers/${server.id}/invites`).send({}).expect(200)).body;
- await players[1].post(`/api/invites/${invite.token}/join`).send({}).expect(200);
+ for(const p of players) await p.get('/api/servers').expect(200);
+ const server={id:'public-'+game};
  const base=`/api/games/${game}`;
  const settings=game==='jeopardy'?{contentId:'demo',teamCount:2}:{contentId:'demo',mode:'points',durations:[5000,5000,5000]};
  const created=(await players[0].post(base+'/rooms').send({serverId:server.id,name:'Партия',settings,commandId:randomUUID(),expectedVersion:0}).expect(200)).body;

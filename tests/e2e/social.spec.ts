@@ -14,6 +14,7 @@ test('social profiles persist, friends accept and graphs render on mobile', asyn
       });
     const p = await a.newPage();
     await p.goto('http://127.0.0.1:4173/#profile');
+    await p.getByRole('button', { name: 'Редактировать профиль', exact: true }).click();
     await expect(p.getByRole('heading', { name: 'Редактировать профиль' })).toBeVisible();
     await p.getByLabel('Ник', { exact: true }).fill('Игрок после правки');
     await p.getByLabel('О себе').fill('Мой новый профиль');

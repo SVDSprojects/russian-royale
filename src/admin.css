@@ -2350,3 +2350,4 @@
 .adm-btn.danger-ghost,.adm-icon-btn.danger-ghost{color:#b42539;}
 .adm-badge.published{color:#126142;background:#dff5e7;border-color:#acd9bd;}
 .adm-root input,.adm-root select,.adm-root textarea{background:#f7f9fc;color:#172642;border-color:#c9d6e9;}
+.sdvs-admin-dictionary{padding:24px}.sdvs-admin-dictionary .sdvs-dictionary-import{display:grid;gap:16px}.sdvs-admin-dictionary .sdvs-import-preview{background:#f1f5fd;padding:20px;border-radius:16px}.sdvs-admin-dictionary button{padding:12px 18px;border:1px solid #cbd5e5;border-radius:12px;color:#294b81;cursor:pointer;background:#f4f7ff}.sdvs-admin-dictionary input{max-width:100%}.sdvs-admin-dictionary p{line-height:1.8;color:#66758a}

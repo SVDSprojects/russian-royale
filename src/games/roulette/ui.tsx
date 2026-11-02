@@ -1,3 +1,4 @@
+import { PlayerName } from '../../student/Identity';
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import type { Action, GameProps } from '../../../shared/games/roulette/types';
 import { RouletteTrophy } from './StudioArt';
@@ -200,7 +201,7 @@ export function Scoreboard({ props }: { props: GameProps }) {
           <span className="rr-avatar">{p.username.slice(0, 1)}</span>
           <div className="rr-studio-player-name">
             <b>
-              {p.username}
+              <PlayerName id={p.id} name={p.username} />
               {p.id === props.currentUserId ? ' · вы' : ''}
             </b>
             <small>
@@ -264,7 +265,7 @@ export function ResultPanel({ props }: { props: GameProps }) {
                 ? '★'
                 : props.view.players.find((x) => x.id === p.userId)?.username.slice(0, 1)}
             </i>
-            {props.view.players.find((x) => x.id === p.userId)?.username}
+            <PlayerName id={p.userId} name={props.view.players.find((x) => x.id === p.userId)?.username} />
           </span>
           <b>
             {p.score}
@@ -317,7 +318,7 @@ export function Reveal({ props }: { props: GameProps }) {
             {a.correct ? '✓' : '—'}
           </span>
           <span>
-            <b>{props.view.players.find((p) => p.id === a.userId)?.username}</b>
+            <b><PlayerName id={a.userId} name={props.view.players.find((p) => p.id === a.userId)?.username} /></b>
             {a.text}
           </span>
         </p>

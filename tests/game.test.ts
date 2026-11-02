@@ -28,15 +28,8 @@ describe('Authoritative multiplayer / stages 1–3 integration', () => {
       players.push(agent);
       users.push(res.body.user);
     }
-    server = (
-      await players[0]
-        .post('/api/servers')
-        .send({ name: '11-А класс', description: 'Закрытое сообщество' })
-        .expect(200)
-    ).body;
-    invite = (await players[0].post(`/api/servers/${server.id}/invites`).send({}).expect(200)).body;
-    for (const player of players.slice(1, 3))
-      await player.post(`/api/invites/${invite.token}/join`).send({}).expect(200);
+    for (const player of players) await player.get('/api/servers').expect(200);
+    server = {id:'public-spy'};
     room = (
       await players[0]
         .post(`/api/servers/${server.id}/rooms`)
@@ -70,17 +63,15 @@ describe('Authoritative multiplayer / stages 1–3 integration', () => {
     for (const p of players.slice(0, 3))
       await p.post(`/api/rooms/${room.id}/vote`).send({ targetId }).expect(200);
   }
-  it('private membership, unguessable invite, revocation and capacity are enforced', async () => {
-    expect(invite.token.length).toBeGreaterThanOrEqual(32);
-    await players[3].get(`/api/servers/${server.id}`).expect(404);
-    await players[3].get(`/api/rooms/${room.id}`).expect(404);
-    await players[1].post(`/api/servers/${server.id}/invites`).send({}).expect(403);
-    await players[3].post(`/api/invites/${invite.token}/join`).send({}).expect(200);
+  it('keeps public servers open while preserving room membership and capacity', async () => {
+    await players[3].get(`/api/servers/${server.id}`).expect(200);
+    const observer = (await players[3].get(`/api/rooms/${room.id}`).expect(200)).body;
+    expect(observer.me.role).toBeUndefined();
+    expect(observer.me.topic).toBeUndefined();
+    await players[0].post(`/api/servers/${server.id}/invites`).send({}).expect(403);
     await players[3].post(`/api/rooms/${room.id}/join`).send({}).expect(409);
-    await players[0].delete(`/api/invites/${invite.token}`).expect(200);
-    await request(instance.app).get(`/api/invites/${invite.token}`).expect(404);
-    await players[3].post(`/api/invites/${invite.token}/join`).send({}).expect(404);
-    expect((await players[0].get('/api/servers')).body[0].memberCount).toBe(4);
+    await request(instance.app).get(`/api/rooms/${room.id}`).expect(401);
+    expect((await players[0].get('/api/servers')).body.find((s:any)=>s.id===server.id).memberCount).toBe(4);
   });
   it('rejects premature starts, non-host starts and duplicate starts', async () => {
     await players[0].post(`/api/rooms/${room.id}/start`).send({}).expect(400);
@@ -111,7 +102,7 @@ describe('Authoritative multiplayer / stages 1–3 integration', () => {
     await players[0].post(`/api/rooms/${room.id}/vote`).send({ targetId: users[3].id }).expect(400);
     await players[0].post(`/api/rooms/${room.id}/vote`).send({ targetId: users[1].id }).expect(200);
     await players[0].post(`/api/rooms/${room.id}/vote`).send({ targetId: users[2].id }).expect(409);
-    await players[3].post(`/api/rooms/${room.id}/vote`).send({ targetId: users[1].id }).expect(404);
+    await players[3].post(`/api/rooms/${room.id}/vote`).send({ targetId: users[1].id }).expect(403);
     expect(instance.db.prepare('SELECT count(*) n FROM game_votes').get().n).toBe(1);
   });
   it('lets the spy win when majority selects an innocent and awards XP exactly once', async () => {
@@ -236,7 +227,7 @@ describe('Authoritative multiplayer / stages 1–3 integration', () => {
     expect((await players[0].get(`/api/rooms/${room.id}/messages`)).body[0].text).toBe(
       '<script>alert(1)</script>',
     );
-    await players[3].get(`/api/rooms/${room.id}/messages`).expect(404);
+    await players[3].get(`/api/rooms/${room.id}/messages`).expect(403);
     await players[1].post(`/api/rooms/${room.id}/messages`).send({ text: 'ещё' }).expect(429);
   });
 });
@@ -265,9 +256,8 @@ it('persists session, role and elapsed deadlines across actual server restart', 
       agents.push(a);
       cookies.push(String(res.headers['set-cookie'][0]).split(';')[0]);
     }
-    server = (await agents[0].post('/api/servers').send({ name: 'Перезапуск' })).body;
-    invite = (await agents[0].post(`/api/servers/${server.id}/invites`).send({})).body;
-    for (const a of agents.slice(1)) await a.post(`/api/invites/${invite.token}/join`).send({});
+    for (const a of agents) await a.get('/api/servers').expect(200);
+    server = { id: 'public-spy' };
     room = (
       await agents[0]
         .post(`/api/servers/${server.id}/rooms`)

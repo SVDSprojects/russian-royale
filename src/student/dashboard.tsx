@@ -1,3 +1,4 @@
+import { PlayerName } from './Identity';
 import { PreferenceSettings } from './preferences';
 import { RoyaleHero } from './RoyaleHero';
 import { WaitingGames } from './WaitingGames';
@@ -38,6 +39,7 @@ import {
   Spade,
 } from 'lucide-react';
 import { api, useAuth } from '../api';
+import { ChallengeCards } from './ChallengesPage';
 import {
   ArrowLink,
   Avatar,
@@ -89,6 +91,7 @@ export function Dashboard() {
         }
       />
       <WaitingGames />
+      <div className="sdvs-home-shortcuts"><a href="#games"><Gamepad2 size={20}/><span><strong>Играть с друзьями</strong><small>Комнаты и онлайн-игры</small></span><ArrowRight size={17}/></a><a href={featuredLesson ? `#lessons/${featuredLesson.id}` : '#learn'}><BookOpen size={20}/><span><strong>{nextLesson ? 'Продолжить обучение' : 'Потренироваться'}</strong><small>{featuredLesson?.title || 'Короткая практика каждый день'}</small></span><ArrowRight size={17}/></a></div>
       <RoyaleHero />
       <div className="rr-stats-grid">
         <Stat icon={<Zap />} value={`${xp} XP`} title="Твой опыт" color="purple" />
@@ -107,7 +110,7 @@ export function Dashboard() {
         <Stat
           icon={<Users />}
           value={String(servers.data?.length ?? 0)}
-          title="Твоих серверов"
+          title="Серверов игр"
           color="pink"
         />
       </div>
@@ -135,7 +138,7 @@ export function Dashboard() {
         </div>
         <span className="royale-section-note">Один игрок. Много открытий.</span>
       </div>
-      <ArcadeCards />
+      <ArcadeCards /><div className="rr-section-heading"><h2>Новые испытания SDVS</h2></div><ChallengeCards />
       <div className="rr-dashboard-columns">
         <section>
           <div className="rr-section-heading">
@@ -595,7 +598,7 @@ export function Leaderboard() {
               <Avatar name={p.username} url={p.avatar} />
               <div>
                 <strong>
-                  {p.username}
+                  <PlayerName id={p.id} name={p.username} />
                   {p.id === user?.id && <small>Это ты</small>}
                 </strong>
                 <span>Уровень {Math.floor(p.xp / 100) + 1}</span>
@@ -691,7 +694,7 @@ export function Roadmap({ section }: { section: string }) {
           <div>
             <ShieldCheck />
             <h3>Аккаунт и сообщество</h3>
-            <p>Регистрация, профиль, закрытые серверы и приглашения по ссылке.</p>
+            <p>Регистрация по почтовому коду, профили, друзья и постоянные серверы игр.</p>
             <ArrowLink to="servers">Серверы игр</ArrowLink>
           </div>
           <div>
@@ -711,8 +714,8 @@ export function Roadmap({ section }: { section: string }) {
         <span className="rr-pill purple">СЛЕДУЮЩИЕ ЭТАПЫ</span>
         <h3>Ещё больше способов учиться</h3>
         <p className="rr-muted">
-          Девять остальных игр, заявки в друзья, интервальное повторение, тренажёр ЕГЭ, пробные экзамены и
-          расширенные достижения пока не реализованы. Друзей уже можно пригласить на сервер обычной ссылкой.
+          Расширенная подготовка к ЕГЭ, пробные экзамены и
+          расширенные достижения появятся позже. Уже доступны десять игр с друзьями, коллекции и отдельные тренировки.
         </p>
         <Notice>
           Правила, примеры и задания можно менять через админку. Мемори и тренировочные забеги используют
