@@ -2340,14 +2340,348 @@
   }
 }
 
-:root{color-scheme:light;background:#f1f4f9;}
-.adm-root{--adm-bg:#f1f4f9;--adm-panel:#fff;--adm-border:#d3deed;--adm-muted:#53627c;--adm-purple:#2455f5;font-family:'Manrope Variable',sans-serif;color:#172642;}
-.adm-root h1,.adm-root h2,.adm-root h3{font-family:'Unbounded Variable',sans-serif;}
-.adm-sidebar,.adm-topbar{background:white;}
-.adm-nav-item.active,.adm-nav-item.active:hover,.adm-btn.primary,.adm-btn.primary:hover{background:#2455f5;color:#fff;border-color:#2455f5;}
-.adm-btn.primary{box-shadow:0 3px 0 #1639a8;border-radius:12px;}
-.adm-btn.danger{background:#b42539;color:white;}
-.adm-btn.danger-ghost,.adm-icon-btn.danger-ghost{color:#b42539;}
-.adm-badge.published{color:#126142;background:#dff5e7;border-color:#acd9bd;}
-.adm-root input,.adm-root select,.adm-root textarea{background:#f7f9fc;color:#172642;border-color:#c9d6e9;}
-.sdvs-admin-dictionary{padding:24px}.sdvs-admin-dictionary .sdvs-dictionary-import{display:grid;gap:16px}.sdvs-admin-dictionary .sdvs-import-preview{background:#f1f5fd;padding:20px;border-radius:16px}.sdvs-admin-dictionary button{padding:12px 18px;border:1px solid #cbd5e5;border-radius:12px;color:#294b81;cursor:pointer;background:#f4f7ff}.sdvs-admin-dictionary input{max-width:100%}.sdvs-admin-dictionary p{line-height:1.8;color:#66758a}
+:root {
+  color-scheme: light;
+  background: #f1f4f9;
+}
+.adm-root {
+  --adm-bg: #f1f4f9;
+  --adm-panel: #fff;
+  --adm-border: #d3deed;
+  --adm-muted: #53627c;
+  --adm-purple: #2455f5;
+  font-family: 'Manrope Variable', sans-serif;
+  color: #172642;
+}
+.adm-root h1,
+.adm-root h2,
+.adm-root h3 {
+  font-family: 'Unbounded Variable', sans-serif;
+}
+.adm-sidebar,
+.adm-topbar {
+  background: white;
+}
+.adm-nav-item.active,
+.adm-nav-item.active:hover,
+.adm-btn.primary,
+.adm-btn.primary:hover {
+  background: #2455f5;
+  color: #fff;
+  border-color: #2455f5;
+}
+.adm-btn.primary {
+  box-shadow: 0 3px 0 #1639a8;
+  border-radius: 12px;
+}
+.adm-btn.danger {
+  background: #b42539;
+  color: white;
+}
+.adm-btn.danger-ghost,
+.adm-icon-btn.danger-ghost {
+  color: #b42539;
+}
+.adm-badge.published {
+  color: #126142;
+  background: #dff5e7;
+  border-color: #acd9bd;
+}
+.adm-root input,
+.adm-root select,
+.adm-root textarea {
+  background: #f7f9fc;
+  color: #172642;
+  border-color: #c9d6e9;
+}
+.sdvs-admin-dictionary {
+  padding: 24px;
+}
+.sdvs-admin-dictionary .sdvs-dictionary-import {
+  display: grid;
+  gap: 16px;
+}
+.sdvs-admin-dictionary .sdvs-import-preview {
+  background: #f1f5fd;
+  padding: 20px;
+  border-radius: 16px;
+}
+.sdvs-admin-dictionary button {
+  padding: 12px 18px;
+  border: 1px solid #cbd5e5;
+  border-radius: 12px;
+  color: #294b81;
+  cursor: pointer;
+  background: #f4f7ff;
+}
+.sdvs-admin-dictionary input {
+  max-width: 100%;
+}
+.sdvs-admin-dictionary p {
+  line-height: 1.8;
+  color: #66758a;
+}
+
+.adm-mobile-switcher,
+.adm-mobile-close {
+  display: none;
+}
+@media (max-width: 760px) {
+  .adm-root {
+    font-size: 16px;
+    min-height: 100dvh;
+  }
+  .adm-main {
+    min-width: 0;
+  }
+  .adm-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 22;
+    height: calc(68px + env(safe-area-inset-top, 0px));
+    padding: env(safe-area-inset-top, 0px) 14px 0;
+    gap: 12px;
+    box-shadow: 0 3px 12px #1726420c;
+  }
+  .adm-mobile-menu {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    min-width: 106px;
+    padding: 10px 14px;
+    border: 1px solid #2455f5;
+    border-radius: 12px;
+    background: #2455f5;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    flex: none;
+  }
+  .adm-breadcrumb {
+    min-width: 0;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+  }
+  .adm-breadcrumb strong {
+    font-weight: 650;
+  }
+  .adm-workspace-label,
+  .adm-breadcrumb-separator,
+  .adm-top-badge {
+    display: none;
+  }
+  .adm-mobile-switcher {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: sticky;
+    top: calc(68px + env(safe-area-inset-top, 0px));
+    z-index: 21;
+    padding: 8px 14px 12px;
+    background: #fff;
+    border-bottom: 1px solid #d3deed;
+  }
+  .adm-mobile-switcher label {
+    font-size: 13px;
+    color: #53627c;
+    flex: none;
+  }
+  .adm-root .adm-mobile-switcher select {
+    min-height: 44px;
+    font-size: 16px;
+    flex: 1;
+  }
+  .adm-sidebar {
+    z-index: 31;
+    width: min(88vw, 340px);
+    padding: calc(20px + env(safe-area-inset-top, 0px)) 16px env(safe-area-inset-bottom, 0px);
+    height: 100dvh;
+  }
+  .adm-sidebar .adm-brand {
+    padding-right: 42px;
+    font-size: 14px;
+  }
+  .adm-mobile-close {
+    display: grid;
+    place-items: center;
+    position: absolute;
+    right: 10px;
+    top: calc(14px + env(safe-area-inset-top, 0px));
+    width: 44px;
+    height: 44px;
+    border: 1px solid #ccd8ec;
+    border-radius: 12px;
+    background: #edf3ff;
+    color: #173b80;
+  }
+  .adm-sidebar-scrim {
+    z-index: 30;
+    background: #14213d80;
+  }
+  .adm-sidebar nav {
+    overscroll-behavior: contain;
+  }
+  .adm-nav-item {
+    min-height: 48px;
+    font-size: 15px;
+  }
+  .adm-nav-group {
+    font-size: 11px;
+  }
+  .adm-root .adm-content {
+    padding: 22px 14px calc(32px + env(safe-area-inset-bottom, 0px));
+  }
+  .adm-root .adm-page-heading p {
+    font-size: 14px;
+    line-height: 1.65;
+  }
+  .adm-root .adm-btn,
+  .adm-root .adm-toolbar .adm-btn,
+  .adm-root .adm-editor-actions .adm-btn {
+    min-height: 44px;
+    font-size: 14px;
+    padding: 11px 14px;
+  }
+  .adm-root input:not([type='checkbox']),
+  .adm-root select,
+  .adm-root textarea,
+  .adm-root .adm-field input,
+  .adm-root .adm-field select,
+  .adm-root .adm-field textarea {
+    font-size: 16px;
+    min-height: 44px;
+  }
+  .adm-root .adm-field > span {
+    font-size: 13px;
+  }
+  .adm-icon-btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .adm-root .adm-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .adm-root .adm-toolbar .adm-search {
+    width: 100%;
+    order: 0;
+    min-width: 0;
+  }
+  .adm-root .adm-toolbar > .adm-btn {
+    margin-left: 0;
+  }
+  .adm-editor-actions,
+  .adm-actions {
+    flex-wrap: wrap;
+  }
+  .adm-root .adm-overview-hero h2 {
+    font-size: 25px;
+    line-height: 1.4;
+  }
+  .adm-root .adm-overview-hero p,
+  .adm-root .adm-quick-row strong {
+    font-size: 14px;
+  }
+  .adm-root .adm-quick-row small,
+  .adm-root .adm-stat-card > span:last-of-type {
+    font-size: 12px;
+  }
+  .adm-root .adm-overview-hero {
+    padding: 22px 18px;
+  }
+  .adm-overlay {
+    padding: 12px;
+    padding-top: max(12px, env(safe-area-inset-top, 0px));
+    padding-bottom: max(12px, env(safe-area-inset-bottom, 0px));
+  }
+  .adm-modal {
+    padding: 22px;
+    max-height: calc(100dvh - 32px);
+  }
+  .adm-modal form {
+    display: grid;
+    gap: 10px;
+  }
+  .adm-root .adm-users-panel {
+    background: transparent;
+    border: 0;
+    overflow: visible;
+    box-shadow: none;
+  }
+  .adm-users-panel .adm-table-scroll {
+    overflow: visible;
+  }
+  .adm-users-panel table {
+    display: block;
+    min-width: 0;
+    width: 100%;
+  }
+  .adm-users-panel thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .adm-users-panel tbody {
+    display: grid;
+    gap: 14px;
+  }
+  .adm-users-panel tr {
+    display: block;
+    min-width: 0;
+    padding: 16px;
+    background: #fff;
+    border: 1px solid #ccd8e9;
+    border-radius: 16px;
+  }
+  .adm-users-panel td {
+    display: block;
+    width: auto;
+    padding: 9px 0;
+    border: 0;
+    white-space: normal;
+    font-size: 14px;
+  }
+  .adm-users-panel td:not(:first-child) {
+    display: grid;
+    grid-template-columns: 90px minmax(0, 1fr);
+    gap: 8px;
+    align-items: center;
+  }
+  .adm-users-panel td:not(:first-child)::before {
+    content: attr(data-label);
+    color: #53627c;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .adm-users-panel td .adm-btn {
+    grid-column: 2;
+    width: 100%;
+  }
+  .adm-users-panel .adm-user-cell {
+    gap: 10px;
+    min-width: 0;
+  }
+  .adm-users-panel .adm-user-cell > div {
+    min-width: 0;
+  }
+  .adm-users-panel .adm-user-cell strong {
+    font-size: 15px;
+    white-space: normal;
+  }
+  .adm-users-panel .adm-user-cell small {
+    font-size: 12px;
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+  .adm-toast {
+    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    max-width: calc(100vw - 24px);
+  }
+}

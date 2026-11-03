@@ -426,9 +426,49 @@ export default function AdminApp() {
   const fromHash = () => nav.find((n) => n.key === location.hash.slice(1))?.key ?? 'overview';
   const [section, setSection] = useState<Section>(fromHash);
   const [mobile, setMobile] = useState(false);
+  const menuRef = useRef<HTMLButtonElement>(null);
+  const sidebarRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if (!mobile || !user) return;
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    sidebarRef.current?.querySelector<HTMLButtonElement>('.adm-nav-item.active')?.focus();
+    const keys = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMobile(false);
+      if (e.key === 'Tab') {
+        const controls = Array.from(
+          sidebarRef.current?.querySelectorAll<HTMLElement>('a[href],button:not(:disabled)') || [],
+        ).filter((el) => el.getClientRects().length);
+        const first = controls[0],
+          last = controls[controls.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last?.focus();
+        }
+        if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first?.focus();
+        }
+      }
+    };
+    const resize = () => {
+      if (window.innerWidth > 760) setMobile(false);
+    };
+    document.addEventListener('keydown', keys);
+    window.addEventListener('resize', resize);
+    return () => {
+      document.body.style.overflow = overflow;
+      document.removeEventListener('keydown', keys);
+      window.removeEventListener('resize', resize);
+      requestAnimationFrame(() => menuRef.current?.focus());
+    };
+  }, [mobile, user?.id]);
   const [notice, setNotice] = useState<{ message: string; error: boolean } | null>(null);
   useEffect(() => {
-    const update = () => setSection(fromHash());
+    const update = () => {
+      setSection(fromHash());
+      setMobile(false);
+    };
     window.addEventListener('hashchange', update);
     return () => window.removeEventListener('hashchange', update);
   }, []);
@@ -442,6 +482,7 @@ export default function AdminApp() {
     location.hash = next;
     setSection(next);
     setMobile(false);
+    window.scrollTo({ top: 0, behavior: 'instant' });
   };
   if (loading)
     return (
@@ -489,7 +530,22 @@ export default function AdminApp() {
       {mobile && (
         <button className="adm-sidebar-scrim" aria-label="Закрыть меню" onClick={() => setMobile(false)} />
       )}
-      <aside className={`adm-sidebar${mobile ? ' open' : ''}`}>
+      <aside
+        id="adm-sections"
+        ref={sidebarRef}
+        className={`adm-sidebar${mobile ? ' open' : ''}`}
+        role={mobile ? 'dialog' : undefined}
+        aria-modal={mobile ? true : undefined}
+        aria-label="Разделы админки"
+      >
+        <button
+          className="adm-mobile-close"
+          type="button"
+          aria-label="Закрыть разделы"
+          onClick={() => setMobile(false)}
+        >
+          <X size={22} />
+        </button>
         <a className="adm-brand" href="/admin.html">
           <span className="adm-logo-icon">
             <Shield size={23} />
@@ -515,6 +571,7 @@ export default function AdminApp() {
                 {item.group && <span className="adm-nav-group">{item.group}</span>}
                 <button
                   className={`adm-nav-item${section === item.key ? ' active' : ''}`}
+                  aria-current={section === item.key ? 'page' : undefined}
                   onClick={() => go(item.key)}
                 >
                   <item.icon size={19} />
@@ -542,19 +599,46 @@ export default function AdminApp() {
           </div>
         </div>
       </aside>
-      <div className="adm-main">
+      <div className="adm-main" inert={mobile ? true : undefined}>
         <header className="adm-topbar">
-          <button className="adm-mobile-menu" aria-label="Открыть меню" onClick={() => setMobile(true)}>
-            <Menu />
+          <button
+            ref={menuRef}
+            className="adm-mobile-menu"
+            type="button"
+            aria-label="Открыть меню"
+            aria-controls="adm-sections"
+            aria-expanded={mobile}
+            onClick={() => setMobile(true)}
+          >
+            <Menu size={22} />
+            <span>Меню</span>
           </button>
           <div className="adm-breadcrumb">
-            Рабочее пространство <ChevronRight size={14} />
+            <span className="adm-workspace-label">Рабочее пространство</span>{' '}
+            <ChevronRight className="adm-breadcrumb-separator" size={14} />
             <strong>{chosen.label}</strong>
           </div>
           <span className="adm-top-badge">
             <Shield size={13} /> Закрытая панель
           </span>
         </header>
+        <div className="adm-mobile-switcher">
+          <label htmlFor="adm-section-select">Раздел</label>
+          <select
+            id="adm-section-select"
+            aria-label="Выбрать раздел админки"
+            value={section}
+            onChange={(e) => go(e.target.value as Section)}
+          >
+            {nav
+              .filter((item) => !item.admin || user.role === 'admin')
+              .map((item) => (
+                <option value={item.key} key={item.key}>
+                  {item.key === 'users' ? 'Пользователи и XP' : item.label}
+                </option>
+              ))}
+          </select>
+        </div>
         <main className="adm-content">
           <div className="adm-page-heading">
             <div>
@@ -2388,7 +2472,7 @@ function UsersEditor({ selfId, notify }: { selfId: string; notify: Notify }) {
           Обновить
         </button>
       </div>
-      <section className="adm-panel adm-table-panel">
+      <section className="adm-panel adm-table-panel adm-users-panel">
         {resource.loading ? (
           <Loader />
         ) : resource.error ? (
@@ -2421,7 +2505,7 @@ function UsersEditor({ selfId, notify }: { selfId: string; notify: Notify }) {
                         </div>
                       </div>
                     </td>
-                    <td>
+                    <td data-label="Роль">
                       <select
                         aria-label={`Роль ${u.username}`}
                         value={u.role}
@@ -2435,7 +2519,7 @@ function UsersEditor({ selfId, notify }: { selfId: string; notify: Notify }) {
                         ))}
                       </select>
                     </td>
-                    <td>
+                    <td data-label="Опыт">
                       <div>{u.xp} XP</div>
                       <button
                         type="button"
@@ -2456,7 +2540,7 @@ function UsersEditor({ selfId, notify }: { selfId: string; notify: Notify }) {
                         Изменить XP
                       </button>
                     </td>
-                    <td>{dateLabel(u.createdAt)}</td>
+                    <td data-label="Регистрация">{dateLabel(u.createdAt)}</td>
                   </tr>
                 ))}
               </tbody>
