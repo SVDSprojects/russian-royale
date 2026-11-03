@@ -1,5 +1,5 @@
 import { createContext, useContext, type ReactNode } from 'react';
-import { BadgeCheck, Sparkles } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import { useAuth } from '../api';
 import { useResource } from './common';
 import { gifts } from '../../shared/collection';
@@ -18,6 +18,7 @@ export type Appearance = {
   emoji: string;
   featured: OwnedItem[];
   verified?: boolean;
+  verificationBadge?: 'founder' | 'staff' | null;
 };
 type Identity = Appearance & { id: string; username: string; verified: boolean };
 const Context = createContext<Identity[]>([]);
@@ -38,17 +39,34 @@ export function PlayerName({
   const identities = useContext(Context),
     { user } = useAuth();
   const identity = identities.find((i) => i.id === id);
-  const verified = identity?.verified || (id === user?.id && user?.verified);
+  const badge = identity ? identity.verificationBadge : id === user?.id ? user?.verificationBadge : null;
   return (
     <span className="sdvs-player-name">
       <span>{identity?.username || name || fallback}</span>
-      {verified && (
+      {badge && (
         <span
-          className="sdvs-verification"
-          title="Основатель SDVS · подтверждённый аккаунт"
-          aria-label="Подтверждённый основатель SDVS"
+          className={`sdvs-verification badge-${badge}`}
+          title={badge === 'founder' ? 'Основатель SDVS' : 'Команда SDVS · назначенная должность'}
+          aria-label={
+            badge === 'founder' ? 'Подтверждённый основатель SDVS' : 'Подтверждённый сотрудник SDVS'
+          }
         >
-          <BadgeCheck size={18} strokeWidth={2.6} />
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              className="badge-outline"
+              d="m12 2 2.6 1.8 3.2-.1 1 3 2.6 1.9-1 3 1 3-2.6 1.9-1 3-3.2-.1L12 22l-2.6-1.8-3.2.1-1-3-2.6-1.9 1-3-1-3 2.6-1.9 1-3 3.2.1Z"
+              strokeWidth="1.6"
+              strokeLinejoin="round"
+            />
+            <path
+              className="badge-tick"
+              d="m7.5 12 3 3 6-6"
+              fill="none"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
         </span>
       )}
       {identity?.premium && <Sparkles className="sdvs-premium-star" size={14} aria-label="Премиум" />}

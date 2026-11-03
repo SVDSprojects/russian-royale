@@ -49,21 +49,19 @@ export function registerSocial(app: Express, ctx: Ctx) {
           new Date(ctx.now()).toISOString(),
         );
       }
-      if (!db.prepare("SELECT 1 FROM seed_metadata WHERE key='sdvs-hayk-identity-v1'").get()) {
-        const candidates = db.prepare("SELECT id FROM users WHERE lower(trim(username))='hayk'").all();
-        if (
-          candidates.length === 1 &&
-          !db
-            .prepare("SELECT 1 FROM rr_profiles WHERE public_id='000007' AND user_id<>?")
-            .get(candidates[0].id)
-        ) {
-          db.prepare("UPDATE rr_profiles SET public_id='000007' WHERE user_id=?").run(candidates[0].id);
-          db.prepare('INSERT INTO seed_metadata VALUES(?,?)').run(
-            'sdvs-hayk-identity-v1',
-            new Date(ctx.now()).toISOString(),
-          );
-        }
+      // This reserved ID follows the account email, never a mutable nickname.
+      const hayk = db
+        .prepare("SELECT id FROM users WHERE lower(trim(email))='hayksargsyan865@gmail.com'")
+        .get();
+      const holder = db.prepare("SELECT user_id FROM rr_profiles WHERE public_id='000007'").get();
+      if (holder && holder.user_id !== hayk?.id) {
+        let replacement: string;
+        do {
+          replacement = String(111111 + (crypto.getRandomValues(new Uint32Array(1))[0] % 888889));
+        } while (db.prepare('SELECT 1 FROM rr_profiles WHERE public_id=?').get(replacement));
+        db.prepare('UPDATE rr_profiles SET public_id=? WHERE user_id=?').run(replacement, holder.user_id);
       }
+      if (hayk) db.prepare("UPDATE rr_profiles SET public_id='000007' WHERE user_id=?").run(hayk.id);
     });
   }
   ensure();

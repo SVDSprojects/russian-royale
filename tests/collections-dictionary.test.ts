@@ -61,7 +61,7 @@ describe('server-owned XP wallet and collections', () => {
     const app = createApp({ dbPath: ':memory:', testMode: true });
     try {
       const a = await player(app),
-        b = await player(app, 'Hayk'),
+        b = await player(app, 'Hayk', 'hayksargsyan865@gmail.com'),
         founder = await player(app, 'Старый ник', 'vbarsegan363@gmail.com');
       expect(b.profile.publicId).toBe('000007');
       expect(founder.profile.username).toBe('CEO"SDVS"');

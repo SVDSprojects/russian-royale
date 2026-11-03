@@ -1,6 +1,6 @@
 import type { Express, RequestHandler } from 'express';
 import { createHash, randomInt, randomUUID } from 'node:crypto';
-import { body, HttpError, str } from './core';
+import { body, HttpError, str, verification } from './core';
 import { transaction, type DB } from './storage';
 import { cases, gifts, premiumPrice, profileEmojis } from '../shared/collection';
 
@@ -44,17 +44,17 @@ export function registerCollections(app: Express, ctx: Context) {
       });
     return { premium, premiumUntil: row?.premium_until ?? 0, emoji: premium ? row.emoji : '', featured };
   }
-  app.get('/api/identities', ctx.requireAuth, (_req, res) => {
+  app.get('/api/identities', ctx.requireAuth, (req, res) => {
     const users = db
       .prepare(
-        `SELECT id,username,email FROM users WHERE lower(email)='vbarsegan363@gmail.com' OR id IN (SELECT user_id FROM rr_shop_profile)`,
+        `SELECT id,username,email,role FROM users WHERE lower(email)='vbarsegan363@gmail.com' OR role IN ('admin','editor','moderator') OR id IN (SELECT user_id FROM rr_shop_profile) OR id=?`,
       )
-      .all();
+      .all(req.user!.id);
     res.json(
       users.map((u) => ({
         id: u.id,
         username: u.username,
-        verified: u.email.toLowerCase() === 'vbarsegan363@gmail.com',
+        ...verification(u),
         ...appearance(u.id),
       })),
     );
@@ -73,11 +73,11 @@ export function registerCollections(app: Express, ctx: Context) {
   app.get('/api/collection/profile/:id', ctx.requireAuth, (req, res) => {
     const u = db
       .prepare(
-        'SELECT u.id,u.email FROM users u JOIN rr_profiles p ON p.user_id=u.id WHERE u.id=? OR p.public_id=?',
+        'SELECT u.id,u.email,u.role FROM users u JOIN rr_profiles p ON p.user_id=u.id WHERE u.id=? OR p.public_id=?',
       )
       .get(req.params.id, req.params.id);
     if (!u) throw new HttpError(404, 'Профиль не найден.');
-    res.json({ verified: u.email.toLowerCase() === 'vbarsegan363@gmail.com', ...appearance(u.id) });
+    res.json({ ...verification(u), ...appearance(u.id) });
   });
   app.post('/api/collection/purchase', ctx.requireAuth, (req, res) => {
     const b = body(req),

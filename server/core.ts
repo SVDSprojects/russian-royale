@@ -11,6 +11,7 @@ export interface User {
   avatar: string;
   createdAt: string;
   verified?: boolean;
+  verificationBadge?: 'founder' | 'staff' | null;
 }
 declare global {
   namespace Express {
@@ -58,6 +59,15 @@ export function imagePath(value: unknown): string {
     throw new HttpError(400, 'Используйте изображение, загруженное на этот сервер.');
   return s;
 }
+export function verification(row: { email?: string; role?: string }) {
+  const verificationBadge =
+    row.email?.trim().toLowerCase() === 'vbarsegan363@gmail.com'
+      ? ('founder' as const)
+      : ['admin', 'editor', 'moderator'].includes(row.role || '')
+        ? ('staff' as const)
+        : null;
+  return { verified: !!verificationBadge, verificationBadge };
+}
 export function publicUser(row: any): User {
   return {
     id: row.id,
@@ -67,7 +77,7 @@ export function publicUser(row: any): User {
     xp: row.xp,
     avatar: row.avatar,
     createdAt: row.created_at,
-    verified: row.email?.toLowerCase() === 'vbarsegan363@gmail.com',
+    ...verification(row),
   };
 }
 export function body(req: Request) {
