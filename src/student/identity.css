@@ -10,43 +10,44 @@
   overflow-wrap: anywhere;
 }
 .sdvs-verification {
+  --badge-glow: #009dff;
+  --badge-edge: #65dcff;
   display: inline-flex;
   flex: none;
-  color: #4267ff;
-  filter: drop-shadow(0 0 5px #7a80ff80);
+  color: var(--badge-glow);
+  filter: drop-shadow(0 0 2px var(--badge-glow))
+    drop-shadow(0 0 5px color-mix(in srgb, var(--badge-glow) 65%, transparent));
   animation: sdvs-badge-glow 3s ease-in-out infinite;
 }
 .sdvs-premium-star {
   color: #8b5cf6;
   flex: none;
 }
-.badge-founder .badge-outline {
-  fill: none;
-  stroke: #70a5ff;
+.badge-moderator {
+  --badge-glow: #0de42a;
+  --badge-edge: #aaff65;
 }
-.badge-founder .badge-tick {
+.sdvs-verification .badge-outline {
+  stroke: var(--badge-edge);
+}
+.sdvs-verification .badge-tick {
   stroke: #fff;
-  filter: drop-shadow(0 0 1px #1d4d91);
+  filter: drop-shadow(0 1px 0.3px #004c6b60);
 }
 .sdvs-player-name .sdvs-verification > svg {
-  width: 20px;
-  height: 20px;
-  max-width: 20px;
-  max-height: 20px;
+  width: 24px;
+  height: 24px;
+  max-width: 24px;
+  max-height: 24px;
   min-width: 0;
   min-height: 0;
   flex: none;
-}
-.badge-staff .badge-outline {
-  fill: #eaf2ff;
-  stroke: #4383ed;
-}
-.badge-staff .badge-tick {
-  stroke: #1762d6;
+  overflow: visible;
 }
 @keyframes sdvs-badge-glow {
   50% {
-    filter: drop-shadow(0 0 9px #8877ff);
+    filter: drop-shadow(0 0 3px var(--badge-glow))
+      drop-shadow(0 0 7px color-mix(in srgb, var(--badge-glow) 75%, transparent));
   }
 }
 .sdvs-gift-art {

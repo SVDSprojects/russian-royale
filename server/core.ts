@@ -11,7 +11,7 @@ export interface User {
   avatar: string;
   createdAt: string;
   verified?: boolean;
-  verificationBadge?: 'founder' | 'staff' | null;
+  verificationBadge?: 'founder' | 'staff' | 'moderator' | null;
 }
 declare global {
   namespace Express {
@@ -63,9 +63,11 @@ export function verification(row: { email?: string; role?: string }) {
   const verificationBadge =
     row.email?.trim().toLowerCase() === 'vbarsegan363@gmail.com'
       ? ('founder' as const)
-      : ['admin', 'editor', 'moderator'].includes(row.role || '')
-        ? ('staff' as const)
-        : null;
+      : row.role === 'moderator'
+        ? ('moderator' as const)
+        : ['admin', 'editor'].includes(row.role || '')
+          ? ('staff' as const)
+          : null;
   return { verified: !!verificationBadge, verificationBadge };
 }
 export function publicUser(row: any): User {

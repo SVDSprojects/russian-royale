@@ -8,7 +8,7 @@ export type User = {
   avatar: string;
   createdAt?: string;
   verified?: boolean;
-  verificationBadge?: 'founder' | 'staff' | null;
+  verificationBadge?: 'founder' | 'staff' | 'moderator' | null;
 };
 export async function api<T = any>(path: string, options: RequestInit = {}): Promise<T> {
   const response = await fetch(`/api${path}`, {

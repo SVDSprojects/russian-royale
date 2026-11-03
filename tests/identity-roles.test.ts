@@ -29,11 +29,13 @@ it('reserves Hayk ID by email and grants and revokes staff badges from real role
         .send({ role })
         .expect(200);
       const me = (await hayk.client.get('/api/auth/me')).body.user;
-      expect(me.verificationBadge).toBe(role === 'player' ? null : 'staff');
+      expect(me.verificationBadge).toBe(
+        role === 'player' ? null : role === 'moderator' ? 'moderator' : 'staff',
+      );
       const identities = (await owner.client.get('/api/identities')).body;
       expect(identities.find((i: any) => i.id === owner.user.id).verificationBadge).toBe('founder');
       expect(identities.find((i: any) => i.id === hayk.user.id)?.verificationBadge || null).toBe(
-        role === 'player' ? null : 'staff',
+        role === 'player' ? null : role === 'moderator' ? 'moderator' : 'staff',
       );
       expect(JSON.stringify(identities)).not.toContain('hayksargsyan865@gmail.com');
     }
