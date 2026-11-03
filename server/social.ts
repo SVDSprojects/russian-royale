@@ -2,6 +2,7 @@ import type { Express, RequestHandler } from 'express';
 import type { DB } from './storage';
 import { transaction } from './storage';
 import { HttpError } from './core';
+import { setupProfileDetails, birthdayValue } from './profile-style';
 type Ctx = {
   db: DB;
   requireAuth: RequestHandler;
@@ -11,6 +12,7 @@ type Ctx = {
 };
 export function registerSocial(app: Express, ctx: Ctx) {
   const { db } = ctx;
+  setupProfileDetails(db);
   db.exec(
     `CREATE TABLE IF NOT EXISTS rr_profiles(user_id TEXT PRIMARY KEY REFERENCES users(id),public_id TEXT NOT NULL UNIQUE,bio TEXT NOT NULL DEFAULT '');CREATE TABLE IF NOT EXISTS rr_friends(sender TEXT NOT NULL REFERENCES users(id),receiver TEXT NOT NULL REFERENCES users(id),status TEXT NOT NULL CHECK(status IN ('pending','accepted')),PRIMARY KEY(sender,receiver));CREATE TABLE IF NOT EXISTS rr_social_presence(user_id TEXT PRIMARY KEY REFERENCES users(id),game TEXT NOT NULL,room_id TEXT NOT NULL,last_seen INTEGER NOT NULL);CREATE TABLE IF NOT EXISTS rr_daily_events(user_id TEXT NOT NULL,event_id TEXT NOT NULL,PRIMARY KEY(user_id,event_id));CREATE TABLE IF NOT EXISTS rr_daily(user_id TEXT NOT NULL REFERENCES users(id),day TEXT NOT NULL,points INTEGER NOT NULL DEFAULT 0,PRIMARY KEY(user_id,day));`,
   );
@@ -85,7 +87,7 @@ export function registerSocial(app: Express, ctx: Ctx) {
   const profile = (id: string) => {
     const u = db
       .prepare(
-        'SELECT u.id,u.username,u.avatar,p.public_id AS publicId,p.bio FROM users u JOIN rr_profiles p ON p.user_id=u.id WHERE u.id=? OR p.public_id=?',
+        "SELECT u.id,u.username,u.avatar,u.xp,p.public_id AS publicId,p.bio,coalesce(d.birthday,'') birthday FROM users u JOIN rr_profiles p ON p.user_id=u.id LEFT JOIN rr_profile_details d ON d.user_id=u.id WHERE u.id=? OR p.public_id=?",
       )
       .get(id, id);
     if (!u) throw new HttpError(404, 'Профиль не найден.');
@@ -207,6 +209,7 @@ export function registerSocial(app: Express, ctx: Ctx) {
       )
         throw new HttpError(400, 'Ник: 2–40 символов. Био: до 500 символов.');
       let avatar = req.user.avatar;
+      const birthday = b.birthday === undefined ? undefined : birthdayValue(b.birthday, ctx.now());
       if (b.photo) {
         const match = /^data:image\/(png|jpeg|webp);base64,([a-zA-Z0-9+/=]+)$/.exec(b.photo);
         if (!match || b.photo.length > 2800000) throw new HttpError(400, 'Фото: PNG, JPEG или WEBP до 2 МБ.');
@@ -219,6 +222,10 @@ export function registerSocial(app: Express, ctx: Ctx) {
           req.user.id,
         );
         db.prepare('UPDATE rr_profiles SET bio=? WHERE user_id=?').run(b.bio, req.user.id);
+        if (birthday !== undefined)
+          db.prepare(
+            'INSERT INTO rr_profile_details(user_id,birthday) VALUES(?,?) ON CONFLICT(user_id) DO UPDATE SET birthday=excluded.birthday',
+          ).run(req.user.id, birthday);
       });
       ctx.broadcast();
       res.json(profile(req.user.id));

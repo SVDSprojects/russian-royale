@@ -1,4 +1,6 @@
+import { fighterGifts } from './fighter-gifts';
 export const gifts = [
+  ...fighterGifts,
   { key: 'quill', name: 'Огненное перо', emoji: '🪶', rarity: 'common', color: '#ff825c' },
   { key: 'lexicon', name: 'Золотой словарь', emoji: '📚', rarity: 'common', color: '#ffcc67' },
   { key: 'orbit', name: 'Орбитальный конь', emoji: '♞', rarity: 'rare', color: '#a49aff' },

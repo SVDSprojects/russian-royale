@@ -5,6 +5,8 @@ import { useResource } from './common';
 import { gifts } from '../../shared/collection';
 import './identity.css';
 import { AnimatedGift } from './AnimatedGift';
+import { ImportedGift } from './ImportedGift';
+import type { ProfileStyle } from '../../shared/profile-style';
 export type OwnedItem = {
   id: string;
   kind: 'gift' | 'id';
@@ -19,6 +21,8 @@ export type Appearance = {
   featured: OwnedItem[];
   verified?: boolean;
   verificationBadge?: 'founder' | 'staff' | 'moderator' | null;
+  style?: ProfileStyle;
+  statusGift?: OwnedItem | null;
 };
 type Identity = Appearance & { id: string; username: string; verified: boolean };
 const Context = createContext<Identity[]>([]);
@@ -93,6 +97,14 @@ export function PlayerName({
         </span>
       )}
       {identity?.premium && <Sparkles className="sdvs-premium-star" size={14} aria-label="Премиум" />}
+      {identity?.statusGift && ['name', 'both'].includes(identity.style?.giftLayout || '') && (
+        <span
+          className="profile-name-gift"
+          title={gifts.find((g) => g.key === identity.statusGift!.reward)?.name}
+        >
+          <GiftArt itemKey={identity.statusGift.reward} small />
+        </span>
+      )}
     </span>
   );
 }
@@ -101,11 +113,13 @@ export function GiftArt({ itemKey, small = false }: { itemKey: string; small?: b
   if (!gift) return null;
   return (
     <div
-      className={`sdvs-gift-art ${small ? 'small' : ''} gift-${gift.key}`}
+      className={`sdvs-gift-art ${small ? 'small' : ''} ${'animation' in gift ? 'gift-imported' : ''} gift-${gift.key}`}
       style={{ '--gift-color': gift.color } as React.CSSProperties}
     >
       <span className="sdvs-gift-orbit" aria-hidden="true" />
-      {gift.key === 'tsarukyan' ? (
+      {'animation' in gift ? (
+        <ImportedGift animation={gift.animation} poster={gift.poster} name={gift.name} />
+      ) : gift.key === 'tsarukyan' ? (
         <AnimatedGift />
       ) : (
         <img src={`/assets/collectibles/${gift.key}.webp`} loading="lazy" decoding="async" alt={gift.name} />

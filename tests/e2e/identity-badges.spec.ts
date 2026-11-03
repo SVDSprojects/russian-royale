@@ -37,6 +37,7 @@ test('founder and appointed staff have distinct badges and revocation updates th
   await expect(founder).toBeVisible();
   await expect(founder.locator('.badge-outline')).toHaveAttribute('fill', /^url/);
   await expect(founder.locator('.badge-tick')).toHaveCSS('stroke', 'rgb(255, 255, 255)');
+  await page.getByRole('tab', { name: 'Статистика', exact: true }).click();
   await expect(page.locator('.social-legend .sdvs-verification svg').first()).toHaveCSS('min-height', '0px');
   await page.screenshot({ path: 'artifacts/founder-badge-phone.png', fullPage: true });
   await page.evaluate(() => {

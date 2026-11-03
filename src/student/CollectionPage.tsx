@@ -4,6 +4,7 @@ import { api, useAuth } from '../api';
 import { cases, gifts, profileEmojis, premiumPrice } from '../../shared/collection';
 import { Dialog, ErrorNotice, Loading, PageHeader, go, json, message, useResource } from './common';
 import { GiftArt, ProfileShowcase, type Appearance, type OwnedItem } from './Identity';
+import { fighterGifts } from '../../shared/fighter-gifts';
 type Shop = {
   balance: { earned: number; spent: number; available: number };
   inventory: OwnedItem[];
@@ -15,6 +16,7 @@ export function CollectionPage() {
   const [error, setError] = useState(''),
     [notice, setNotice] = useState(''),
     [busy, setBusy] = useState(false);
+  const [catalogModel, setCatalogModel] = useState('khabib');
   const [reward, setReward] = useState<any>(null),
     [emoji, setEmoji] = useState(''),
     [featured, setFeatured] = useState<string[]>([]),
@@ -135,7 +137,7 @@ export function CollectionPage() {
           </span>
           <h2>Больше твоего характера</h2>
           <p>
-            Фон с эмодзи, сияющая звезда рядом с именем и до трёх подарков в витрине. Обычный профиль тоже
+            Фон с эмодзи, сияющая звезда рядом с именем и до шести подарков в витрине. Обычный профиль тоже
             может выставить один подарок.
           </p>
           <p>30 дней · Продление добавляет 30 дней к оставшемуся сроку.</p>
@@ -150,16 +152,39 @@ export function CollectionPage() {
         </button>
       </section>
       <h2>Знакомься с коллекцией</h2>
+      <p>
+        Пять бойцов, у каждого пять самостоятельных анимированных фонов. В кейсе выпадает конкретный вариант
+        со своим номером.
+      </p>
+      <label className="sdvs-catalog-filter">
+        Коллекция
+        <select
+          aria-label="Коллекция подарков"
+          value={catalogModel}
+          onChange={(e) => setCatalogModel(e.target.value)}
+        >
+          {Array.from(new Map(fighterGifts.map((g) => [g.model, g.modelName])).entries()).map(
+            ([key, name]) => (
+              <option key={key} value={key}>
+                {name}
+              </option>
+            ),
+          )}
+          <option value="classic">Первая коллекция</option>
+        </select>
+      </label>
       <div className="sdvs-catalog-grid">
-        {gifts.map((g) => (
-          <article className="sdvs-gift-card" key={g.key}>
-            <GiftArt itemKey={g.key} />
-            <span className={`sdvs-rarity rarity-${g.rarity}`}>
-              {{ common: 'Обычный', rare: 'Редкий', legendary: 'Легендарный' }[g.rarity]}
-            </span>
-            <h3>{g.name}</h3>
-          </article>
-        ))}
+        {gifts
+          .filter((g) => ('model' in g ? g.model === catalogModel : catalogModel === 'classic'))
+          .map((g) => (
+            <article className="sdvs-gift-card" key={g.key}>
+              <GiftArt itemKey={g.key} />
+              <span className={`sdvs-rarity rarity-${g.rarity}`}>
+                {{ common: 'Обычный', rare: 'Редкий', legendary: 'Легендарный' }[g.rarity]}
+              </span>
+              <h3>{g.name}</h3>
+            </article>
+          ))}
       </div>
       <div className="sdvs-section-title">
         <h2>Твои предметы</h2>
@@ -192,7 +217,7 @@ export function CollectionPage() {
                 <input
                   type="checkbox"
                   checked={featured.includes(item.id)}
-                  disabled={busy || (!featured.includes(item.id) && featured.length >= (a?.premium ? 3 : 1))}
+                  disabled={busy || (!featured.includes(item.id) && featured.length >= (a?.premium ? 6 : 1))}
                   onChange={(e) =>
                     setFeatured(
                       e.target.checked ? [...featured, item.id] : featured.filter((id) => id !== item.id),

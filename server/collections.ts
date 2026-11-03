@@ -3,6 +3,7 @@ import { createHash, randomInt, randomUUID } from 'node:crypto';
 import { body, HttpError, str, verification } from './core';
 import { transaction, type DB } from './storage';
 import { cases, gifts, premiumPrice, profileEmojis } from '../shared/collection';
+import { getProfileStyle, validateStyle, saveStyle } from './profile-style';
 
 type Context = { db: DB; requireAuth: RequestHandler; now: () => number; broadcast: () => void };
 export function registerCollections(app: Express, ctx: Context) {
@@ -33,7 +34,7 @@ export function registerCollections(app: Express, ctx: Context) {
       .get(uid);
     const premium = (row?.premium_until ?? 0) > ctx.now();
     const featured = (JSON.parse(row?.featured || '[]') as string[])
-      .slice(0, premium ? 3 : 1)
+      .slice(0, premium ? 6 : 1)
       .flatMap((id) => {
         const item = db
           .prepare(
@@ -42,7 +43,22 @@ export function registerCollections(app: Express, ctx: Context) {
           .get(id, uid);
         return item ? [item] : [];
       });
-    return { premium, premiumUntil: row?.premium_until ?? 0, emoji: premium ? row.emoji : '', featured };
+    const style = getProfileStyle(db, uid);
+    const statusGift = style.statusGiftId
+      ? (db
+          .prepare(
+            "SELECT id,kind,reward,serial,created_at AS createdAt FROM rr_inventory WHERE id=? AND owner_id=? AND kind='gift'",
+          )
+          .get(style.statusGiftId, uid) ?? null)
+      : null;
+    return {
+      premium,
+      premiumUntil: row?.premium_until ?? 0,
+      emoji: premium ? row.emoji : '',
+      featured,
+      style,
+      statusGift,
+    };
   }
   app.get('/api/identities', ctx.requireAuth, (req, res) => {
     const users = db
@@ -175,7 +191,7 @@ export function registerCollections(app: Express, ctx: Context) {
         throw new HttpError(400, 'Этот фон доступен с премиумом.');
       if (
         !Array.isArray(b.featured) ||
-        b.featured.length > (premium ? 3 : 1) ||
+        b.featured.length > (premium ? 6 : 1) ||
         new Set(b.featured).size !== b.featured.length ||
         b.featured.some(
           (id: unknown) =>
@@ -183,7 +199,8 @@ export function registerCollections(app: Express, ctx: Context) {
             !db.prepare("SELECT 1 FROM rr_inventory WHERE id=? AND owner_id=? AND kind='gift'").get(id, uid),
         )
       )
-        throw new HttpError(400, 'Выберите свои подарки: один без премиума или до трёх с премиумом.');
+        throw new HttpError(400, 'Выберите свои подарки: один без премиума или до шести с премиумом.');
+      if (b.style !== undefined) saveStyle(db, uid, validateStyle(b.style, db, uid));
       db.prepare(
         'INSERT INTO rr_shop_profile(user_id,emoji,featured) VALUES(?,?,?) ON CONFLICT(user_id) DO UPDATE SET emoji=excluded.emoji,featured=excluded.featured',
       ).run(uid, b.emoji, JSON.stringify(b.featured));
@@ -230,6 +247,8 @@ export function registerCollections(app: Express, ctx: Context) {
         .prepare("UPDATE rr_inventory SET owner_id=? WHERE id=? AND owner_id=? AND kind='gift'")
         .run(recipient.user_id, req.params.id, uid);
       if (!moved.changes) throw new HttpError(409, 'Подарок уже передан или не принадлежит вам.');
+      const style = getProfileStyle(db, uid);
+      if (style.statusGiftId === req.params.id) saveStyle(db, uid, { ...style, statusGiftId: '' });
       const row = db.prepare('SELECT featured FROM rr_shop_profile WHERE user_id=?').get(uid);
       if (row)
         db.prepare('UPDATE rr_shop_profile SET featured=? WHERE user_id=?').run(
