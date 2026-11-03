@@ -11,7 +11,7 @@ import { http as durakHttp } from '../games/durak/client';
 import { AdminPanel as JeopardyAdmin } from '../games/jeopardy/AdminPanel';
 import { AdminPanel as RouletteAdmin } from '../games/roulette/AdminPanel';
 import { api as gameApi } from '../games/jeopardy/client';
-import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import {
   ArrowDown,
   ArrowLeft,
@@ -135,7 +135,14 @@ type AdminServer = {
   memberCount?: number;
   roomCount?: number;
 };
-type Audit = { id: string; actorId: string; action: string; targetId: string; createdAt: string };
+type Audit = {
+  id: string;
+  actorId: string;
+  action: string;
+  targetId: string;
+  createdAt: string;
+  xpDetails?: string | null;
+};
 type Preview = { valid: boolean; errors: string[]; counts: { rules: number; exercises: number } };
 type Notify = (message: string, error?: boolean) => void;
 
@@ -2305,6 +2312,45 @@ function UsersEditor({ selfId, notify }: { selfId: string; notify: Notify }) {
   const [query, setQuery] = useState('');
   const [busyId, setBusyId] = useState('');
   const [pending, setPending] = useState<{ user: AdminUser; role: Role } | null>(null);
+  const [xpEdit, setXpEdit] = useState<{
+    user: AdminUser;
+    amount: string;
+    mode: 'add' | 'remove';
+    reason: string;
+    commandId: string;
+  } | null>(null);
+  const [xpError, setXpError] = useState('');
+  const xpLock = useRef(false);
+  async function changeXp(e: FormEvent) {
+    e.preventDefault();
+    if (!xpEdit || xpLock.current) return;
+    const amount = Number(xpEdit.amount);
+    if (!Number.isInteger(amount) || amount < 1 || amount > 1000000) {
+      setXpError('Введите целое число от 1 до 1 000 000.');
+      return;
+    }
+    xpLock.current = true;
+    setBusyId(xpEdit.user.id);
+    setXpError('');
+    try {
+      const result = await api<{ after: number }>(
+        `/admin/users/${xpEdit.user.id}/xp`,
+        request('POST', {
+          delta: xpEdit.mode === 'add' ? amount : -amount,
+          reason: xpEdit.reason,
+          commandId: xpEdit.commandId,
+        }),
+      );
+      setXpEdit(null);
+      resource.reload();
+      notify(`XP обновлён. Теперь у пользователя ${result.after} XP.`);
+    } catch (e) {
+      setXpError(messageOf(e));
+    } finally {
+      xpLock.current = false;
+      setBusyId('');
+    }
+  }
   async function save() {
     if (!pending) return;
     setBusyId(pending.user.id);
@@ -2321,8 +2367,9 @@ function UsersEditor({ selfId, notify }: { selfId: string; notify: Notify }) {
   }
   const filtered = useMemo(
     () =>
-      resource.data?.filter((u) => `${u.username} ${u.email}`.toLowerCase().includes(query.toLowerCase())) ??
-      [],
+      resource.data?.filter((u) =>
+        `${u.username} ${u.email} ${u.publicId || ''}`.toLowerCase().includes(query.toLowerCase()),
+      ) ?? [],
     [resource.data, query],
   );
   return (
@@ -2334,7 +2381,7 @@ function UsersEditor({ selfId, notify }: { selfId: string; notify: Notify }) {
             aria-label="Поиск пользователей"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Имя или электронная почта"
+            placeholder="Имя, ID или электронная почта"
           />
         </div>
         <button className="adm-btn" onClick={resource.reload}>
@@ -2388,7 +2435,27 @@ function UsersEditor({ selfId, notify }: { selfId: string; notify: Notify }) {
                         ))}
                       </select>
                     </td>
-                    <td>{u.xp} XP</td>
+                    <td>
+                      <div>{u.xp} XP</div>
+                      <button
+                        type="button"
+                        className="adm-btn"
+                        aria-label={`Изменить XP для ${u.username}`}
+                        disabled={!!busyId}
+                        onClick={() => {
+                          setXpError('');
+                          setXpEdit({
+                            user: u,
+                            amount: '',
+                            mode: 'add',
+                            reason: '',
+                            commandId: crypto.randomUUID(),
+                          });
+                        }}
+                      >
+                        Изменить XP
+                      </button>
+                    </td>
                     <td>{dateLabel(u.createdAt)}</td>
                   </tr>
                 ))}
@@ -2398,6 +2465,89 @@ function UsersEditor({ selfId, notify }: { selfId: string; notify: Notify }) {
           </div>
         )}
       </section>
+      {xpEdit && (
+        <div className="adm-overlay">
+          <section className="adm-modal" role="dialog" aria-modal="true" aria-labelledby="adm-xp-title">
+            <h2 id="adm-xp-title">Изменение XP</h2>
+            <p>
+              <strong>{xpEdit.user.username}</strong> · ID {xpEdit.user.publicId ?? '—'}
+            </p>
+            <p>
+              Сейчас: <strong>{xpEdit.user.xp} XP</strong>
+            </p>
+            <form onSubmit={(e) => void changeXp(e)}>
+              <label className="adm-field">
+                <span>Действие с XP</span>
+                <select
+                  value={xpEdit.mode}
+                  disabled={!!busyId}
+                  onChange={(e) =>
+                    setXpEdit({
+                      ...xpEdit,
+                      mode: e.target.value as 'add' | 'remove',
+                      commandId: crypto.randomUUID(),
+                    })
+                  }
+                >
+                  <option value="add">Начислить</option>
+                  <option value="remove">Списать</option>
+                </select>
+              </label>
+              <label className="adm-field">
+                <span>Количество XP</span>
+                <input
+                  type="number"
+                  inputMode="numeric"
+                  min="1"
+                  max="1000000"
+                  step="1"
+                  required
+                  autoFocus
+                  value={xpEdit.amount}
+                  disabled={!!busyId}
+                  onChange={(e) =>
+                    setXpEdit({ ...xpEdit, amount: e.target.value, commandId: crypto.randomUUID() })
+                  }
+                />
+              </label>
+              <label className="adm-field">
+                <span>Причина изменения</span>
+                <input
+                  maxLength={300}
+                  placeholder="Необязательно"
+                  value={xpEdit.reason}
+                  disabled={!!busyId}
+                  onChange={(e) =>
+                    setXpEdit({ ...xpEdit, reason: e.target.value, commandId: crypto.randomUUID() })
+                  }
+                />
+              </label>
+              {Number.isInteger(Number(xpEdit.amount)) && Number(xpEdit.amount) > 0 && (
+                <p>
+                  После изменения:{' '}
+                  <strong>
+                    {xpEdit.user.xp + Number(xpEdit.amount) * (xpEdit.mode === 'add' ? 1 : -1)} XP
+                  </strong>
+                </p>
+              )}
+              <p>XP влияет на уровень и рейтинг. Купленные подарки сохраняются.</p>
+              {xpError && (
+                <p className="adm-error" role="alert">
+                  {xpError}
+                </p>
+              )}
+              <div className="adm-actions">
+                <button type="button" className="adm-btn" disabled={!!busyId} onClick={() => setXpEdit(null)}>
+                  Отмена
+                </button>
+                <button type="submit" className="adm-btn primary" disabled={!!busyId}>
+                  {busyId ? 'Сохраняем…' : xpEdit.mode === 'add' ? 'Начислить XP' : 'Списать XP'}
+                </button>
+              </div>
+            </form>
+          </section>
+        </div>
+      )}
       {pending && (
         <div className="adm-overlay">
           <section
@@ -2476,6 +2626,10 @@ function ServersEditor({ notify }: { notify: Notify }) {
   );
 }
 
+function xpAuditText(details: string) {
+  const d = JSON.parse(details);
+  return `${d.before} → ${d.after} XP (${d.delta > 0 ? '+' : ''}${d.delta})${d.reason ? ' · ' + d.reason : ''}`;
+}
 function AuditLog() {
   const resource = useResource<Audit[]>('/admin/audit');
   return (
@@ -2510,7 +2664,10 @@ function AuditLog() {
                   <tr key={entry.id}>
                     <td>{dateLabel(entry.createdAt)}</td>
                     <td>
-                      <span className="adm-audit-action">{entry.action}</span>
+                      <span className="adm-audit-action">
+                        {entry.action === 'user.xp' ? 'Изменение XP' : entry.action}
+                      </span>
+                      {entry.xpDetails && <p>{xpAuditText(entry.xpDetails)}</p>}
                     </td>
                     <td>
                       <code>{entry.targetId || '—'}</code>
