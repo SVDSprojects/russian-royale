@@ -4,6 +4,7 @@ import { useAuth } from '../api';
 import { useResource } from './common';
 import { gifts } from '../../shared/collection';
 import './identity.css';
+import { AnimatedGift } from './AnimatedGift';
 export type OwnedItem = {
   id: string;
   kind: 'gift' | 'id';
@@ -63,12 +64,11 @@ export function GiftArt({ itemKey, small = false }: { itemKey: string; small?: b
       style={{ '--gift-color': gift.color } as React.CSSProperties}
     >
       <span className="sdvs-gift-orbit" aria-hidden="true" />
-      <img
-        src={`/assets/collectibles/${gift.key}.webp`}
-        loading="lazy"
-        decoding="async"
-        alt={gift.key === 'tsarukyan' ? 'Авторская статуэтка Армана Царукяна' : gift.name}
-      />
+      {gift.key === 'tsarukyan' ? (
+        <AnimatedGift />
+      ) : (
+        <img src={`/assets/collectibles/${gift.key}.webp`} loading="lazy" decoding="async" alt={gift.name} />
+      )}
       <span className="sdvs-gift-spark one" aria-hidden="true">
         ✦
       </span>

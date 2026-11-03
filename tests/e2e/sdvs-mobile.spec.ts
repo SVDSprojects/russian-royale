@@ -33,9 +33,10 @@ test('phone navigation, collections, dictionary and three learning games work to
   await expect(page.getByRole('heading', { name: 'Коллекции SDVS' })).toBeVisible();
   for (const card of await page.locator('.sdvs-catalog-grid .sdvs-gift-card').all()) {
     await card.scrollIntoViewIfNeeded();
-    await expect
-      .poll(() => card.locator('img').evaluate((i: HTMLImageElement) => i.naturalWidth))
-      .toBeGreaterThan(0);
+    await expect(
+      card.locator('img:not(.tsarukyan-motion):not(.tsarukyan-still), .sdvs-tsarukyan-render'),
+    ).toBeVisible();
+    await expect.poll(() => card.locator('img').first().evaluate((i: HTMLImageElement) => i.naturalWidth)).toBeGreaterThan(0);
   }
   await page.evaluate(() => scrollTo(0, 0));
   await page.getByRole('button', { name: 'Открыть · 500 XP', exact: true }).click();
@@ -76,9 +77,10 @@ test('phone navigation, collections, dictionary and three learning games work to
   await expect(page.locator('.sdvs-case-grid')).toBeVisible();
   for (const card of await page.locator('.sdvs-catalog-grid .sdvs-gift-card').all()) {
     await card.scrollIntoViewIfNeeded();
-    await expect
-      .poll(() => card.locator('img').evaluate((i: HTMLImageElement) => i.naturalWidth))
-      .toBeGreaterThan(0);
+    await expect(
+      card.locator('img:not(.tsarukyan-motion):not(.tsarukyan-still), .sdvs-tsarukyan-render'),
+    ).toBeVisible();
+    await expect.poll(() => card.locator('img').first().evaluate((i: HTMLImageElement) => i.naturalWidth)).toBeGreaterThan(0);
   }
   await page.evaluate(() => scrollTo(0, 0));
   await page.screenshot({ path: 'artifacts/sdvs-collection-desktop.png', fullPage: true });
