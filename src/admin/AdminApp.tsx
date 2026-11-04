@@ -1,4 +1,5 @@
 import { DictionaryImport } from '../student/DictionaryPage';
+import { StreakEditor } from './StreakEditor';
 import { PlayerName } from '../student/Identity';
 import { AdminPanel as ImpostorAdmin } from '../games/impostor';
 import { AdminPanel as WhoamiAdmin } from '../games/whoami';
@@ -119,6 +120,7 @@ type Stats = {
   games: number;
 };
 type AdminUser = {
+  streak: number;
   publicId?: string;
   id: string;
   username: string;
@@ -142,6 +144,7 @@ type Audit = {
   targetId: string;
   createdAt: string;
   xpDetails?: string | null;
+  streakDetails?: string | null;
 };
 type Preview = { valid: boolean; errors: string[]; counts: { rules: number; exercises: number } };
 type Notify = (message: string, error?: boolean) => void;
@@ -2404,6 +2407,7 @@ function UsersEditor({ selfId, notify }: { selfId: string; notify: Notify }) {
     commandId: string;
   } | null>(null);
   const [xpError, setXpError] = useState('');
+  const [streakEdit, setStreakEdit] = useState<AdminUser | null>(null);
   const xpLock = useRef(false);
   async function changeXp(e: FormEvent) {
     e.preventDefault();
@@ -2485,6 +2489,7 @@ function UsersEditor({ selfId, notify }: { selfId: string; notify: Notify }) {
                   <th>Пользователь</th>
                   <th>Роль</th>
                   <th>Опыт</th>
+                  <th>Серия</th>
                   <th>Регистрация</th>
                 </tr>
               </thead>
@@ -2540,6 +2545,18 @@ function UsersEditor({ selfId, notify }: { selfId: string; notify: Notify }) {
                         Изменить XP
                       </button>
                     </td>
+                    <td data-label="Серия">
+                      <div>🔥 {u.streak} дн. подряд</div>
+                      <button
+                        type="button"
+                        className="adm-btn"
+                        aria-label={`Изменить серию для ${u.username}`}
+                        disabled={!!busyId}
+                        onClick={() => setStreakEdit(u)}
+                      >
+                        Изменить серию
+                      </button>
+                    </td>
                     <td data-label="Регистрация">{dateLabel(u.createdAt)}</td>
                   </tr>
                 ))}
@@ -2549,6 +2566,17 @@ function UsersEditor({ selfId, notify }: { selfId: string; notify: Notify }) {
           </div>
         )}
       </section>
+      {streakEdit && (
+        <StreakEditor
+          user={streakEdit}
+          onClose={() => setStreakEdit(null)}
+          onSaved={(count) => {
+            setStreakEdit(null);
+            resource.reload();
+            notify(`Серия обновлена: ${count} дн. подряд.`);
+          }}
+        />
+      )}
       {xpEdit && (
         <div className="adm-overlay">
           <section className="adm-modal" role="dialog" aria-modal="true" aria-labelledby="adm-xp-title">
@@ -2710,6 +2738,10 @@ function ServersEditor({ notify }: { notify: Notify }) {
   );
 }
 
+function streakAuditText(details: string) {
+  const d = JSON.parse(details);
+  return `${d.before} → ${d.after} дн.${d.reason ? ' · ' + d.reason : ''}`;
+}
 function xpAuditText(details: string) {
   const d = JSON.parse(details);
   return `${d.before} → ${d.after} XP (${d.delta > 0 ? '+' : ''}${d.delta})${d.reason ? ' · ' + d.reason : ''}`;
@@ -2749,9 +2781,14 @@ function AuditLog() {
                     <td>{dateLabel(entry.createdAt)}</td>
                     <td>
                       <span className="adm-audit-action">
-                        {entry.action === 'user.xp' ? 'Изменение XP' : entry.action}
+                        {entry.action === 'user.xp'
+                          ? 'Изменение XP'
+                          : entry.action === 'user.streak'
+                            ? 'Изменение серии'
+                            : entry.action}
                       </span>
                       {entry.xpDetails && <p>{xpAuditText(entry.xpDetails)}</p>}
+                      {entry.streakDetails && <p>{streakAuditText(entry.streakDetails)}</p>}
                     </td>
                     <td>
                       <code>{entry.targetId || '—'}</code>

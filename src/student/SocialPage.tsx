@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { api, useAuth } from '../api';
 import { Avatar, ErrorNotice, go, json, useResource } from './common';
 import './social.css';
+import { streakAt, type StreakAdjustment } from '../../shared/streak';
 
 type Person = {
   id: string;
@@ -14,6 +15,7 @@ type Person = {
   birthday?: string;
   xp?: number;
   streak: number;
+  streakAdjustment?: StreakAdjustment | null;
   activity: { day: string; points: number }[];
   status?: string;
   incoming?: boolean;
@@ -97,14 +99,7 @@ export function SocialPage({ id }: { id?: string }) {
     ),
     valueAt = (s: Person, d: string) => {
       if (chartMode === 'activity') return s.activity.find((a) => a.day === d)?.points || 0;
-      let t = new Date(d + 'T12:00:00Z').getTime(),
-        n = 0;
-      const set = new Set(s.activity.map((a) => a.day));
-      while (set.has(new Date(t).toISOString().slice(0, 10))) {
-        n++;
-        t -= 86400000;
-      }
-      return n;
+      return streakAt(s.activity, d, s.streakAdjustment);
     },
     max = Math.max(1, ...series.flatMap((s) => days.map((d) => valueAt(s, d)))),
     colors = ['#2563eb', '#ec4899', '#059669', '#9333ea', '#ea580c', '#0891b2', '#be123c'];

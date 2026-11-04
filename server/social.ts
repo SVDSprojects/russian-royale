@@ -3,6 +3,8 @@ import type { DB } from './storage';
 import { transaction } from './storage';
 import { HttpError } from './core';
 import { setupProfileDetails, birthdayValue } from './profile-style';
+import { setupStreaks, streakAdjustment } from './streak';
+import { streakAt, streakDay } from '../shared/streak';
 type Ctx = {
   db: DB;
   requireAuth: RequestHandler;
@@ -13,6 +15,7 @@ type Ctx = {
 export function registerSocial(app: Express, ctx: Ctx) {
   const { db } = ctx;
   setupProfileDetails(db);
+  setupStreaks(db);
   db.exec(
     `CREATE TABLE IF NOT EXISTS rr_profiles(user_id TEXT PRIMARY KEY REFERENCES users(id),public_id TEXT NOT NULL UNIQUE,bio TEXT NOT NULL DEFAULT '');CREATE TABLE IF NOT EXISTS rr_friends(sender TEXT NOT NULL REFERENCES users(id),receiver TEXT NOT NULL REFERENCES users(id),status TEXT NOT NULL CHECK(status IN ('pending','accepted')),PRIMARY KEY(sender,receiver));CREATE TABLE IF NOT EXISTS rr_social_presence(user_id TEXT PRIMARY KEY REFERENCES users(id),game TEXT NOT NULL,room_id TEXT NOT NULL,last_seen INTEGER NOT NULL);CREATE TABLE IF NOT EXISTS rr_daily_events(user_id TEXT NOT NULL,event_id TEXT NOT NULL,PRIMARY KEY(user_id,event_id));CREATE TABLE IF NOT EXISTS rr_daily(user_id TEXT NOT NULL REFERENCES users(id),day TEXT NOT NULL,points INTEGER NOT NULL DEFAULT 0,PRIMARY KEY(user_id,day));`,
   );
@@ -74,15 +77,7 @@ export function registerSocial(app: Express, ctx: Ctx) {
     }[];
   }
   function streak(values: { day: string }[]) {
-    const set = new Set(values.map((v) => v.day));
-    let t = ctx.now(),
-      n = 0;
-    if (!set.has(day(t))) t -= 86400000;
-    while (set.has(day(t))) {
-      n++;
-      t -= 86400000;
-    }
-    return n;
+    return streakAt(values, streakDay(ctx.now()));
   }
   const profile = (id: string) => {
     const u = db
@@ -92,7 +87,13 @@ export function registerSocial(app: Express, ctx: Ctx) {
       .get(id, id);
     if (!u) throw new HttpError(404, 'Профиль не найден.');
     const activity = days(u.id);
-    return { ...u, activity, streak: streak(activity) };
+    const adjustment = streakAdjustment(db, u.id);
+    return {
+      ...u,
+      activity,
+      streakAdjustment: adjustment,
+      streak: streakAt(activity, streakDay(ctx.now()), adjustment),
+    };
   };
   const wrap =
     (f: (req: any, res: any) => unknown): RequestHandler =>
