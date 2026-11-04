@@ -41,7 +41,7 @@ test('world artwork, phone layout and reduced motion remain usable', async ({ pa
   await page.getByRole('button', { name: 'Начать приключение' }).click();
   await expect(page).toHaveURL(/#games\/jeopardy$/);
   await page.goto('/#games');
-  await expect(page.locator('.rr-game-card.available')).toHaveCount(3);
+  await expect(page.locator('.rr-game-card.available')).toHaveCount(10);
   await page.screenshot({ path: 'artifacts/world-catalog-desktop.png', fullPage: true });
   await page.setViewportSize({ width: 360, height: 800 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);

@@ -1,3 +1,6 @@
+import { DictionaryImport } from '../student/DictionaryPage';
+import { StreakEditor } from './StreakEditor';
+import { PlayerName } from '../student/Identity';
 import { AdminPanel as ImpostorAdmin } from '../games/impostor';
 import { AdminPanel as WhoamiAdmin } from '../games/whoami';
 import { AdminPanel as AliasAdmin } from '../games/alias';
@@ -9,7 +12,7 @@ import { http as durakHttp } from '../games/durak/client';
 import { AdminPanel as JeopardyAdmin } from '../games/jeopardy/AdminPanel';
 import { AdminPanel as RouletteAdmin } from '../games/roulette/AdminPanel';
 import { api as gameApi } from '../games/jeopardy/client';
-import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import {
   ArrowDown,
   ArrowLeft,
@@ -55,6 +58,7 @@ type Section =
   | 'rules'
   | 'exercises'
   | 'lessons'
+  | 'dictionary'
   | 'teacher'
   | 'categories'
   | 'import'
@@ -116,6 +120,7 @@ type Stats = {
   games: number;
 };
 type AdminUser = {
+  streak: number;
   publicId?: string;
   id: string;
   username: string;
@@ -132,7 +137,15 @@ type AdminServer = {
   memberCount?: number;
   roomCount?: number;
 };
-type Audit = { id: string; actorId: string; action: string; targetId: string; createdAt: string };
+type Audit = {
+  id: string;
+  actorId: string;
+  action: string;
+  targetId: string;
+  createdAt: string;
+  xpDetails?: string | null;
+  streakDetails?: string | null;
+};
 type Preview = { valid: boolean; errors: string[]; counts: { rules: number; exercises: number } };
 type Notify = (message: string, error?: boolean) => void;
 
@@ -141,6 +154,7 @@ const nav: { key: Section; label: string; icon: typeof BookOpen; group: string; 
   { key: 'rules', label: 'Правила', icon: BookOpen, group: 'УЧЕБНЫЕ МАТЕРИАЛЫ' },
   { key: 'exercises', label: 'Задания', icon: ClipboardList, group: '' },
   { key: 'lessons', label: 'Уроки', icon: GraduationCap, group: '' },
+  { key: 'dictionary', label: 'Академический словарь', icon: BookOpen, group: '' },
   { key: 'teacher', label: 'Учительница', icon: Sparkles, group: '' },
   { key: 'categories', label: 'Категории', icon: Settings2, group: '' },
   { key: 'import', label: 'Импорт', icon: Upload, group: '' },
@@ -415,9 +429,49 @@ export default function AdminApp() {
   const fromHash = () => nav.find((n) => n.key === location.hash.slice(1))?.key ?? 'overview';
   const [section, setSection] = useState<Section>(fromHash);
   const [mobile, setMobile] = useState(false);
+  const menuRef = useRef<HTMLButtonElement>(null);
+  const sidebarRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if (!mobile || !user) return;
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    sidebarRef.current?.querySelector<HTMLButtonElement>('.adm-nav-item.active')?.focus();
+    const keys = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMobile(false);
+      if (e.key === 'Tab') {
+        const controls = Array.from(
+          sidebarRef.current?.querySelectorAll<HTMLElement>('a[href],button:not(:disabled)') || [],
+        ).filter((el) => el.getClientRects().length);
+        const first = controls[0],
+          last = controls[controls.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last?.focus();
+        }
+        if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first?.focus();
+        }
+      }
+    };
+    const resize = () => {
+      if (window.innerWidth > 760) setMobile(false);
+    };
+    document.addEventListener('keydown', keys);
+    window.addEventListener('resize', resize);
+    return () => {
+      document.body.style.overflow = overflow;
+      document.removeEventListener('keydown', keys);
+      window.removeEventListener('resize', resize);
+      requestAnimationFrame(() => menuRef.current?.focus());
+    };
+  }, [mobile, user?.id]);
   const [notice, setNotice] = useState<{ message: string; error: boolean } | null>(null);
   useEffect(() => {
-    const update = () => setSection(fromHash());
+    const update = () => {
+      setSection(fromHash());
+      setMobile(false);
+    };
     window.addEventListener('hashchange', update);
     return () => window.removeEventListener('hashchange', update);
   }, []);
@@ -431,6 +485,7 @@ export default function AdminApp() {
     location.hash = next;
     setSection(next);
     setMobile(false);
+    window.scrollTo({ top: 0, behavior: 'instant' });
   };
   if (loading)
     return (
@@ -449,8 +504,11 @@ export default function AdminApp() {
           <span className="adm-eyebrow">РУССКИЙ ROYALE ADMIN</span>
           <h1>Это пространство редакторов</h1>
           <p>
-            Вы вошли как <strong>{user.username}</strong>. Для доступа нужна роль редактора или главного
-            администратора.
+            Вы вошли как{' '}
+            <strong>
+              <PlayerName id={user.id} name={user.username} />
+            </strong>
+            . Для доступа нужна роль редактора или главного администратора.
           </p>
           <div className="adm-info">
             Владелец проекта может назначить первого администратора в терминале на сервере:
@@ -475,7 +533,22 @@ export default function AdminApp() {
       {mobile && (
         <button className="adm-sidebar-scrim" aria-label="Закрыть меню" onClick={() => setMobile(false)} />
       )}
-      <aside className={`adm-sidebar${mobile ? ' open' : ''}`}>
+      <aside
+        id="adm-sections"
+        ref={sidebarRef}
+        className={`adm-sidebar${mobile ? ' open' : ''}`}
+        role={mobile ? 'dialog' : undefined}
+        aria-modal={mobile ? true : undefined}
+        aria-label="Разделы админки"
+      >
+        <button
+          className="adm-mobile-close"
+          type="button"
+          aria-label="Закрыть разделы"
+          onClick={() => setMobile(false)}
+        >
+          <X size={22} />
+        </button>
         <a className="adm-brand" href="/admin.html">
           <span className="adm-logo-icon">
             <Shield size={23} />
@@ -501,6 +574,7 @@ export default function AdminApp() {
                 {item.group && <span className="adm-nav-group">{item.group}</span>}
                 <button
                   className={`adm-nav-item${section === item.key ? ' active' : ''}`}
+                  aria-current={section === item.key ? 'page' : undefined}
                   onClick={() => go(item.key)}
                 >
                   <item.icon size={19} />
@@ -517,7 +591,9 @@ export default function AdminApp() {
           <div className="adm-account">
             <span className="adm-avatar">{user.username.slice(0, 2).toUpperCase()}</span>
             <div>
-              <strong>{user.username}</strong>
+              <strong>
+                <PlayerName id={user.id} name={user.username} />
+              </strong>
               <small>{user.role === 'admin' ? 'Администратор' : 'Редактор'}</small>
             </div>
             <button aria-label="Выйти" onClick={() => void logout()}>
@@ -526,19 +602,46 @@ export default function AdminApp() {
           </div>
         </div>
       </aside>
-      <div className="adm-main">
+      <div className="adm-main" inert={mobile ? true : undefined}>
         <header className="adm-topbar">
-          <button className="adm-mobile-menu" aria-label="Открыть меню" onClick={() => setMobile(true)}>
-            <Menu />
+          <button
+            ref={menuRef}
+            className="adm-mobile-menu"
+            type="button"
+            aria-label="Открыть меню"
+            aria-controls="adm-sections"
+            aria-expanded={mobile}
+            onClick={() => setMobile(true)}
+          >
+            <Menu size={22} />
+            <span>Меню</span>
           </button>
           <div className="adm-breadcrumb">
-            Рабочее пространство <ChevronRight size={14} />
+            <span className="adm-workspace-label">Рабочее пространство</span>{' '}
+            <ChevronRight className="adm-breadcrumb-separator" size={14} />
             <strong>{chosen.label}</strong>
           </div>
           <span className="adm-top-badge">
             <Shield size={13} /> Закрытая панель
           </span>
         </header>
+        <div className="adm-mobile-switcher">
+          <label htmlFor="adm-section-select">Раздел</label>
+          <select
+            id="adm-section-select"
+            aria-label="Выбрать раздел админки"
+            value={section}
+            onChange={(e) => go(e.target.value as Section)}
+          >
+            {nav
+              .filter((item) => !item.admin || user.role === 'admin')
+              .map((item) => (
+                <option value={item.key} key={item.key}>
+                  {item.key === 'users' ? 'Пользователи и XP' : item.label}
+                </option>
+              ))}
+          </select>
+        </div>
         <main className="adm-content">
           <div className="adm-page-heading">
             <div>
@@ -614,6 +717,14 @@ export default function AdminApp() {
               {section === 'rules' && <RulesEditor notify={notify} />}
               {section === 'exercises' && <ExercisesEditor notify={notify} />}
               {section === 'lessons' && <LessonsEditor notify={notify} />}
+              {section === 'dictionary' && (
+                <section className="adm-panel sdvs-admin-dictionary">
+                  <p>
+                    Загрузка академического словаря с проверкой файла, предпросмотром и сохранением источника.
+                  </p>
+                  <DictionaryImport />
+                </section>
+              )}
               {section === 'teacher' && <TeacherEditor notify={notify} />}
               {section === 'categories' && <CategoriesEditor notify={notify} />}
               {section === 'import' && <ImportEditor notify={notify} />}
@@ -2288,6 +2399,46 @@ function UsersEditor({ selfId, notify }: { selfId: string; notify: Notify }) {
   const [query, setQuery] = useState('');
   const [busyId, setBusyId] = useState('');
   const [pending, setPending] = useState<{ user: AdminUser; role: Role } | null>(null);
+  const [xpEdit, setXpEdit] = useState<{
+    user: AdminUser;
+    amount: string;
+    mode: 'add' | 'remove';
+    reason: string;
+    commandId: string;
+  } | null>(null);
+  const [xpError, setXpError] = useState('');
+  const [streakEdit, setStreakEdit] = useState<AdminUser | null>(null);
+  const xpLock = useRef(false);
+  async function changeXp(e: FormEvent) {
+    e.preventDefault();
+    if (!xpEdit || xpLock.current) return;
+    const amount = Number(xpEdit.amount);
+    if (!Number.isInteger(amount) || amount < 1 || amount > 1000000) {
+      setXpError('Введите целое число от 1 до 1 000 000.');
+      return;
+    }
+    xpLock.current = true;
+    setBusyId(xpEdit.user.id);
+    setXpError('');
+    try {
+      const result = await api<{ after: number }>(
+        `/admin/users/${xpEdit.user.id}/xp`,
+        request('POST', {
+          delta: xpEdit.mode === 'add' ? amount : -amount,
+          reason: xpEdit.reason,
+          commandId: xpEdit.commandId,
+        }),
+      );
+      setXpEdit(null);
+      resource.reload();
+      notify(`XP обновлён. Теперь у пользователя ${result.after} XP.`);
+    } catch (e) {
+      setXpError(messageOf(e));
+    } finally {
+      xpLock.current = false;
+      setBusyId('');
+    }
+  }
   async function save() {
     if (!pending) return;
     setBusyId(pending.user.id);
@@ -2304,8 +2455,9 @@ function UsersEditor({ selfId, notify }: { selfId: string; notify: Notify }) {
   }
   const filtered = useMemo(
     () =>
-      resource.data?.filter((u) => `${u.username} ${u.email}`.toLowerCase().includes(query.toLowerCase())) ??
-      [],
+      resource.data?.filter((u) =>
+        `${u.username} ${u.email} ${u.publicId || ''}`.toLowerCase().includes(query.toLowerCase()),
+      ) ?? [],
     [resource.data, query],
   );
   return (
@@ -2317,14 +2469,14 @@ function UsersEditor({ selfId, notify }: { selfId: string; notify: Notify }) {
             aria-label="Поиск пользователей"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Имя или электронная почта"
+            placeholder="Имя, ID или электронная почта"
           />
         </div>
         <button className="adm-btn" onClick={resource.reload}>
           Обновить
         </button>
       </div>
-      <section className="adm-panel adm-table-panel">
+      <section className="adm-panel adm-table-panel adm-users-panel">
         {resource.loading ? (
           <Loader />
         ) : resource.error ? (
@@ -2337,6 +2489,7 @@ function UsersEditor({ selfId, notify }: { selfId: string; notify: Notify }) {
                   <th>Пользователь</th>
                   <th>Роль</th>
                   <th>Опыт</th>
+                  <th>Серия</th>
                   <th>Регистрация</th>
                 </tr>
               </thead>
@@ -2348,7 +2501,7 @@ function UsersEditor({ selfId, notify }: { selfId: string; notify: Notify }) {
                         <span className="adm-avatar">{u.username.slice(0, 2).toUpperCase()}</span>
                         <div>
                           <strong>
-                            {u.username}
+                            <PlayerName id={u.id} name={u.username} />
                             {u.id === selfId && <span className="adm-self">вы</span>}
                           </strong>
                           <small>
@@ -2357,7 +2510,7 @@ function UsersEditor({ selfId, notify }: { selfId: string; notify: Notify }) {
                         </div>
                       </div>
                     </td>
-                    <td>
+                    <td data-label="Роль">
                       <select
                         aria-label={`Роль ${u.username}`}
                         value={u.role}
@@ -2371,8 +2524,40 @@ function UsersEditor({ selfId, notify }: { selfId: string; notify: Notify }) {
                         ))}
                       </select>
                     </td>
-                    <td>{u.xp} XP</td>
-                    <td>{dateLabel(u.createdAt)}</td>
+                    <td data-label="Опыт">
+                      <div>{u.xp} XP</div>
+                      <button
+                        type="button"
+                        className="adm-btn"
+                        aria-label={`Изменить XP для ${u.username}`}
+                        disabled={!!busyId}
+                        onClick={() => {
+                          setXpError('');
+                          setXpEdit({
+                            user: u,
+                            amount: '',
+                            mode: 'add',
+                            reason: '',
+                            commandId: crypto.randomUUID(),
+                          });
+                        }}
+                      >
+                        Изменить XP
+                      </button>
+                    </td>
+                    <td data-label="Серия">
+                      <div>🔥 {u.streak} дн. подряд</div>
+                      <button
+                        type="button"
+                        className="adm-btn"
+                        aria-label={`Изменить серию для ${u.username}`}
+                        disabled={!!busyId}
+                        onClick={() => setStreakEdit(u)}
+                      >
+                        Изменить серию
+                      </button>
+                    </td>
+                    <td data-label="Регистрация">{dateLabel(u.createdAt)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -2381,6 +2566,100 @@ function UsersEditor({ selfId, notify }: { selfId: string; notify: Notify }) {
           </div>
         )}
       </section>
+      {streakEdit && (
+        <StreakEditor
+          user={streakEdit}
+          onClose={() => setStreakEdit(null)}
+          onSaved={(count) => {
+            setStreakEdit(null);
+            resource.reload();
+            notify(`Серия обновлена: ${count} дн. подряд.`);
+          }}
+        />
+      )}
+      {xpEdit && (
+        <div className="adm-overlay">
+          <section className="adm-modal" role="dialog" aria-modal="true" aria-labelledby="adm-xp-title">
+            <h2 id="adm-xp-title">Изменение XP</h2>
+            <p>
+              <strong>{xpEdit.user.username}</strong> · ID {xpEdit.user.publicId ?? '—'}
+            </p>
+            <p>
+              Сейчас: <strong>{xpEdit.user.xp} XP</strong>
+            </p>
+            <form onSubmit={(e) => void changeXp(e)}>
+              <label className="adm-field">
+                <span>Действие с XP</span>
+                <select
+                  value={xpEdit.mode}
+                  disabled={!!busyId}
+                  onChange={(e) =>
+                    setXpEdit({
+                      ...xpEdit,
+                      mode: e.target.value as 'add' | 'remove',
+                      commandId: crypto.randomUUID(),
+                    })
+                  }
+                >
+                  <option value="add">Начислить</option>
+                  <option value="remove">Списать</option>
+                </select>
+              </label>
+              <label className="adm-field">
+                <span>Количество XP</span>
+                <input
+                  type="number"
+                  inputMode="numeric"
+                  min="1"
+                  max="1000000"
+                  step="1"
+                  required
+                  autoFocus
+                  value={xpEdit.amount}
+                  disabled={!!busyId}
+                  onChange={(e) =>
+                    setXpEdit({ ...xpEdit, amount: e.target.value, commandId: crypto.randomUUID() })
+                  }
+                />
+              </label>
+              <label className="adm-field">
+                <span>Причина изменения</span>
+                <input
+                  maxLength={300}
+                  placeholder="Необязательно"
+                  value={xpEdit.reason}
+                  disabled={!!busyId}
+                  onChange={(e) =>
+                    setXpEdit({ ...xpEdit, reason: e.target.value, commandId: crypto.randomUUID() })
+                  }
+                />
+              </label>
+              {Number.isInteger(Number(xpEdit.amount)) && Number(xpEdit.amount) > 0 && (
+                <p>
+                  После изменения:{' '}
+                  <strong>
+                    {xpEdit.user.xp + Number(xpEdit.amount) * (xpEdit.mode === 'add' ? 1 : -1)} XP
+                  </strong>
+                </p>
+              )}
+              <p>XP влияет на уровень и рейтинг. Купленные подарки сохраняются.</p>
+              {xpError && (
+                <p className="adm-error" role="alert">
+                  {xpError}
+                </p>
+              )}
+              <div className="adm-actions">
+                <button type="button" className="adm-btn" disabled={!!busyId} onClick={() => setXpEdit(null)}>
+                  Отмена
+                </button>
+                <button type="submit" className="adm-btn primary" disabled={!!busyId}>
+                  {busyId ? 'Сохраняем…' : xpEdit.mode === 'add' ? 'Начислить XP' : 'Списать XP'}
+                </button>
+              </div>
+            </form>
+          </section>
+        </div>
+      )}
       {pending && (
         <div className="adm-overlay">
           <section
@@ -2459,6 +2738,14 @@ function ServersEditor({ notify }: { notify: Notify }) {
   );
 }
 
+function streakAuditText(details: string) {
+  const d = JSON.parse(details);
+  return `${d.before} → ${d.after} дн.${d.reason ? ' · ' + d.reason : ''}`;
+}
+function xpAuditText(details: string) {
+  const d = JSON.parse(details);
+  return `${d.before} → ${d.after} XP (${d.delta > 0 ? '+' : ''}${d.delta})${d.reason ? ' · ' + d.reason : ''}`;
+}
 function AuditLog() {
   const resource = useResource<Audit[]>('/admin/audit');
   return (
@@ -2493,7 +2780,15 @@ function AuditLog() {
                   <tr key={entry.id}>
                     <td>{dateLabel(entry.createdAt)}</td>
                     <td>
-                      <span className="adm-audit-action">{entry.action}</span>
+                      <span className="adm-audit-action">
+                        {entry.action === 'user.xp'
+                          ? 'Изменение XP'
+                          : entry.action === 'user.streak'
+                            ? 'Изменение серии'
+                            : entry.action}
+                      </span>
+                      {entry.xpDetails && <p>{xpAuditText(entry.xpDetails)}</p>}
+                      {entry.streakDetails && <p>{streakAuditText(entry.streakDetails)}</p>}
                     </td>
                     <td>
                       <code>{entry.targetId || '—'}</code>

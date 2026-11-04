@@ -1,0 +1,759 @@
+@media (max-width: 760px) {
+  .rr-app {
+    padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+    min-height: 100dvh;
+  }
+  .rr-workspace {
+    min-width: 0;
+    width: 100%;
+    margin-left: 0;
+  }
+  .rr-main {
+    padding: 20px 16px 26px;
+    min-width: 0;
+  }
+  .rr-topbar {
+    height: 65px;
+    padding: 10px 16px;
+    gap: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 35;
+    background: #f8faffee;
+    backdrop-filter: blur(16px);
+  }
+  .rr-topbar .rr-beta-badge,
+  .rr-breadcrumb {
+    display: none;
+  }
+  .rr-topbar-right {
+    margin-left: auto;
+    gap: 9px;
+  }
+  .rr-topbar .rr-account > span:not(.rr-avatar) {
+    display: none;
+  }
+  .rr-topbar .rr-account > svg {
+    display: none;
+  }
+  .rr-topbar .rr-account {
+    padding: 3px;
+    border: 0;
+    background: transparent;
+  }
+  .rr-topbar .rr-avatar {
+    width: 36px;
+    height: 36px;
+  }
+  .rr-topbar .rr-xp-badge {
+    min-height: 36px;
+    font-size: 12px;
+    padding: 8px 11px;
+  }
+  .rr-menu-button {
+    display: flex;
+    min-height: 42px;
+    min-width: 42px;
+  }
+  .sdvs-bottom-nav {
+    position: fixed;
+    z-index: 55;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    padding: 7px 10px calc(7px + env(safe-area-inset-bottom, 0px));
+    background: #fffffff5;
+    border-top: 1px solid #e2e7f0;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 -8px 30px #273b6406;
+  }
+  .sdvs-bottom-nav > a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    text-decoration: none;
+    color: #8290a6;
+    font-size: 10px;
+    font-weight: 750;
+    min-height: 49px;
+    border-radius: 14px;
+  }
+  .sdvs-bottom-nav > a.active {
+    background: #eef0ff;
+    color: #5750bf;
+  }
+  .sdvs-bottom-nav > a.active svg {
+    stroke-width: 2.5;
+  }
+  .rr-sidebar {
+    width: min(310px, 88vw);
+    padding-bottom: 95px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    z-index: 70;
+  }
+  .rr-mobile-scrim {
+    z-index: 65;
+  }
+  .rr-sidebar-bottom {
+    position: static;
+  }
+  .rr-sidebar-tip {
+    display: none;
+  }
+  .rr-sidebar .rr-nav-item {
+    font-size: 13px;
+    min-height: 43px;
+  }
+  .rr-sidebar-section-label {
+    margin-top: 16px;
+  }
+  .rr-page-header {
+    margin-bottom: 22px;
+    gap: 13px;
+  }
+  .rr-page-header h1 {
+    font-size: clamp(25px, 7vw, 33px);
+    line-height: 1.25;
+    letter-spacing: -1px;
+  }
+  .rr-page-header .rr-description {
+    font-size: 14px;
+    line-height: 1.65;
+    max-width: 42ch;
+  }
+  .rr-eyebrow {
+    font-size: 9px;
+    letter-spacing: 1.5px;
+  }
+  .rr-panel {
+    padding: 20px !important;
+    border-radius: 20px;
+  }
+  .rr-form label {
+    font-size: 13px;
+  }
+  .rr-form input,
+  .rr-form textarea,
+  .rr-form select,
+  .rr-toolbar input,
+  .rr-toolbar select,
+  .social-page input,
+  .social-page textarea {
+    font-size: 16px;
+    min-height: 46px;
+  }
+  .rr-form input[type='checkbox'] {
+    min-height: initial;
+  }
+  .rr-button {
+    min-height: 44px;
+    font-size: 13px;
+  }
+  .rr-icon-button {
+    min-height: 42px;
+    min-width: 42px;
+  }
+  .rr-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .rr-toolbar .rr-search {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+  .rr-toolbar > select {
+    flex: 1;
+    min-width: 120px;
+    max-width: 100%;
+  }
+  .rr-toolbar > .rr-button {
+    font-size: 12px;
+    min-height: 44px;
+  }
+  .rr-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+  }
+  .rr-stat {
+    padding: 14px !important;
+    min-height: 90px;
+  }
+  .rr-stat strong {
+    font-size: 23px;
+  }
+  .rr-stat p,
+  .rr-stat span {
+    font-size: 11px;
+  }
+  .rr-game-grid,
+  .rr-game-grid.dashboard {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .rr-game-card {
+    border-radius: 19px;
+    min-width: 0;
+  }
+  .rr-game-card h3 {
+    font-size: 17px;
+    line-height: 1.3;
+  }
+  .rr-game-card p {
+    font-size: 12px;
+  }
+  .rr-game-card .rr-game-card-content {
+    padding: 14px;
+  }
+  .rr-game-card .rr-game-card-foot {
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+  .rr-game-grid.dashboard > .rr-game-card:nth-child(n + 5) {
+    display: none;
+  }
+  .rr-section-heading h2 {
+    font-size: 22px;
+  }
+  .rr-section-heading {
+    gap: 10px;
+    align-items: center;
+  }
+  .rr-section-heading > a {
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .rr-catalog-tabs {
+    display: flex;
+    overflow-x: auto;
+    max-width: 100%;
+    flex-wrap: nowrap;
+    padding: 4px;
+  }
+  .rr-catalog-tabs button {
+    white-space: nowrap;
+    min-height: 42px;
+    font-size: 12px;
+  }
+  .rr-catalog-controls {
+    display: grid;
+    gap: 12px;
+  }
+  .rr-catalog-controls .rr-search {
+    width: 100%;
+    min-width: 0;
+  }
+  .arcade-modes {
+    grid-template-columns: 1fr !important;
+    gap: 12px;
+  }
+  .arcade-mode {
+    min-height: 145px !important;
+    max-height: 220px;
+  }
+  .arcade-mode .arcade-card-copy {
+    padding: 20px;
+  }
+  .arcade-mode h3 {
+    font-size: 20px;
+  }
+  .rr-hero,
+  .royale-hero {
+    min-height: 0;
+  }
+  .rr-world-scene {
+    max-height: 230px;
+  }
+  .rr-world-hero {
+    overflow: hidden;
+  }
+  .rr-discovery > .rr-hero {
+    margin-block: 16px;
+  }
+  .sdvs-home-shortcuts {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .sdvs-home-shortcuts > a {
+    padding: 17px;
+  }
+  .sdvs-home-shortcuts strong {
+    font-size: 15px;
+  }
+  .sdvs-home-shortcuts small {
+    font-size: 12px;
+  }
+  .rr-date-chip {
+    display: none;
+  }
+  .sdvs-active-game {
+    padding-top: 13px;
+  }
+  .sdvs-active-game input,
+  .sdvs-active-game textarea,
+  .sdvs-active-game select {
+    font-size: 16px;
+    max-width: 100%;
+  }
+  .sdvs-active-game button {
+    min-height: 44px;
+  }
+  .sdvs-active-game .scene {
+    display: none;
+  }
+  .sdvs-active-game main > header {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .sdvs-active-game main > header h1 {
+    font-size: 23px;
+    line-height: 1.3;
+  }
+  .sdvs-active-game .players {
+    display: flex !important;
+    overflow-x: auto;
+    gap: 10px;
+    scroll-snap-type: x proximity;
+    max-width: 100%;
+    padding: 5px;
+  }
+  .sdvs-active-game .players > article {
+    min-width: 145px;
+    max-width: 170px;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    padding: 12px;
+    font-size: 12px;
+  }
+  .sdvs-active-game .actions {
+    display: grid;
+    gap: 12px;
+  }
+  .sdvs-active-game .actions input,
+  .sdvs-active-game .actions select {
+    width: 100%;
+  }
+  .sdvs-active-game .private {
+    margin-block: 14px;
+  }
+  .sdvs-active-game .private summary {
+    min-height: 44px;
+    cursor: pointer;
+  }
+  .sdvs-active-game .paper {
+    padding: 20px;
+  }
+  .rr-main-room .rr-room-layout {
+    display: flex;
+    flex-direction: column;
+  }
+  .rr-main-room .rr-room-layout > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .rr-main-room .rr-room-sidebar {
+    order: 2;
+  }
+  .rr-modal-overlay {
+    padding: 12px;
+    align-items: center;
+    z-index: 100;
+  }
+  .rr-modal {
+    width: 100%;
+    max-height: calc(100dvh - 30px);
+    overflow-y: auto;
+    padding: 22px;
+    border-radius: 24px;
+  }
+  .rr-modal h2 {
+    font-size: 21px;
+  }
+  .social-person {
+    display: grid;
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 10px;
+  }
+  .social-person > button:first-of-type {
+    grid-column: 2;
+    font-size: 13px;
+    text-align: left;
+    overflow-wrap: anywhere;
+  }
+  .social-person > span:not(.rr-avatar),
+  .social-person > button:not(:first-of-type) {
+    grid-column: 2;
+  }
+  .social-person > span {
+    font-size: 12px;
+  }
+  .social-page form:has(input[aria-label='Ник или ID друга']) {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .social-page form:has(input[aria-label='Ник или ID друга']) > input {
+    flex: 1;
+    min-width: 140px;
+  }
+  .social-chart-scroll {
+    border-radius: 14px;
+    background: #f7f9fc;
+  }
+  .social-legend {
+    font-size: 12px;
+    gap: 10px;
+  }
+  .rr-footer {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 22px;
+    padding: 28px 20px;
+    font-size: 11px;
+  }
+  .sdvs-footer-links > a {
+    min-height: 24px;
+  }
+  .sdvs-case-grid {
+    grid-template-columns: 1fr;
+  }
+  .sdvs-case {
+    display: grid;
+    grid-template-columns: 82px minmax(0, 1fr);
+    column-gap: 16px;
+    padding: 20px;
+    border-radius: 23px;
+  }
+  .sdvs-case-visual {
+    grid-row: 1/5;
+    grid-column: 1;
+    height: 120px;
+  }
+  .sdvs-case-visual > svg {
+    width: 60px;
+  }
+  .sdvs-case > small,
+  .sdvs-case > h3,
+  .sdvs-case > p,
+  .sdvs-case > .rr-button {
+    grid-column: 2;
+  }
+  .sdvs-case h3 {
+    font-size: 25px;
+    margin: 4px 0;
+  }
+  .sdvs-case > p {
+    margin: 5px 0 12px;
+    min-height: 0;
+    font-size: 12px;
+  }
+  .sdvs-case > .sdvs-odds {
+    grid-column: 1/-1;
+    margin-top: 13px;
+    line-height: 1.6;
+  }
+  .sdvs-case .rr-button {
+    font-size: 12px;
+  }
+  .sdvs-wallet {
+    padding: 24px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .sdvs-wallet > p {
+    flex-basis: 100%;
+    margin: 0;
+    font-size: 12px;
+    order: 3;
+  }
+  .sdvs-wallet > svg {
+    width: 34px;
+  }
+  .sdvs-premium-card {
+    padding: 24px;
+    gap: 16px;
+  }
+  .sdvs-premium-card h2 {
+    font-size: 25px;
+  }
+  .sdvs-premium-card .rr-button {
+    width: 100%;
+  }
+  .sdvs-catalog-grid,
+  .sdvs-owned-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .sdvs-gift-card {
+    padding: 9px;
+    border-radius: 21px;
+  }
+  .sdvs-gift-card h3 {
+    font-size: 14px;
+  }
+  .sdvs-gift-art {
+    height: 155px;
+    border-radius: 17px;
+  }
+  .sdvs-gift-object {
+    font-size: 74px;
+  }
+  .gift-orbit .sdvs-gift-object {
+    font-size: 105px;
+  }
+  .sdvs-gift-art.small {
+    height: 110px;
+  }
+  .sdvs-gift-art.small .sdvs-gift-object {
+    font-size: 55px;
+  }
+  .sdvs-featured-gifts {
+    gap: 8px;
+  }
+  .sdvs-featured-gifts strong {
+    font-size: 11px;
+  }
+  .sdvs-featured-gifts .sdvs-gift-art.small {
+    height: 90px;
+    border-radius: 13px;
+  }
+  .sdvs-featured-gifts .sdvs-gift-art.small .sdvs-gift-object {
+    font-size: 40px;
+  }
+  .sdvs-showcase {
+    padding: 16px;
+  }
+  .sdvs-section-title {
+    align-items: flex-start;
+  }
+  .sdvs-section-title h2 {
+    font-size: 21px;
+  }
+  .sdvs-section-title > span {
+    font-size: 11px;
+    text-align: right;
+  }
+  .sdvs-dictionary-banner {
+    padding: 23px;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  .sdvs-dictionary-banner > svg {
+    width: 30px;
+    height: 30px;
+  }
+  .sdvs-dictionary-banner h2 {
+    font-size: 20px;
+  }
+  .sdvs-dictionary-list {
+    grid-template-columns: 1fr;
+  }
+  .sdvs-word h2 {
+    font-size: 28px;
+  }
+  .sdvs-dictionary-page > .rr-toolbar > button {
+    font-size: 12px;
+  }
+  .sdvs-alphabet {
+    gap: 6px;
+  }
+  .sdvs-alphabet button {
+    width: 36px;
+    height: 40px;
+  }
+  .sdvs-pagination {
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .sdvs-learn-grid {
+    gap: 12px;
+  }
+  .sdvs-learn-card {
+    padding: 18px !important;
+  }
+  .sdvs-learn-card h2 {
+    font-size: 18px;
+    line-height: 1.3;
+  }
+  .sdvs-learn-card p {
+    font-size: 12px;
+  }
+  .sdvs-challenge-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .sdvs-challenge-card {
+    position: relative;
+    padding: 22px 22px 22px 95px;
+    min-height: 165px;
+  }
+  .sdvs-challenge-symbol {
+    position: absolute;
+    left: 20px;
+    top: 35px;
+    width: 50px;
+    height: 65px;
+  }
+  .sdvs-challenge-symbol > span {
+    right: -5px;
+    top: -10px;
+    font-size: 24px;
+  }
+  .sdvs-challenge-card h3 {
+    font-size: 22px;
+    margin: 9px 0;
+  }
+  .sdvs-challenge-card small {
+    font-size: 8px;
+  }
+  .sdvs-challenge-card p {
+    min-height: 0;
+    font-size: 12px;
+    margin: 0 0 14px;
+  }
+  .sdvs-challenge-stage {
+    padding: 22px 18px;
+    border-radius: 24px;
+  }
+  .sdvs-stage-decoration {
+    height: 70px;
+    margin-bottom: 16px;
+  }
+  .sdvs-stage-decoration > svg {
+    width: 50px;
+  }
+  .sdvs-challenge-stage > h2 {
+    font-size: 23px;
+  }
+  .sdvs-answer-options > button {
+    padding: 15px 13px;
+    font-size: 15px;
+  }
+  .sdvs-syllables {
+    gap: 8px;
+  }
+  .sdvs-syllables > button {
+    min-width: 65px;
+    min-height: 74px;
+    font-size: 23px;
+    border-radius: 16px;
+  }
+  .sdvs-challenge-result {
+    padding: 19px;
+  }
+  .sdvs-challenge-result .rr-button {
+    width: 100%;
+  }
+  .sdvs-feedback > a {
+    font-size: 13px;
+  }
+  .sdvs-profile-pattern {
+    font-size: 27px;
+  }
+  .sdvs-reward-reveal .sdvs-gift-art {
+    height: 240px;
+  }
+}
+@media (max-width: 359px) {
+  .rr-main {
+    padding-inline: 12px;
+  }
+  .rr-game-grid,
+  .rr-game-grid.dashboard {
+    grid-template-columns: 1fr;
+  }
+  .sdvs-learn-grid {
+    grid-template-columns: 1fr;
+  }
+  .sdvs-case {
+    grid-template-columns: 62px minmax(0, 1fr);
+    column-gap: 10px;
+  }
+  .sdvs-case-visual > svg {
+    width: 50px;
+  }
+  .sdvs-featured-gifts {
+    grid-template-columns: 1fr;
+  }
+  .sdvs-catalog-grid,
+  .sdvs-owned-grid {
+    gap: 8px;
+  }
+  .sdvs-gift-card h3 {
+    font-size: 12px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *:before,
+  *:after {
+    scroll-behavior: auto !important;
+  }
+  .sdvs-learn-card,
+  .sdvs-syllables > button,
+  .sdvs-challenge-progress::-webkit-progress-value {
+    transition: none;
+  }
+}
+@media (hover: none) {
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+@media (max-width: 760px) {
+  .rr-world-welcome {
+    display: flex !important;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .rr-world-welcome > .rr-auth-form {
+    order: -1;
+  }
+  .rr-world-welcome .rr-welcome-intro h1 {
+    font-size: 32px;
+  }
+  .rr-world-welcome .royale-world {
+    max-height: 230px;
+  }
+  .rr-welcome-facts {
+    display: none;
+  }
+  .sdvs-profile-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  .sdvs-profile-actions .rr-button {
+    flex: 1;
+    white-space: nowrap;
+  }
+  .sdvs-game-toolbar {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 15px 0;
+  }
+  .sdvs-room-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 16px 0;
+    border-bottom: 1px solid #e1e6ef;
+  }
+  .sdvs-room-row h3 {
+    font-size: 16px;
+    overflow-wrap: anywhere;
+  }
+  .sdvs-room-row p {
+    font-size: 12px;
+  }
+}

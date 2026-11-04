@@ -6,12 +6,13 @@ import { AuthProvider } from './api';
 import StudentApp from './student/StudentApp';
 import './base.css';
 import './student.css';
+import { IdentityProvider } from './student/Identity';
 initializeTheme();
 createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <AuthProvider>
       <PreferencesProvider>
-        <StudentApp />
+        <IdentityProvider><StudentApp /></IdentityProvider>
       </PreferencesProvider>
     </AuthProvider>
   </React.StrictMode>,

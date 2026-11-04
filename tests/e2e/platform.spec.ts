@@ -39,9 +39,9 @@ test('review survives reload, clears corrected tasks, and the catalogue separate
   await page.goto('/#games');
   await expect(page.getByText('В разработке', { exact: true })).toHaveCount(1);
   await page.getByRole('button', { name: 'В разработке', exact: true }).click();
-  await expect(page.locator('.rr-game-card.upcoming')).toHaveCount(7);
+  await expect(page.locator('.rr-game-card.upcoming')).toHaveCount(0);
   await page.getByLabel('Поиск игр').fill('бункер');
-  await expect(page.locator('.rr-game-card')).toHaveCount(1);
+  await expect(page.locator('.rr-game-card')).toHaveCount(0);
   await page.goto('/#arcade/review');
   await expect(page.getByText('Ошибок для повторения нет.', { exact: false })).toBeVisible();
   const bank = await api(page.context(), '/training');
@@ -238,7 +238,7 @@ test('server protected Admin and real rule editing/deletion plus character repla
   await page.getByRole('alertdialog').getByRole('button', { name: 'Удалить', exact: true }).click();
   await expect(page.getByRole('alertdialog')).toBeHidden();
   await page.getByRole('button', { name: 'Учительница', exact: true }).click();
-  await expect(page.getByLabel('Имя персонажа', { exact: true })).toHaveValue('Мария Ивановна');
+  await expect(page.getByLabel('Имя персонажа', { exact: true })).toHaveValue('Белова Надежда Юрьевна');
   await page.setViewportSize({ width: 390, height: 844 });
   await noOverflow(page);
   await page.screenshot({ path: 'artifacts/admin-mobile.png', fullPage: true });
@@ -257,28 +257,11 @@ test('three isolated browser identities play synchronized Spy and recover after 
     for (let i = 0; i < 3; i++) await signup(pages[i], ['Ведущий', 'Ира', 'Дима'][i]);
     const users = await Promise.all(contexts.map(async (c) => (await api(c, '/auth/me')).user));
     const host = pages[0];
-    await host.getByRole('button', { name: 'Играть в Шпион', exact: true }).click();
-    await host.getByRole('button', { name: 'Создать сервер', exact: true }).click();
-    await host.getByLabel('Название сервера', { exact: true }).fill('Наш класс — браузерный тест');
-    await host.getByRole('dialog').getByRole('button', { name: 'Создать сервер', exact: true }).click();
-    await expect(
-      host.getByRole('heading', { name: 'Наш класс — браузерный тест', exact: true }),
-    ).toBeVisible();
-    await host.getByRole('button', { name: 'Новая ссылка', exact: true }).click();
-    const invite = host.getByLabel('Ссылка-приглашение', { exact: true });
-    await expect(invite).toHaveValue(/\/invite\//);
-    const url = await invite.inputValue();
-    for (let i = 1; i < 3; i++) {
-      await pages[i].goto(url);
-      await pages[i].getByRole('button', { name: 'Присоединиться к серверу', exact: true }).click();
-      await expect(
-        pages[i].getByRole('heading', { name: 'Наш класс — браузерный тест', exact: true }),
-      ).toBeVisible();
-    }
-    await host.getByRole('button', { name: 'Создать комнату', exact: true }).click();
-    await host.getByRole('dialog').getByRole('button', { name: 'Создать комнату', exact: true }).click();
+    for (const c of contexts) await api(c, '/servers');
+    const created = await api(contexts[0], '/servers/public-spy/rooms', {name:'Наш класс — браузерный тест'});
+    const rid=created.id;
+    await host.goto('/#rooms/'+rid);
     await expect(host.getByRole('button', { name: 'Я готов играть', exact: true })).toBeVisible();
-    const rid = host.url().split('#rooms/')[1];
     expect(rid).toBeTruthy();
     for (let i = 1; i < 3; i++) {
       await pages[i].goto(`/${i === 1 ? '?transport=poll' : ''}#rooms/${rid}`);
@@ -326,40 +309,26 @@ test('three isolated browser identities play synchronized Spy and recover after 
   }
 });
 
-test('invitation survives registration on a phone viewport', async ({ browser }) => {
-  const owner = await browser.newContext({ baseURL: 'http://127.0.0.1:4173' }),
-    guest = await browser.newContext({
-      baseURL: 'http://127.0.0.1:4173',
-      viewport: { width: 390, height: 844 },
-    });
+test('public room link survives registration on a phone viewport', async ({ browser }) => {
+  const owner = await browser.newContext({ baseURL:'http://127.0.0.1:4173' }), guest = await browser.newContext({baseURL:'http://127.0.0.1:4173',viewport:{width:390,height:844}});
   try {
-    await api(owner, '/auth/register', {
-      email: `owner-${unique()}@royale.test`,
-      password,
-      username: 'Создатель',
-    });
-    const server = await api(owner, '/servers', { name: 'Приглашение на телефон' }),
-      invite = await api(owner, `/servers/${server.id}/invites`, {});
-    const p = await guest.newPage();
-    await p.goto(invite.url);
-    await p.getByLabel('Имя игрока', { exact: true }).fill('Гость');
-    await p.getByLabel('Электронная почта', { exact: true }).fill(`guest-${unique()}@royale.test`);
-    await p.getByLabel('Пароль', { exact: true }).fill(password);
-    await p.getByRole('button', { name: 'Создать аккаунт', exact: true }).click();
-    await expect(p.getByRole('button', { name: 'Присоединиться к серверу', exact: true })).toBeVisible();
-    await p.getByRole('button', { name: 'Присоединиться к серверу', exact: true }).click();
-    await expect(p.getByRole('heading', { name: 'Приглашение на телефон', exact: true })).toBeVisible();
+    await api(owner,'/auth/register',{email:`owner-${unique()}@royale.test`,password,username:'Создатель'});
+    await api(owner,'/servers');
+    const room=await api(owner,'/servers/public-spy/rooms',{name:'Партия на телефон'});
+    const p=await guest.newPage();await p.goto('/#rooms/'+room.id);
+    await p.getByLabel('Имя игрока',{exact:true}).fill('Гость');
+    await p.getByLabel('Электронная почта',{exact:true}).fill(`guest-${unique()}@royale.test`);
+    await p.getByLabel('Пароль',{exact:true}).fill(password);
+    await p.getByRole('button',{name:'Создать аккаунт',exact:true}).click();
+    await expect(p.getByRole('button',{name:'Я готов играть',exact:true})).toBeVisible();
     await noOverflow(p);
-    expect((await api(guest, `/servers/${server.id}`)).memberCount).toBe(2);
-  } finally {
-    await owner.close();
-    await guest.close();
-  }
+    expect((await api(guest,'/rooms/'+room.id)).playerCount).toBe(2);
+  }finally { await owner.close();await guest.close(); }
 });
 
 for(const game of ['jeopardy','roulette']) test(game+' imported game lobby works inside the site',async({page})=>{
  await signup(page,'Новые игры');
- await api(page.context(),'/servers',{name:'Новый сервер',description:''});
+ await api(page.context(),'/servers');
  await page.goto('/#games/'+game);
  await page.getByRole('button',{name:'Создать партию',exact:true}).click();
  await expect(page.getByRole('button',{name:'Я готов',exact:true})).toBeVisible();

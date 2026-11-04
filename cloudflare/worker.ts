@@ -1,4 +1,8 @@
 import { registerPreferences } from '../server/preferences';
+import { registerCollections } from '../server/collections';
+import { registerDictionary } from '../server/dictionary';
+import { registerChallenges } from '../server/challenges';
+import { registerGameRewards } from '../server/game-rewards';
 import { emailDelivery } from '../server/email-codes';
 import { registerSocial } from '../server/social';
 import { registerPublicServers } from '../server/public-servers';
@@ -30,6 +34,7 @@ export class Royale extends DurableObject<Env> {
   private router = new JsonRouter();
   private game;
   private extraGames;
+  private settleGameRewards;
   private revision = crypto.randomUUID();
   private waiters = new Set<() => void>();
   private online = new Map<string, number>();
@@ -67,7 +72,12 @@ export class Royale extends DurableObject<Env> {
       next();
     });
     app.get('/api/health', (_req, res) =>
-      res.json({ ok: true, serverNow: Date.now(), hosting: 'cloudflare', release: 'waiting-games-1' }),
+      res.json({
+        ok: true,
+        serverNow: Date.now(),
+        hosting: 'cloudflare',
+        release: 'sdvs-mobile-collections-2026-11-02',
+      }),
     );
     app.get('/api/updates', this.auth.requireAuth, async (req, res) => {
       if (req.query.after === this.revision) {
@@ -135,6 +145,10 @@ export class Royale extends DurableObject<Env> {
     };
     registerPreferences(app, context);
     registerSocial(app, context);
+    registerCollections(app, context);
+    registerDictionary(app, context);
+    registerChallenges(app, context);
+    this.settleGameRewards = registerGameRewards(app, context);
     registerPublicServers(app, context);
     this.game = registerGameRoutes(app, context);
     this.extraGames = registerExtraGames(app, context);
@@ -155,6 +169,7 @@ export class Royale extends DurableObject<Env> {
   async alarm() {
     this.game.tick();
     this.extraGames.tick();
+    this.settleGameRewards();
     await this.schedule();
   }
   async fetch(request: Request): Promise<Response> {
@@ -197,6 +212,7 @@ export class Royale extends DurableObject<Env> {
     }
     this.game.tick();
     this.extraGames.tick();
+    this.settleGameRewards();
     // Start deadline scheduling before long polling awaits a notification.
     await this.schedule();
     const response = await this.router.fetch(request);

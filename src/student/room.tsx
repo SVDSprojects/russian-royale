@@ -1,3 +1,4 @@
+import { PlayerName } from './Identity';
 import { useContext, useEffect, useRef, useState, type FormEvent } from 'react';
 import {
   ArrowRight,
@@ -355,7 +356,7 @@ export function RoomPage({ id }: { id: string }) {
                             onClick={() => setVoteTarget(p.id)}
                           >
                             <Avatar name={p.username} url={p.avatar} />
-                            <span>{p.username}</span>
+                            <span><PlayerName id={p.id} name={p.username} /></span>
                             {voteTarget === p.id && <CheckCircle2 size={18} />}
                           </button>
                         ))}
@@ -513,7 +514,7 @@ export function RoomPage({ id }: { id: string }) {
                 </div>
                 <div>
                   <strong>
-                    {p.username}
+                    <PlayerName id={p.id} name={p.username} />
                     {p.id === user?.id && <span className="rr-you-inline">ты</span>}
                   </strong>
                   <span>{p.id === r.hostId ? 'Ведущий' : p.online ? 'В комнате' : 'Не в сети'}</span>
@@ -578,7 +579,7 @@ function RoomChat({ id }: { id: string }) {
           messages.data.map((m) => (
             <div key={m.id} className={`rr-chat-message ${m.userId === user?.id ? 'self' : ''}`}>
               <div>
-                <strong>{m.username}</strong>
+                <strong><PlayerName id={m.userId} name={m.username} /></strong>
                 <time>
                   {new Date(m.createdAt).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}
                 </time>

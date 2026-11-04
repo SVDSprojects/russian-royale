@@ -1,4 +1,8 @@
 import type { EmailDelivery } from './email-codes';
+import { registerCollections } from './collections';
+import { registerDictionary } from './dictionary';
+import { registerChallenges } from './challenges';
+import { registerGameRewards } from './game-rewards';
 import { registerPreferences } from './preferences';
 import { registerSocial } from './social';
 import { registerPublicServers } from './public-servers';
@@ -167,6 +171,10 @@ export function createApp(
   };
   registerPreferences(app, ctx);
   registerSocial(app, ctx);
+  registerCollections(app, ctx);
+  registerDictionary(app, ctx);
+  registerChallenges(app, ctx);
+  const settleGameRewards = registerGameRewards(app, ctx);
   registerPublicServers(app, ctx);
   const game = registerGameRoutes(app, ctx);
   const extraGames = registerExtraGames(app, ctx);
@@ -221,6 +229,7 @@ export function createApp(
   const tick = () => {
     game?.tick?.();
     extraGames.tick();
+    settleGameRewards();
     if (now() - lastHeartbeat >= 15000) {
       lastHeartbeat = now();
       for (const [res, value] of clients) {

@@ -1,6 +1,9 @@
 import type { Express } from 'express';
 import type { RegisterContext } from './games/jeopardy/routes';
 import type { WaitingGame } from '../shared/waiting-games';
+import { MAX_PLAYERS as aliasMax } from '../shared/games/alias/types';
+import { MAX_PLAYERS as whoamiMax } from '../shared/games/whoami/types';
+import { MAX_PLAYERS as impostorMax } from '../shared/games/impostor/types';
 
 export function registerWaitingGames(app: Express, { db, requireAuth, now }: RegisterContext) {
   app.get('/api/waiting-games', requireAuth, (req, res) => {
@@ -31,7 +34,7 @@ export function registerWaitingGames(app: Express, { db, requireAuth, now }: Reg
           activity: r.activity,
         });
     for (const game of ['jeopardy', 'roulette'] as const) {
-      // Table names are fixed constants. Only members of the private server see its rooms.
+      // Table names are fixed constants. Public-server membership is checked for every request.
       const rows = db
         .prepare(
           `SELECT r.*, s.name AS server_name,
@@ -59,6 +62,63 @@ export function registerWaitingGames(app: Express, { db, requireAuth, now }: Reg
           waiting: r.online,
           joined: state.players.some((p: { id: string }) => p.id === userId),
           activity: r.activity,
+        });
+      }
+    }
+    // Other modules store presence differently. Successful authenticated /view requests
+    // already populate rr_social_presence; never expose their state or private role cards.
+    for (const [game, table, maximum] of [
+      ['alias', 'alias', aliasMax],
+      ['whoami', 'whoami', whoamiMax],
+      ['impostor', 'impostor', impostorMax],
+      ['mafia', 'mafia', 16],
+      ['bunker', 'bunker', 16],
+      ['broken-text', 'broken_text', 16],
+      ['durak', 'durak', 6],
+    ] as const) {
+      const rows = db
+        .prepare(
+          `SELECT r.*,s.name server_name FROM rr_${table}_rooms r JOIN servers s ON s.id=r.server_id JOIN server_members m ON m.server_id=s.id AND m.user_id=?`,
+        )
+        .all(userId);
+      for (const r of rows) {
+        let ids: string[],
+          lobby: boolean,
+          max: number = maximum;
+        if (game === 'alias' || game === 'whoami' || game === 'impostor') {
+          lobby = r.phase === 'lobby';
+          ids = db
+            .prepare(`SELECT user_id FROM rr_${table}_members WHERE room_id=? AND left_at IS NULL`)
+            .all(r.id)
+            .map((p) => p.user_id);
+        } else if (game === 'durak') {
+          const data = JSON.parse(r.data);
+          lobby = !data.state;
+          max = data.settings.maxPlayers;
+          ids = data.members.map((p: { id: string }) => p.id);
+        } else {
+          const state = JSON.parse(r.state);
+          lobby = state.phase === 'lobby';
+          ids = state.participants.map((p: { id: string }) => p.id);
+        }
+        if (!lobby || ids.length >= max) continue;
+        const presence = db
+          .prepare(
+            'SELECT user_id,last_seen FROM rr_room_presence WHERE game=? AND room_id=? AND last_seen>?',
+          )
+          .all(game, r.id, time - 45000)
+          .filter((p) => ids.includes(p.user_id));
+        const others = presence.filter((p) => p.user_id !== userId);
+        if (!others.length) continue;
+        waiting.push({
+          id: r.id,
+          game,
+          name: r.name,
+          serverId: r.server_id,
+          serverName: r.server_name,
+          waiting: presence.length,
+          joined: ids.includes(userId),
+          activity: Math.max(...others.map((p) => p.last_seen)),
         });
       }
     }

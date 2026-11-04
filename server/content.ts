@@ -1,6 +1,8 @@
 import type { Express, RequestHandler, Request } from 'express';
 import type { DB } from './storage.js';
 import { transaction } from './storage.js';
+import { setupStreaks, userStreak } from './streak';
+import { streakDay } from '../shared/streak';
 import {
   boolean,
   body,
@@ -100,6 +102,10 @@ export function setupContent(
   const { db, requireAuth, requireRole, now, broadcast, uploadsDir, onlineUsers } = ctx;
   const edit = requireRole('admin', 'editor');
   const admin = requireRole('admin');
+  setupStreaks(db);
+  db.exec(
+    'CREATE TABLE IF NOT EXISTS rr_admin_xp_commands(actor_id TEXT NOT NULL REFERENCES users(id),command_id TEXT NOT NULL,target_id TEXT NOT NULL REFERENCES users(id),delta INTEGER NOT NULL,reason TEXT NOT NULL,result TEXT NOT NULL,PRIMARY KEY(actor_id,command_id))',
+  );
   const audit = (actor: string, action: string, target: string, details: any = {}) =>
     db
       .prepare('INSERT INTO audit_log(id,actor_id,action,target_id,details,created_at) VALUES(?,?,?,?,?,?)')
@@ -671,11 +677,87 @@ export function setupContent(
         .all()
         .map((u) => ({
           ...publicUser(u),
+          streak: userStreak(db, u.id, now()),
           publicId:
             db.prepare('SELECT public_id FROM rr_profiles WHERE user_id=?').get(u.id)?.public_id || null,
         })),
     ),
   );
+  app.post('/api/admin/users/:id/streak', admin, (req, res) => {
+    const uid = String(req.params.id),
+      b = body(req);
+    const count = integer(b.count, 'Количество дней', 0, 36500);
+    const reason = str(b.reason ?? '', 'Причина', 0, 300);
+    const command = str(b.commandId, 'Номер операции', 16, 100);
+    const result = transaction(db, () => {
+      const previous = db
+        .prepare('SELECT * FROM rr_admin_streak_commands WHERE actor_id=? AND command_id=?')
+        .get(req.user!.id, command);
+      if (previous) {
+        if (previous.target_id !== uid || previous.count !== count || previous.reason !== reason)
+          throw new HttpError(409, 'Номер операции уже использован.');
+        return JSON.parse(previous.result);
+      }
+      if (!db.prepare('SELECT id FROM users WHERE id=?').get(uid))
+        throw new HttpError(404, 'Пользователь не найден.');
+      const before = userStreak(db, uid, now()),
+        day = streakDay(now());
+      db.prepare(
+        'INSERT INTO rr_streak_adjustments VALUES(?,?,?) ON CONFLICT(user_id) DO UPDATE SET day=excluded.day,count=excluded.count',
+      ).run(uid, day, count);
+      const result = { before, after: count, day };
+      audit(req.user!.id, 'user.streak', uid, { ...result, reason, commandId: command });
+      db.prepare('INSERT INTO rr_admin_streak_commands VALUES(?,?,?,?,?,?)').run(
+        req.user!.id,
+        command,
+        uid,
+        count,
+        reason,
+        JSON.stringify(result),
+      );
+      return result;
+    });
+    broadcast();
+    res.json(result);
+  });
+  app.post('/api/admin/users/:id/xp', admin, (req, res) => {
+    const uid = String(req.params.id),
+      b = body(req);
+    const delta = integer(b.delta, 'Изменение XP', -1000000, 1000000);
+    if (!delta) throw new HttpError(400, 'Укажите ненулевое изменение XP.');
+    const reason = str(b.reason ?? '', 'Причина', 0, 300);
+    const command = str(b.commandId, 'Номер операции', 16, 100);
+    const result = transaction(db, () => {
+      const previous = db
+        .prepare('SELECT * FROM rr_admin_xp_commands WHERE actor_id=? AND command_id=?')
+        .get(req.user!.id, command);
+      if (previous) {
+        if (previous.target_id !== uid || previous.delta !== delta || previous.reason !== reason)
+          throw new HttpError(409, 'Номер операции уже использован для другого изменения.');
+        return JSON.parse(previous.result);
+      }
+      const user = db.prepare('SELECT * FROM users WHERE id=?').get(uid);
+      if (!user) throw new HttpError(404, 'Пользователь не найден.');
+      const after = user.xp + delta;
+      if (after < 0) throw new HttpError(409, 'Нельзя списать больше XP, чем есть у пользователя.');
+      if (!Number.isSafeInteger(after) || after > 2147483647)
+        throw new HttpError(409, 'Превышено допустимое количество XP.');
+      db.prepare('UPDATE users SET xp=? WHERE id=?').run(after, uid);
+      const result = { user: publicUser({ ...user, xp: after }), before: user.xp, after, delta };
+      audit(req.user!.id, 'user.xp', uid, { before: user.xp, after, delta, reason, commandId: command });
+      db.prepare('INSERT INTO rr_admin_xp_commands VALUES(?,?,?,?,?,?)').run(
+        req.user!.id,
+        command,
+        uid,
+        delta,
+        reason,
+        JSON.stringify(result),
+      );
+      return result;
+    });
+    broadcast();
+    res.json(result);
+  });
   app.patch('/api/admin/users/:id', admin, (req, res) => {
     const uid = String(req.params.id),
       role = body(req).role;
@@ -700,7 +782,7 @@ export function setupContent(
     res.json(
       db
         .prepare(
-          'SELECT a.id,a.actor_id actorId,u.username actorName,a.action,a.target_id targetId,a.created_at createdAt FROM audit_log a LEFT JOIN users u ON u.id=a.actor_id ORDER BY a.created_at DESC LIMIT 250',
+          "SELECT a.id,a.actor_id actorId,u.username actorName,a.action,a.target_id targetId,a.created_at createdAt,CASE WHEN a.action='user.xp' THEN a.details ELSE NULL END xpDetails,CASE WHEN a.action='user.streak' THEN a.details ELSE NULL END streakDetails FROM audit_log a LEFT JOIN users u ON u.id=a.actor_id ORDER BY a.created_at DESC LIMIT 250",
         )
         .all(),
     ),

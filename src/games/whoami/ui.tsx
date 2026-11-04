@@ -1,3 +1,4 @@
+import { PlayerName } from '../../student/Identity';
 // Общие элементы интерфейса «Кто я» — «Музей живых слов»: таймер, связь, звук, рамки, штампы, буквы.
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { LoaderCircle, Volume2, VolumeX, Wifi, WifiOff } from "lucide-react";
@@ -175,7 +176,7 @@ export function PlayerChip({ player, active, me, children }: { player: ViewParti
         {initials(player.username)}
       </span>
       <span className="rr-whoami-player-name">
-        {player.username}
+        <PlayerName id={player.id} name={player.username} />
         {me ? " (вы)" : ""}
         {player.isHost ? <span className="rr-whoami-tag">ведущий</span> : null}
         {status ? <span className="rr-whoami-tag rr-whoami-tag--muted">{status}</span> : null}

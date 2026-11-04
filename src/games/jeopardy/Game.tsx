@@ -1,3 +1,4 @@
+import { PlayerName } from '../../student/Identity';
 import { useState } from 'react';
 import type { GameProps } from '../../../shared/games/jeopardy/types';
 import { Frame, Scoreboard, ResultPanel, Reveal, useAction } from './ui';
@@ -56,7 +57,7 @@ export function Game(props: GameProps) {
                     <small> очков</small>
                   </strong>
                   <small className="jd-captain">
-                    Капитан: {view.players.find((p) => p.id === t.captainId)?.username}
+                    Капитан: <PlayerName id={t.captainId} name={view.players.find((p) => p.id === t.captainId)?.username} />
                   </small>
                 </div>
               ))}
@@ -69,7 +70,7 @@ export function Game(props: GameProps) {
                   </span>
                   <span>
                     Выбирает <b>{chooser?.name}</b> · капитан{' '}
-                    {view.players.find((p) => p.id === chooser?.captainId)?.username}
+                    <PlayerName id={chooser?.captainId} name={view.players.find((p) => p.id === chooser?.captainId)?.username} />
                   </span>
                   <span className="jd-turn-hint">
                     {chooser?.captainId === currentUserId
@@ -147,6 +148,8 @@ export function Game(props: GameProps) {
                   {view.categories.find((c) => c.id === view.question?.categoryId)?.label}
                 </p>
                 <h2>{view.question?.prompt}</h2>
+                <p className="sdvs-turn-order">{view.round === 1 ? 'Первый вопрос: команды отвечают по очереди.' : 'Порядок отвечающих команд выбирает сервер случайно.'} Пропуск передаёт ход без штрафа.</p>
+                {view.phase === 'answer' && <p className="sdvs-current-answerer" role="status">Сейчас отвечает {view.teams.find(t => t.id === answerer?.teamId)?.name}: <PlayerName id={answerer?.id} name={answerer?.username} /> · 20 секунд на попытку</p>}
                 {view.phase === 'reading' && (
                   <p className="jd-reading-note">
                     <span className="jd-reading-dots" aria-hidden="true">
@@ -154,7 +157,7 @@ export function Game(props: GameProps) {
                       <i />
                       <i />
                     </span>
-                    Пять секунд на чтение. Сигнал откроется одновременно для всех.
+                    Пять секунд на чтение. Затем система назначит отвечающую команду.
                   </p>
                 )}
                 {view.phase === 'buzz' && (
@@ -202,7 +205,7 @@ export function Game(props: GameProps) {
                     </form>
                   ) : (
                     <p>
-                      Отвечает <b>{answerer?.username}</b>. Остальные сигналы заблокированы.
+                      Отвечает <b><PlayerName id={answerer?.id} name={answerer?.username} /></b>. Остальные сигналы заблокированы.
                     </p>
                   ))}
                 <Reveal props={props} />
@@ -219,7 +222,7 @@ export function Game(props: GameProps) {
                 ) : (
                   view.chat.map((m) => (
                     <p key={m.id}>
-                      <b>{view.players.find((p) => p.id === m.userId)?.username}:</b> {m.text}
+                      <b><PlayerName id={m.userId} name={view.players.find((p) => p.id === m.userId)?.username} />:</b> {m.text}
                     </p>
                   ))
                 )}

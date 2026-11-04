@@ -37,12 +37,9 @@ for (const game of ['jeopardy', 'roulette'] as const)
           email: `world-${game}-${randomUUID()}@royale.test`,
           password: 'Browser-test-password-2026!',
         });
+      for(const c of contexts) await api(c, '/servers');
+      const server = {id:'public-'+game};
       await host.goto('/#games/' + game);
-      await expect(host.getByRole('heading', { name: 'Для приключения нужны друзья' })).toBeVisible();
-      await screen(host, `${game}-no-server`, 390);
-      const server = await api(contexts[0], '/servers', { name: 'Компания друзей', description: '' });
-      const invite = await api(contexts[0], `/servers/${server.id}/invites`, {});
-      await api(contexts[1], `/invites/${invite.token}/join`, {});
       await host.reload();
       await expect(host.getByRole('button', { name: 'Создать партию', exact: true })).toBeEnabled();
       await host.getByLabel('Набор заданий', { exact: true }).selectOption('demo');
@@ -81,17 +78,14 @@ for (const game of ['jeopardy', 'roulette'] as const)
         const hostIdentity = (await api(contexts[0], '/auth/me')).user.id;
         const chooserPage = captain === hostIdentity ? host : guest;
         await chooserPage.locator('.rr-active-island button:not([disabled])').first().click();
-        await expect(host.getByRole('button', { name: 'Я знаю ответ!', exact: true })).toBeVisible({
-          timeout: 15000,
-        });
-        await host.getByRole('button', { name: 'Я знаю ответ!', exact: true }).click();
-        await expect(host.getByLabel('Ваш ответ', { exact: true })).toBeVisible();
-        await screen(host, `${game}-question`, 390);
+        await expect.poll(async () => (await get()).view.phase).toBe('answer');
         const state = await get();
-        const answer = content.questions.find((q: { id: string }) => q.id === state.view.question.id)
-          .acceptedAnswers[0];
-        await host.getByLabel('Ваш ответ', { exact: true }).fill(answer);
-        await host.getByRole('button', { name: 'Отправить ответ', exact: true }).click();
+        const answeringPage = state.view.answererId === hostIdentity ? host : guest;
+        await expect(answeringPage.getByLabel('Ваш ответ', { exact: true })).toBeVisible();
+        await screen(answeringPage, `${game}-question`, 390);
+        const answer = content.questions.find((q: { id: string }) => q.id === state.view.question.id).acceptedAnswers[0];
+        await answeringPage.getByLabel('Ваш ответ', { exact: true }).fill(answer);
+        await answeringPage.getByRole('button', { name: 'Отправить ответ', exact: true }).click();
       } else {
         await expect.poll(async () => (await get()).view.phase).toBe('question');
         await expect(

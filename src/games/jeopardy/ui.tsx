@@ -1,3 +1,4 @@
+import { PlayerName } from '../../student/Identity';
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import type { Action, GameProps } from '../../../shared/games/jeopardy/types';
 import { Anchor, Check, Compass, Flag, Trophy, Volume2, VolumeX } from 'lucide-react';
@@ -83,7 +84,7 @@ export function Frame({
     board: 'Капитан выбирает',
     reading: 'Читаем вопрос',
     buzz: 'Кто готов ответить?',
-    answer: 'Сигнал принят',
+    answer: 'Ход отвечающей команды',
   };
   return (
     <section
@@ -203,7 +204,7 @@ export function Scoreboard({ props }: { props: GameProps }) {
           </span>
           <div>
             <b>
-              {p.username}
+              <PlayerName id={p.id} name={p.username} />
               {p.id === props.currentUserId ? ' · вы' : ''}
             </b>
             <small>

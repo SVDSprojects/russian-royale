@@ -1,0 +1,10 @@
+.sdvs-tsarukyan-render { position:absolute; inset:0; display:block; overflow:hidden; border-radius:inherit; }
+.sdvs-gift-art .sdvs-tsarukyan-render img { position:absolute; inset:0; width:100%; height:100%; max-width:none; object-fit:cover; transform:none; animation:none; filter:none; }
+.sdvs-tsarukyan-render .tsarukyan-still { display:none; }
+.gift-tsarukyan > .sdvs-gift-orbit, .gift-tsarukyan > .sdvs-gift-spark, .gift-tsarukyan:after { display:none; }
+@media (prefers-reduced-motion:reduce) {
+.sdvs-tsarukyan-render .tsarukyan-motion { display:none; }
+.sdvs-tsarukyan-render .tsarukyan-still { display:block; }
+}
+[data-reduce-motion='true'] .sdvs-tsarukyan-render .tsarukyan-motion { display:none; }
+[data-reduce-motion='true'] .sdvs-tsarukyan-render .tsarukyan-still { display:block; }

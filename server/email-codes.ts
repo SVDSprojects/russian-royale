@@ -28,11 +28,37 @@ export function emailDelivery(env: Record<string, string | undefined>): EmailDel
         }),
         signal: AbortSignal.timeout(15000),
       });
-      if (!response.ok)
+      if (!response.ok) {
+        const detail = (await response.json().catch(() => ({}))) as { code?: string; message?: string };
+        console.warn(
+          'rr-mail',
+          JSON.stringify({ event: 'rejected', status: response.status, code: detail.code || 'unknown' }),
+        );
         throw new HttpError(
           502,
           'Не удалось отправить письмо. Попробуйте позже или обратитесь к администратору.',
         );
+      }
+      const receipt = (await response.json().catch(() => ({}))) as { messageId?: string };
+      console.info('rr-mail', JSON.stringify({ event: 'accepted', messageId: receipt.messageId || null }));
+      // Only provider event names and reasons are logged; codes and message bodies never are.
+      if (receipt.messageId)
+        try {
+          const report = await fetch(
+            'https://api.brevo.com/v3/smtp/statistics/events?limit=5&days=1&email=' +
+              encodeURIComponent(email),
+            { headers: { 'api-key': key }, signal: AbortSignal.timeout(5000) },
+          );
+          if (report.ok) {
+            const body = (await report.json()) as { events?: { event?: string; reason?: string }[] };
+            console.info(
+              'rr-mail-events',
+              JSON.stringify(body.events?.map((e) => ({ event: e.event, reason: e.reason })) || []),
+            );
+          }
+        } catch {
+          /* A reporting failure must not invalidate an accepted email. */
+        }
     },
   };
 }
@@ -91,7 +117,12 @@ export function emailCodes(db: DB, now: () => number, delivery?: EmailDelivery) 
     limit('ip:' + ip, 30, 1000);
     limit('email:' + email, 6, 60000);
     const exists = !!db.prepare('SELECT id FROM users WHERE email=?').get(email);
-    if ((purpose === 'reset' && !exists) || (purpose === 'register' && exists)) return;
+    if (purpose === 'register' && exists)
+      throw new HttpError(
+        409,
+        'Этот адрес уже зарегистрирован. Перейдите во «Вход» или нажмите «Забыли пароль?».',
+      );
+    if (purpose === 'reset' && !exists) return;
     const nonce = randomBytes(24).toString('hex'),
       code = String(randomInt(100000, 1000000));
     db.prepare(
