@@ -13,9 +13,32 @@ export function StreakEditor({
     [reason, setReason] = useState(''),
     [error, setError] = useState(''),
     [busy, setBusy] = useState(false);
+  const [viewport, setViewport] = useState(() => ({
+    height: window.visualViewport?.height ?? window.innerHeight,
+    top: window.visualViewport?.offsetTop ?? 0,
+  }));
   const lock = useRef(false),
     command = useRef(crypto.randomUUID()),
     root = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const update = () =>
+      setViewport({
+        height: window.visualViewport?.height ?? window.innerHeight,
+        top: window.visualViewport?.offsetTop ?? 0,
+      });
+    const visual = window.visualViewport;
+    visual?.addEventListener('resize', update);
+    visual?.addEventListener('scroll', update);
+    window.addEventListener('resize', update);
+    return () => {
+      visual?.removeEventListener('resize', update);
+      visual?.removeEventListener('scroll', update);
+      window.removeEventListener('resize', update);
+    };
+  }, []);
+  useEffect(() => {
+    if (error) root.current?.querySelector('[role="alert"]')?.scrollIntoView({ block: 'nearest' });
+  }, [error]);
   useEffect(() => {
     const previous = document.activeElement as HTMLElement,
       overflow = document.body.style.overflow;
@@ -71,10 +94,13 @@ export function StreakEditor({
     }
   }
   return (
-    <div className="adm-overlay">
+    <div
+      className="adm-overlay adm-streak-overlay"
+      style={{ top: viewport.top, height: viewport.height, bottom: 'auto' }}
+    >
       <section
         ref={root}
-        className="adm-modal"
+        className="adm-modal adm-streak-modal"
         role="dialog"
         aria-modal="true"
         aria-labelledby="adm-streak-title"
@@ -86,46 +112,49 @@ export function StreakEditor({
         <p>
           Сейчас: <strong>{user.streak} дн. подряд</strong>
         </p>
-        <form onSubmit={(e) => void save(e)}>
-          <label className="adm-field">
-            <span>Количество дней подряд</span>
-            <input
-              type="number"
-              inputMode="numeric"
-              min="0"
-              max="36500"
-              step="1"
-              required
-              disabled={busy}
-              value={value}
-              onChange={(e) => {
-                setValue(e.target.value);
-                command.current = crypto.randomUUID();
-              }}
-            />
-          </label>
-          <label className="adm-field">
-            <span>Причина изменения</span>
-            <input
-              maxLength={300}
-              placeholder="Необязательно"
-              disabled={busy}
-              value={reason}
-              onChange={(e) => {
-                setReason(e.target.value);
-                command.current = crypto.randomUUID();
-              }}
-            />
-          </label>
-          <p>
-            Установится указанное число дней на сегодня. 0 сбрасывает серию. Дальше она продолжается при
-            ежедневной активности; пропуск дня прерывает её. Общая серия с другом считается отдельно.
-          </p>
-          {error && (
-            <p className="adm-error" role="alert">
-              {error}
+        <form noValidate onSubmit={(e) => void save(e)}>
+          <div className="adm-streak-fields">
+            {error && (
+              <p className="adm-error" role="alert">
+                {error}
+              </p>
+            )}
+            <label className="adm-field">
+              <span>Количество дней подряд</span>
+              <input
+                type="number"
+                inputMode="numeric"
+                min="0"
+                max="36500"
+                step="1"
+                required
+                aria-describedby="adm-streak-range"
+                disabled={busy}
+                value={value}
+                onChange={(e) => {
+                  setValue(e.target.value);
+                  command.current = crypto.randomUUID();
+                }}
+              />
+            </label>
+            <small id="adm-streak-range">От 0 до 36 500 дней. 0 — сброс серии.</small>
+            <label className="adm-field">
+              <span>Причина изменения</span>
+              <input
+                maxLength={300}
+                placeholder="Необязательно"
+                disabled={busy}
+                value={reason}
+                onChange={(e) => {
+                  setReason(e.target.value);
+                  command.current = crypto.randomUUID();
+                }}
+              />
+            </label>
+            <p>
+              Введи новое число и нажми «Сохранить серию». После сохранения появится сообщение с результатом.
             </p>
-          )}
+          </div>
           <div className="adm-actions">
             <button type="button" className="adm-btn" disabled={busy} onClick={onClose}>
               Отмена

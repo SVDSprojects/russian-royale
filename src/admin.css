@@ -1076,6 +1076,44 @@
   line-height: 1.85;
   color: #53627c;
 }
+.adm-overlay .adm-streak-modal {
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+  overflow: hidden;
+}
+.adm-streak-modal h2 {
+  margin-top: 0;
+}
+.adm-streak-modal > p {
+  margin-block: 3px;
+}
+.adm-overlay .adm-streak-modal form {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  margin-top: 12px;
+  overflow: hidden;
+}
+.adm-streak-fields {
+  overflow-y: auto;
+  min-height: 0;
+  padding: 2px;
+}
+.adm-streak-fields > small {
+  display: block;
+  margin: 6px 0 12px;
+  color: #53627c;
+}
+.adm-streak-modal .adm-actions {
+  flex-shrink: 0;
+  margin-top: 12px;
+  padding-top: 10px;
+  background: #fff;
+}
+.adm-streak-modal .adm-actions button {
+  min-height: 44px;
+}
 .adm-actions {
   display: flex;
   justify-content: flex-end;

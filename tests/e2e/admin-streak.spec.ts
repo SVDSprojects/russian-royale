@@ -20,6 +20,15 @@ test('admin sets and resets streak on a phone and the profile uses the new value
   const row = page.locator('tbody tr').filter({ hasText: email });
   await row.getByRole('button', { name: 'Изменить серию для Админ серии' }).click();
   const dialog = page.getByRole('dialog', { name: 'Изменение серии' });
+  await dialog.getByLabel('Количество дней подряд').fill('40000');
+  await dialog.getByRole('button', { name: 'Сохранить серию', exact: true }).click();
+  await expect(dialog.getByRole('alert')).toContainText('от 0 до 36 500');
+  await expect(dialog).toBeVisible();
+  await page.setViewportSize({ width: 390, height: 420 });
+  const saveButton = dialog.getByRole('button', { name: 'Сохранить серию', exact: true });
+  const box = await saveButton.boundingBox();
+  expect(box!.y).toBeGreaterThanOrEqual(0);
+  expect(box!.y + box!.height).toBeLessThanOrEqual(420);
   await dialog.getByLabel('Количество дней подряд').fill('42');
   await dialog.getByLabel('Причина изменения').fill('Восстановление после пропуска');
   await expect(dialog.getByLabel('Количество дней подряд')).toHaveCSS('font-size', '16px');
@@ -27,6 +36,7 @@ test('admin sets and resets streak on a phone and the profile uses the new value
   await dialog.getByRole('button', { name: 'Сохранить серию', exact: true }).click();
   await expect(dialog).toHaveCount(0);
   await expect(row).toContainText('42 дн. подряд');
+  await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/#profile');
   await expect(page.locator('.profile-hero-status')).toContainText('42 дн.');
   await page.getByRole('tab', { name: 'Статистика', exact: true }).click();
