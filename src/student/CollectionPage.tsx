@@ -1,10 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
 import { Gift, Sparkles, Crown, Fingerprint, ArrowRight } from 'lucide-react';
 import { api, useAuth } from '../api';
-import { cases, gifts, profileEmojis, premiumPrice } from '../../shared/collection';
+import { animatedGifts, cases, gifts, profileEmojis, premiumPrice } from '../../shared/collection';
 import { Dialog, ErrorNotice, Loading, PageHeader, go, json, message, useResource } from './common';
 import { GiftArt, ProfileShowcase, type Appearance, type OwnedItem } from './Identity';
-import { fighterGifts } from '../../shared/fighter-gifts';
+
+const models = Array.from(
+  new Map(
+    animatedGifts.map((g) => [
+      g.model,
+      { key: g.model, name: g.modelName, category: 'category' in g ? g.category : 'Бойцы' },
+    ]),
+  ).values(),
+);
+const categories = Array.from(new Set(models.map((m) => m.category)));
 type Shop = {
   balance: { earned: number; spent: number; available: number };
   inventory: OwnedItem[];
@@ -153,8 +162,8 @@ export function CollectionPage() {
       </section>
       <h2>Знакомься с коллекцией</h2>
       <p>
-        Пять бойцов, у каждого пять самостоятельных анимированных фонов. В кейсе выпадает конкретный вариант
-        со своим номером.
+        {models.length} моделей · {animatedGifts.length} анимированных вариантов. В кейсе выпадает конкретный
+        фон со своим номером экземпляра.
       </p>
       <label className="sdvs-catalog-filter">
         Коллекция
@@ -163,13 +172,17 @@ export function CollectionPage() {
           value={catalogModel}
           onChange={(e) => setCatalogModel(e.target.value)}
         >
-          {Array.from(new Map(fighterGifts.map((g) => [g.model, g.modelName])).entries()).map(
-            ([key, name]) => (
-              <option key={key} value={key}>
-                {name}
-              </option>
-            ),
-          )}
+          {categories.map((category) => (
+            <optgroup key={category} label={category}>
+              {models
+                .filter((m) => m.category === category)
+                .map((m) => (
+                  <option key={m.key} value={m.key}>
+                    {m.name}
+                  </option>
+                ))}
+            </optgroup>
+          ))}
           <option value="classic">Первая коллекция</option>
         </select>
       </label>

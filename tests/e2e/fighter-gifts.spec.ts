@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import { randomUUID } from 'node:crypto';
 import { DatabaseSync } from 'node:sqlite';
 import { fighterGifts } from '../../shared/fighter-gifts';
+import { animatedGifts } from '../../shared/collection';
 
 test('all imported fighter backgrounds render and owned animated gifts work in profiles and transfers', async ({
   page,
@@ -30,7 +31,7 @@ test('all imported fighter backgrounds render and owned animated gifts work in p
   );
   db.close();
   const shop = await (await context.request.get('/api/collection')).json();
-  expect(shop.gifts.filter((g: { model?: string }) => g.model)).toHaveLength(25);
+  expect(shop.gifts.filter((g: { model?: string }) => g.model)).toHaveLength(animatedGifts.length);
   expect(
     (
       await context.request.patch('/api/collection/appearance', {
